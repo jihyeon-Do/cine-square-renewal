@@ -5,7 +5,7 @@ import React, { useEffect, useState, useCallback, useRef } from 'react';
 import './home.scss';
 
 import HeaderTemplate from '../components/HeaderTemplate';
-// import FooterTemplate from '../components/FooterTemplate';
+import FooterTemplate from '../components/FooterTemplate';
 // import VideoFrame from '../components/VideoFrame';
 import Owlslide from '../components/Owlslide';
 import VideoFrameContainer from '../containers/VideoFrameContainer';
@@ -100,7 +100,7 @@ function Home() {
           </article> */}
       {/* </section>
       </main> */}
-      {/* <FooterTemplate /> */}
+      <FooterTemplate />
     </>
   );
 }

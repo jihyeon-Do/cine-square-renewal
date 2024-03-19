@@ -1,11 +1,11 @@
 import React from 'react';
 import './App.css';
-import Login from './pages/Login';
+import Login from './pages/Signin';
 import { Route, Routes } from 'react-router-dom';
 
 import Home from './pages/Home';
 // import FatalError from './pages/FatalError';
-// import Signin from './pages/Signin';
+import Signin from './pages/Signin';
 // import Complete from './pages/Complete';
 // import Search from './pages/Search';
 // import NotFound from './pages/NotFound';
@@ -19,7 +19,7 @@ function App() {
   return (
     <div className="App">
       <Routes>
-        {/* <Route path={'/signin'} element={<Signin />} /> */}
+        <Route path={'/signin'} element={<Signin />} />
         {/* <Route path={'/signup'} element={<Signup />} /> */}
         {/* <Route path={'/complete'} element={<Complete />} /> */}
         {/* <Route path={'/profile'} element={<Profile />} /> */}

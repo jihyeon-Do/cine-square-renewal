@@ -1,0 +1,94 @@
+.header-container {
+  width: 100%;
+  background-color: #fff;
+  border-bottom: 1px solid #e4e4e4;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 50;
+  .header-wrapper {
+    width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    padding: 5px 0;
+    justify-content: space-between;
+    .header {
+      cursor: pointer;
+      position: relative;
+      img {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 220px;
+      }
+    }
+    .right-content {
+      width: 55%;
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      .input-box {
+        position: relative;
+        form {
+          display: inline-block;
+        }
+        input {
+          width: 250px;
+          background: none;
+          border: #e4e4e4 solid 1px;
+          padding: 5px 5px;
+          color: #808080;
+          font-weight: normal;
+        }
+        .search-button {
+          width: 35px;
+          height: 32px;
+          background: url(../images/searchIcon.png) no-repeat 0 0;
+          background-size: contain;
+          text-indent: -9999px;
+          overflow: hidden;
+          font-size: 0;
+          margin-left: 8px;
+          vertical-align: middle;
+        }
+
+        .search-list {
+          display: none;
+          position: absolute;
+          top: 50px;
+          left: 0;
+          background-color: #1f1f1f;
+          color: #ffffff;
+          z-index: 10;
+          width: 100%;
+          box-shadow: 2px 2px 20px 2px #272727;
+          box-sizing: border-box;
+          padding: 20px;
+          ul {
+            width: 100%;
+            height: 100%;
+            li {
+              padding: 10px;
+            }
+          }
+        }
+      }
+      .my-profile-btn {
+        line-height: 32px;
+        a,
+        p {
+          display: inline-block;
+          margin-left: 35px;
+          color: #5e5e5e;
+          font-size: 0.8rem;
+        }
+        a:hover {
+          color: #5e5e5e;
+        }
+        p {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}

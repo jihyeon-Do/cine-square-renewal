@@ -1,0 +1,85 @@
+.App {
+  text-align: left;
+}
+
+body {
+  position: relative;
+  margin: 0;
+  font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Nanum Gothic',
+    'Malgun Gothic', sans-serif;
+  // background-color: #222222;
+  text-align: left;
+}
+
+main {
+  height: 100%;
+  padding-top: 64px;
+  & > section {
+    width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: 500;
+}
+p {
+  font-family: inherit;
+  margin: 0;
+}
+span {
+  font-family: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+ul {
+  padding-left: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+button {
+  padding: 0;
+  cursor: pointer;
+  border: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  font-family: 'Montserrat', 'Noto Sans kr', sans-serif;
+}
+
+input {
+  border: none;
+  font-family: 'Montserrat', 'Noto Sans kr', sans-serif;
+  font-weight: 500;
+}
+.a11y-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: polygon(0 0, 0 0, 0 0);
+}
+.readable-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}

@@ -1,24 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Login from './pages/Login';
+import { Route, Routes } from 'react-router-dom';
+
+import Home from './pages/Home';
+// import FatalError from './pages/FatalError';
+// import Signin from './pages/Signin';
+// import Complete from './pages/Complete';
+// import Search from './pages/Search';
+// import NotFound from './pages/NotFound';
+// import Signup from './pages/Signup';
+// import Detail from './pages/Detail';
+// import Profile from './pages/Profile';
+// // import Evaluate from './pages/Evaluate';
+// import MyBooks from './pages/MyBooks';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        {/* <Route path={'/signin'} element={<Signin />} /> */}
+        {/* <Route path={'/signup'} element={<Signup />} /> */}
+        {/* <Route path={'/complete'} element={<Complete />} /> */}
+        {/* <Route path={'/profile'} element={<Profile />} /> */}
+        {/* <Route path={'/detail/:movieCd'} element={<Detail />} /> */}
+        {/* <Route path="/evaluate" component={Evaluate} /> */}
+        {/* <Route path={'/mybooks'} element={<MyBooks />} /> */}
+        {/* <Route path={'/search/:keyword'} element={<Search />} /> */}
+        <Route path={'/'} element={<Home />} />
+        {/* <Route element={<NotFound />} /> */}
+      </Routes>
     </div>
   );
 }

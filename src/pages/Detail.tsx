@@ -246,8 +246,8 @@ export default function Detail() {
 
   return (
     <>
+      <HeaderTemplate />
       <main className="detail-main">
-        <HeaderTemplate />
         <h2 className="readable-hidden">영화상세정보</h2>
         <div className="poster-wrapper">
           <div className="poster-box">

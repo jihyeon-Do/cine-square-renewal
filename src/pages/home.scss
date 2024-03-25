@@ -28,6 +28,8 @@ $border-color: #eee;
   }
   section {
     padding: 50px 0;
+    width: 95%;
+    max-width: 1300px;
     .slide {
       width: 100%;
       img {
@@ -36,7 +38,9 @@ $border-color: #eee;
     }
     .slide-container {
       position: relative;
-      overflow: hidden;
+      // overflow: hidden;
+      overflow: scroll;
+      scrollbar-width: none;
     }
     .rank,
     .my-collection-wrapper {
@@ -51,16 +55,17 @@ $border-color: #eee;
       }
       ul {
         display: flex;
-        justify-content: space-between;
-        width: calc(100% * 2);
         transform: translate(0);
         transition: all 1s;
-        // overflow: hidden;
         position: relative;
         z-index: 1;
+        gap: 16px;
+        flex-wrap: nowrap;
+        overflow: visible;
         li {
           position: relative;
-          width: calc(100% / 10 - 20px);
+          flex: 0 0 auto;
+          width: calc((100% - 64px) / 5);
           .ranking {
             background-color: #000000ad;
             display: inline-block;
@@ -78,6 +83,12 @@ $border-color: #eee;
             left: 5px;
             border-radius: 3px;
           }
+          // li:nth-child(5n) {
+          //   margin-right: 0;
+          // }
+          // li:nth-child(6n) {
+          //   margin-left: 0;
+          // }
           img {
             width: 100%;
             border-radius: 5px;
@@ -121,13 +132,15 @@ $border-color: #eee;
       .prev-btn {
         top: 50%;
         margin-top: -20px;
-        left: -50px;
+        left: -15px;
         display: none;
+        z-index: 10;
       }
       .next-btn {
         top: 50%;
         margin-top: -20px;
-        right: -50px;
+        right: -15px;
+        z-index: 10;
       }
     }
     .my-collection-wrapper {

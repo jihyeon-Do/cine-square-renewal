@@ -34,7 +34,7 @@ function HeaderTemplate() {
           //     dispatch(push('/'));
           //   }}
         >
-          <img src="../images/CINE_SQUARE_logo.svg" alt="main_logo" />
+          <img src="../images/test.svg" alt="main_logo" />
         </h1>
         <div className="right-content">
           <div className="input-box" role="search">

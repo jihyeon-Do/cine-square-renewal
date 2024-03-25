@@ -1,4 +1,9 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
+import {
+  boxofficeList,
+  starRating,
+  individualList,
+} from '../data/CineSuggestionMovieList';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { RootState } from '../redux/modules';
 
@@ -58,13 +63,13 @@ function Home() {
         {modalId > 0 && <VideoFrameContainer hide={hide} id={modalId} />}
         <section>
           <article className="rank cine-square-rank">
-            <CineSuggestion title={'boxoffice'} />
+            <CineSuggestion title={'boxoffice'} list={boxofficeList} />
           </article>
           <article className="rank cine-square-rank">
-            <CineSuggestion title={'starRating'} />
+            <CineSuggestion title={'starRating'} list={starRating} />
           </article>
           <article className="rank cine-square-rank">
-            <CineSuggestion title={'individual'} />
+            <CineSuggestion title={'individual'} list={individualList} />
           </article>
         </section>
       </main>

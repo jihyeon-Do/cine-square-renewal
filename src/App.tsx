@@ -28,6 +28,9 @@ function App() {
         {/* <Route path="/evaluate" component={Evaluate} /> */}
         {/* <Route path={'/mybooks'} element={<MyBooks />} /> */}
         <Route path={'/mychoice/:listname'} element={<MyChoice />} />
+        <Route path={'/review'} element={<MyChoice />} />
+        <Route path={'/favorite/review'} element={<MyChoice />} />
+        <Route path={'/favorite/person'} element={<MyChoice />} />
         <Route path={'/search/:keyword'} element={<Search />} />
         <Route path={'/'} element={<Home />} />
         {/* <Route element={<NotFound />} /> */}

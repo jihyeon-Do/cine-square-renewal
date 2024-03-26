@@ -194,6 +194,27 @@ function MyMovie() {
       score: 3.5,
       mainImg: '../images/boxoffice1.jpg',
     },
+    {
+      id: 4,
+      movieCd: '203662',
+      movieNm: '파묘',
+      score: 3.5,
+      mainImg: '../images/boxoffice1.jpg',
+    },
+    {
+      id: 4,
+      movieCd: '203662',
+      movieNm: '파묘',
+      score: 3.5,
+      mainImg: '../images/boxoffice1.jpg',
+    },
+    {
+      id: 4,
+      movieCd: '203662',
+      movieNm: '파묘',
+      score: 3.5,
+      mainImg: '../images/boxoffice1.jpg',
+    },
   ];
 
   return (

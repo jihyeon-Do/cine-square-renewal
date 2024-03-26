@@ -1,6 +1,7 @@
 .my-choice-movie {
   margin-top: 10px;
-
+  max-width: 1200px;
+  width: 100%;
   h3 {
     font-size: 1.2rem;
     font-weight: 700;
@@ -11,10 +12,12 @@
     margin-top: 20px;
     margin-bottom: 40px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(10%, auto));
+    // grid-template-columns: repeat(auto-fill, minmax(10%, auto));
+    grid-template-columns: repeat(10, 1fr);
     row-gap: 30px;
     column-gap: 10px;
     li {
+      box-sizing: border-box;
       img {
         width: 100%;
       }

@@ -117,7 +117,10 @@ function Signup() {
         {/* <h1><img src="./images/login_logo.png" alt="login_logo" /></h1> */}
         <div className="signup-form">
           <form>
-            <img src="./images/CINE_SQUARE_logo.svg" />
+            <img
+              src="./images/CINE_SQUARE_logo.svg"
+              onClick={() => navigate('/')}
+            />
             <fieldset>
               <legend>회원가입</legend>
               <div className="input-box">

@@ -1,0 +1,114 @@
+.my-choice {
+  max-width: 640px;
+  width: 100%;
+  h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+    font-weight: 700;
+  }
+
+  ul {
+    padding-top: 20px;
+    padding-bottom: 40px;
+    max-width: 640px;
+    width: 100%;
+    margin: 0 auto;
+    li {
+      background-color: #f8f8f8;
+      box-sizing: border-box;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 14px;
+      p:first-child {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 1rem;
+        svg {
+          width: auto;
+          height: 16px;
+          margin-right: 3px;
+        }
+        div:first-child {
+          font-size: 1.1rem;
+          span {
+            font-size: 0.8rem;
+            color: #b5b5b5;
+            margin-left: 5px;
+          }
+        }
+        div:last-child {
+          display: flex;
+          align-items: flex-start;
+          color: #ffaa00;
+        }
+      }
+      p:nth-child(2) {
+        margin: 7px 0 4px 0;
+        color: rgb(16, 16, 16);
+      }
+      p:nth-child(3) {
+        span {
+          color: #939396;
+          display: inline-block;
+          margin-left: 5px;
+        }
+      }
+      p:nth-child(4) {
+        width: 60px;
+        margin-top: 5px;
+        font-size: 0.9rem;
+        // border-radius: 10px;
+        button {
+          width: 100%;
+          padding: 5px;
+          background-color: transparent;
+          display: flex;
+          align-items: flex-end;
+          justify-content: center;
+          border: 1px solid rgb(16, 16, 16);
+          border-radius: 10px;
+        }
+        img {
+          height: 17px;
+          display: inline-block;
+          margin-right: 3px;
+        }
+      }
+    }
+  }
+  .favorite-person {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    row-gap: 30px;
+    column-gap: 10px;
+    li {
+      //   padding: 0;
+      background-color: transparent;
+      text-align: center;
+      p {
+        width: 100% !important;
+        &:nth-of-type(1) {
+          font-size: 1rem;
+          font-weight: 700;
+        }
+        &:nth-of-type(2) {
+          font-size: 0.8rem;
+          color: rgb(120, 120, 120);
+          font-weight: 300;
+        }
+        &:nth-of-type(3) {
+          font-size: 0.8rem;
+          margin-top: 0;
+          color: rgb(120, 120, 120);
+          font-weight: 300;
+        }
+      }
+      img {
+        width: 100%;
+      }
+    }
+  }
+}

@@ -6,10 +6,10 @@ import { Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 // import FatalError from './pages/FatalError';
 import Signin from './pages/Signin';
+import Signup from './pages/Signup';
 // import Complete from './pages/Complete';
 import Search from './pages/Search';
 // import NotFound from './pages/NotFound';
-// import Signup from './pages/Signup';
 import Detail from './pages/Detail';
 import Profile from './pages/Profile';
 // // import Evaluate from './pages/Evaluate';
@@ -21,7 +21,7 @@ function App() {
     <div className="App">
       <Routes>
         <Route path={'/signin'} element={<Signin />} />
-        {/* <Route path={'/signup'} element={<Signup />} /> */}
+        <Route path={'/signup'} element={<Signup />} />
         {/* <Route path={'/complete'} element={<Complete />} /> */}
         <Route path={'/profile'} element={<Profile />} />
         <Route path={'/detail/:movieCd'} element={<Detail />} />

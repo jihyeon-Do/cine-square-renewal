@@ -1,11 +1,12 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './headerTemplate.scss';
 
 function HeaderTemplate() {
   const [value, setValue] = useState('');
   const searchInput = useRef<HTMLInputElement>(null);
   const searchClickButton = useRef<HTMLButtonElement>(null);
+  const navigate = useNavigate();
 
   //   useEffect(() => {
   //     if (urlParameter === `/search/${keyword}`) {
@@ -33,6 +34,7 @@ function HeaderTemplate() {
           //   onClick={() => {
           //     dispatch(push('/'));
           //   }}
+          onClick={() => navigate('/')}
         >
           <img src="../images/test.svg" alt="main_logo" />
         </h1>

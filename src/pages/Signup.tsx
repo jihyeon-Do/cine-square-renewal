@@ -14,6 +14,7 @@ function Signup() {
     isNickname: false,
     isEmail: false,
     isPw: false,
+    duplication: false,
   });
 
   const passwordRef = useRef(null);
@@ -87,17 +88,28 @@ function Signup() {
     }
   }
 
-  console.log(validation);
-
   async function click() {
     try {
-      const response = await axios.post(`${LOCALAPI}/api/users`, {
-        account: account,
-        password: password,
-        name: userName,
-        nickname: nickname,
-      });
-      console.log(response);
+      const isDuplication = await axios.get(
+        `${LOCALAPI}/api/users/check-account/${account}`,
+      );
+      if (!isDuplication.data.result) {
+        const response = await axios.post(`${LOCALAPI}/api/users`, {
+          account: account,
+          password: password,
+          name: userName,
+          nickname: nickname,
+        });
+        if (response.data.data.user_id) {
+          alert('회원가입 성공');
+          navigate('/');
+        }
+      } else {
+        setValidation({
+          ...validation,
+          duplication: true,
+        });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -177,6 +189,9 @@ function Signup() {
               {/* <button className="signup-btn" type="button">
                 회원가입
               </button> */}
+              {validation.duplication && (
+                <p className="email-duplication">이미 존재하는 이메일입니다.</p>
+              )}
               <div className="btn-box">
                 <button
                   type="button"

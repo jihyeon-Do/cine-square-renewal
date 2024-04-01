@@ -106,7 +106,12 @@
           border-radius: 50px;
         }
       }
-
+      .email-duplication {
+        font-size: 0.8rem;
+        text-align: center;
+        margin-top: 20px;
+        color: rgb(224, 0, 0);
+      }
       .btn-box {
         display: flex;
         justify-content: space-between;

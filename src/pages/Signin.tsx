@@ -1,44 +1,58 @@
 import React, { useState, useRef } from 'react';
 import { message } from 'antd';
 import './signin.scss';
-import HeaderTemplate from '../components/HeaderTemplate';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Signin() {
-  const [idValue, setId] = useState('');
-  const [pwValue, setPw] = useState('');
-  const [correctPw, setCorrectPw] = useState(false);
-
-  // const confirmPassword = (e: React.FormEvent<HTMLInputElement>) => {
-  //   const PASSWORD = '1234';
-  //   setPw(e.currentTarget.value);
-  //   if (e.currentTarget.value === PASSWORD) {
-  //     setCorrectPw(true);
-  //   }
-  // };
-
-  // const loginAlert = () => {
-  //   if (correctPw) {
-  //     alert('비밀번호가 맞습니다.');
-  //   } else {
-  //     alert('비밀번호가 틀립니다.');
-  //   }
-  // };
-
+  const [isEmail, setIsEmail] = useState(false);
   const [account, setAccount] = useState('');
-  const passwordRef = useRef('');
+  const [password, setPassword] = useState('');
+  const [isValidation, setIsValidation] = useState({
+    confirm: false,
+  });
 
-  function click() {
-    // const password = passwordRef.current.value;
-    // if (
-    //   account === '' ||
-    //   password === '' ||
-    //   account == null ||
-    //   password == null
-    // ) {
-    //   message.error('이메일 또는 비밀번호가 입력되지 않았습니다.');
-    // } else {
-    //   // getUser(account, password);
-    // }
+  const navigate = useNavigate();
+  const LOCALAPI = 'http://3.38.64.130:8080';
+
+  async function click() {
+    try {
+      const response = await axios.post(`${LOCALAPI}/api/users/login`, {
+        account: account,
+        password: password,
+      });
+      if (response.data.result) {
+        setIsValidation({
+          ...isValidation,
+          confirm: false,
+        });
+        alert('로그인성공');
+        navigate('/');
+      } else {
+        setIsValidation({
+          ...isValidation,
+          confirm: true,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function change(e: React.ChangeEvent<HTMLInputElement>, text: string) {
+    if (text === 'email') {
+      setAccount(e.target.value);
+      const regex = /^[a-z0-9\.\-_]+@([a-z0-9\-]+\.)+[a-z]{2,6}$/;
+      const isValidation = regex.test(e.target.value);
+
+      if (isValidation) {
+        setIsEmail(true);
+      } else {
+        setIsEmail(false);
+      }
+    } else if (text === 'password') {
+      setPassword(e.target.value);
+    }
   }
 
   return (
@@ -55,34 +69,59 @@ function Signin() {
         {/* <h1><img src="./images/login_logo.png" alt="login_logo" /></h1> */}
         <div className="login-form">
           <form>
-            <img src="./images/CINE_SQUARE_logo.svg" />
+            <img
+              src="./images/CINE_SQUARE_logo.svg"
+              onClick={() => navigate('/')}
+            />
 
             <fieldset>
               <legend>로그인</legend>
-              <input
-                type="text"
-                value={account}
-                onChange={change}
-                placeholder="이메일주소"
-                aria-label="이메일"
-              />
-              <input
-                type="password"
-                // ref={passwordRef}
-                placeholder="비밀번호"
-                aria-label="비밀번호"
-              />
-              <button className="login-btn" onClick={click} type="button">
+              <div className="input-box">
+                <input
+                  type="text"
+                  value={account}
+                  onChange={(e) => change(e, 'email')}
+                  placeholder="이메일주소"
+                  aria-label="이메일"
+                />
+                {!isEmail && account !== '' && (
+                  <p>이메일 형식에 맞지 않습니다.</p>
+                )}
+              </div>
+              <div className="input-box">
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => change(e, 'password')}
+                  placeholder="비밀번호"
+                  aria-label="비밀번호"
+                />
+              </div>
+              <p className="login-result">
+                {isValidation.confirm
+                  ? '이메일 또는 비밀번호가 맞지 않습니다.'
+                  : ''}
+              </p>
+              <button
+                className="login-btn"
+                onClick={click}
+                type="button"
+                disabled={!isEmail || password === ''}
+              >
                 로그인
               </button>
               <div className="btn-box">
-                <button type="button" className="signup-btn">
+                <button
+                  type="button"
+                  className="signup-btn"
+                  onClick={() => navigate('/signup')}
+                >
                   회원가입
                 </button>
                 <button
                   type="button"
                   className="cancel-btn"
-                  // onClick={() => dispatch(push('/'))}
+                  onClick={() => navigate('/')}
                 >
                   취소
                 </button>
@@ -111,10 +150,6 @@ function Signin() {
       </div>
     </>
   );
-
-  function change(e: any) {
-    setAccount(e.target.value);
-  }
 
   // function goSignup() {
   //   dispatch(push('/signup'));

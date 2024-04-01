@@ -26,6 +26,7 @@ function Signin() {
           ...isValidation,
           confirm: false,
         });
+        sessionStorage.setItem('token', '1');
         alert('로그인성공');
         navigate('/');
       } else {

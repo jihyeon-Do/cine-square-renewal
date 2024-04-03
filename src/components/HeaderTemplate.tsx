@@ -4,6 +4,7 @@ import './headerTemplate.scss';
 
 function HeaderTemplate() {
   const [value, setValue] = useState('');
+  const [token, setToken] = useState<string | null>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const searchClickButton = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
@@ -25,6 +26,14 @@ function HeaderTemplate() {
     // AccountService.deleteUserName();
     // logoutUser()
   }
+
+  useEffect(() => {
+    if (sessionStorage.getItem('token')) {
+      setToken(sessionStorage.getItem('token'));
+    } else {
+      setToken(null);
+    }
+  }, []);
 
   return (
     <header className="header-container">
@@ -58,19 +67,19 @@ function HeaderTemplate() {
             </button>
           </div>
           <div className="my-profile-btn">
-            {/* {token && (
+            {token && (
               <div>
-                <Link to="/evaluate">평가하기</Link>
-                <Link to="/profile">내정보</Link>
+                {/* <Link to="/evaluate">평가하기</Link> */}
+                <button onClick={() => navigate('/profile')}>내정보</button>
                 <p onClick={logOut}>로그아웃</p>
               </div>
-            )} */}
-            {/* {!token && ( */}
-            <div>
-              <Link to="/signin">로그인</Link>
-              <Link to="/signup">회원가입</Link>
-            </div>
-            {/* )} */}
+            )}
+            {!token && (
+              <div>
+                <Link to="/signin">로그인</Link>
+                <Link to="/signup">회원가입</Link>
+              </div>
+            )}
           </div>
         </div>
       </div>

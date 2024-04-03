@@ -102,7 +102,7 @@ function Signup() {
         });
         if (response.data.data.user_id) {
           alert('회원가입 성공');
-          navigate('/');
+          navigate('/signin');
         }
       } else {
         setValidation({

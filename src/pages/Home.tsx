@@ -19,7 +19,7 @@ import axios from 'axios';
 // import CineSuggestion from '../components/CineSuggestion';
 // import AverageRanking from '../components/AverageRanking';
 
-type BoxOfficeList = {
+type SimpleMoiveInfo = {
   movieId?: number;
   rank?: number;
   movieTitle?: string;
@@ -35,7 +35,10 @@ function Home() {
   //   return state.boxoffice.boxOfficeList;
   // });
   const [modalId, setModalId] = useState(0);
-  const [boxofficeList, setBoxofficeList] = useState<BoxOfficeList[]>([]);
+  const [boxofficeList, setBoxofficeList] = useState<SimpleMoiveInfo[]>([]);
+  const [averageRatingList, setAverageRatingList] = useState<SimpleMoiveInfo[]>(
+    [],
+  );
   const LOCALAPI = 'http://3.38.64.130:8080';
   // const token = useSelector((state: RootState) => state.auth.token);
   // const account = useSelector((state) => state.auth.account);
@@ -62,6 +65,7 @@ function Home() {
     return year + month + day;
   };
 
+  //: 박스오피스
   useEffect(() => {
     const today = getToday();
     async function getMovieInfo() {
@@ -69,7 +73,7 @@ function Home() {
         const response = await axios.get(
           `${LOCALAPI}/api/movies/boxoffice?end_date=${'20240328'}`,
         );
-        let boxofficeArray: BoxOfficeList[] = [];
+        let boxofficeArray: SimpleMoiveInfo[] = [];
         response.data.list.map(
           (v: { movie_id: number; rank: number }, i: number) => {
             boxofficeArray = [
@@ -86,27 +90,99 @@ function Home() {
     getMovieInfo();
   }, []);
 
-  async function boxofficeDetail(boxofficeArray: BoxOfficeList[]) {
-    let copyBoxofficeList: BoxOfficeList[] = [];
-    await Promise.all(
-      boxofficeArray.map(async (v, i) => {
-        const boxofficeListDetail = await axios.get(
-          `${LOCALAPI}/api/movies/${v.movieId}`,
-        );
-        copyBoxofficeList = [
-          ...copyBoxofficeList,
-          {
-            rank: v.rank,
-            movieId: v.movieId,
-            movieTitle: boxofficeListDetail.data.data.movie_title,
-            nation: boxofficeListDetail.data.data.nation,
-            productionYear: boxofficeListDetail.data.data.production_year,
-            runningTime: boxofficeListDetail.data.data.running_time,
-          },
-        ];
-      }),
-    );
+  async function boxofficeDetail(boxofficeArray: SimpleMoiveInfo[]) {
+    let copyBoxofficeList: SimpleMoiveInfo[] = [];
+    try {
+      await Promise.all(
+        boxofficeArray.map(async (v, i) => {
+          const boxofficeListDetail = await axios.get(
+            `${LOCALAPI}/api/movies/${v.movieId}`,
+          );
+          copyBoxofficeList = [
+            ...copyBoxofficeList,
+            {
+              rank: v.rank,
+              movieId: v.movieId,
+              movieTitle: boxofficeListDetail.data.data.movie_title,
+              nation: boxofficeListDetail.data.data.nation,
+              productionYear: boxofficeListDetail.data.data.production_year,
+              runningTime: boxofficeListDetail.data.data.running_time,
+            },
+          ];
+        }),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+
+    //* sort 메서드의 비교 함수는 반드시 숫자를 반환해야 하며, undefined이나 다른 타입을 반환하면 타입 에러가 발생할 수 있습니다.
+    copyBoxofficeList = copyBoxofficeList.sort((a, b) => {
+      if (a.rank !== undefined && b.rank !== undefined) {
+        return a.rank - b.rank;
+      }
+      return 0;
+    });
     setBoxofficeList(copyBoxofficeList);
+  }
+
+  useEffect(() => {
+    async function getAverageRatingMovie() {
+      try {
+        const response = await axios.get(
+          `${LOCALAPI}/api/movies/cinesquare-rank`,
+        );
+        let averageRatingArray: SimpleMoiveInfo[] = [];
+        response.data.list.map(
+          (v: { movie_id: number; rank: number }, i: number) => {
+            averageRatingArray = [
+              ...averageRatingArray,
+              { movieId: v.movie_id, rank: v.rank },
+            ];
+          },
+        );
+        averageRatingDetail(averageRatingArray);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getAverageRatingMovie();
+  }, []);
+
+  async function averageRatingDetail(averageRatingArray: SimpleMoiveInfo[]) {
+    let copyAverageRatingList: SimpleMoiveInfo[] = [];
+    try {
+      await Promise.all(
+        averageRatingArray.map(async (v, i) => {
+          const averageRatingListDetail = await axios.get(
+            `${LOCALAPI}/api/movies/${v.movieId}`,
+          );
+          copyAverageRatingList = [
+            ...copyAverageRatingList,
+            {
+              rank: v.rank,
+              movieId: v.movieId,
+              movieTitle: averageRatingListDetail.data.data.movie_title,
+              nation: averageRatingListDetail.data.data.nation,
+              productionYear: averageRatingListDetail.data.data.production_year,
+              runningTime: averageRatingListDetail.data.data.running_time,
+            },
+          ];
+        }),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+
+    console.log(copyAverageRatingList);
+
+    //* sort 메서드의 비교 함수는 반드시 숫자를 반환해야 하며, undefined이나 다른 타입을 반환하면 타입 에러가 발생할 수 있습니다.
+    copyAverageRatingList = copyAverageRatingList.sort((a, b) => {
+      if (a.rank !== undefined && b.rank !== undefined) {
+        return a.rank - b.rank;
+      }
+      return 0;
+    });
+    setAverageRatingList(copyAverageRatingList);
   }
 
   // const getBoxOfficeList = useCallback(() => {
@@ -129,7 +205,7 @@ function Home() {
             <CineSuggestion title={'boxoffice'} list={boxofficeList} />
           </article>
           <article className="rank cine-square-rank">
-            <CineSuggestion title={'starRating'} list={starRating} />
+            <CineSuggestion title={'starRating'} list={averageRatingList} />
           </article>
           <article className="rank cine-square-rank">
             <CineSuggestion title={'individual'} list={individualList} />

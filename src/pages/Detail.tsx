@@ -11,24 +11,27 @@ import BookmarkEmpty from '../images/unlike.png';
 import BookmarkFull from '../images/like.png';
 import unlike_thumb from '../images/unlike_thumb.png';
 import like_thumb from '../images/like_thumb.png';
+import noImg from '../images/no-images.png';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-// import APIService from '../service/APIService';
+import APIService from '../service/APIService';
 
 // const AWSAPI = APIService.AWSAPI;
-// const LOCALAPI = APIService.LOCALAPI;
+const LOCALAPI = APIService.LOCALAPI;
 // const PROXY = APIService.PROXY;
 
 type movieDetailInfoType = {
-  movieNm: string;
-  openDt: number;
-  janres: string;
+  movie_title: string;
+  open_date: number;
+  genres: string;
   nations: string;
-  showTm: string;
+  running_time: string;
   mainImg: string;
-  grade: number;
-  characterList: string[];
+  score: number;
+  actors: string[];
   content: string;
+  movie_title_en: string;
 };
 
 type commentsList = {
@@ -58,6 +61,7 @@ export default function Detail() {
   const [comments, setComments] = useState<commentsList>([]);
   const [seeMore, setSeeMore] = useState(false);
   const [movieInfo, setMovieInfo] = useState<movieDetailInfoType | null>(null);
+  const { movieId } = useParams();
 
   //   const token = useSelector((state) => state.auth.token);
   //   const account = useSelector((state) => state.auth.account);
@@ -78,21 +82,9 @@ export default function Detail() {
     //   sendScore(v);
     //   setScore(v);
     // }
-  };
-
-  const movieDetailInfo = {
-    movieNm: '파묘',
-    openDt: 2024,
-    janres: '미스터리/스릴러',
-    nations: '한국',
-    showTm: '2시간 14',
-    mainImg: '../images/boxoffice1.jpg',
-    grade: 3.5,
-    characterList: ['김고은', '이도현', '최민식', '유해진'],
-    content: `미국 LA, 거액의 의뢰를 받은 무당 ‘화림’(김고은)과 ‘봉길’(이도현)은 기이한 병이 대물림되는 집안의 장손을 만난다. 조상의 묫자리가 화근임을 알아챈 ‘화림’은 이장을 권하고, 돈 냄새를 맡은 최고의 풍수사 ‘상덕’(최민식)과 장의사 ‘영근’(유해진)이 합류한다.
-"전부 잘 알 거야… 묘 하나 잘못 건들면 어떻게 되는지"
-절대 사람이 묻힐 수 없는 악지에 자리한 기이한 묘. '상덕'은 불길한 기운을 느끼고 제안을 거절하지만, '화림'의 설득으로 결국 파묘가 시작되고…
-나와서는 안될 것이 나왔다.`,
+    if (score === 0 && displayScore === 0) return;
+    sendScore(v);
+    setScore(v);
   };
 
   const commentsList = [
@@ -162,24 +154,25 @@ export default function Detail() {
   ];
 
   useEffect(() => {
-    setMovieInfo(movieDetailInfo);
     setComments(commentsList);
+    console.log(new Date());
   }, []);
 
-  //   useEffect(() => {
-  //     async function getMovieInfo() {
-  //       try {
-  //         const response = await axios.get(
-  //           `${PROXY}/movie/movieInfo?movieCd=${movieCd}`,
-  //         );
-  //         // const response = await axios.get(`${LOCALAPI}/movie/movieInfo?movieCd=${movieCd}`);
-  //         setMovieInfo(response.data.result);
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //     getMovieInfo();
-  //   }, [movieCd]);
+  useEffect(() => {
+    async function getMovieInfo() {
+      try {
+        const response = await axios.get(
+          `${LOCALAPI}/api/movies/${movieId}/detail`,
+        );
+        const actor = response.data.data.actors.split(',');
+        const copyMovieDetail = { ...response.data.data, actors: actor };
+        setMovieInfo(copyMovieDetail);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getMovieInfo();
+  }, [movieId]);
 
   //   useEffect(() => {
   //     async function getMovieGrade() {
@@ -201,24 +194,29 @@ export default function Detail() {
   //     getMovieGrade();
   //   }, [token, movieCd]);
 
-  //   const sendScore = async function (v) {
-  //     if (account === null) return;
-  //     try {
-  //       const response = await axios({
-  //         method: 'POST',
-  //         url: `${PROXY}/user/selectMovieGrade`,
-  //         // url: `${LOCALAPI}/user/selectMovieGrade`,
-  //         data: {
-  //           account: account,
-  //           cineToken: token,
-  //           grade: v,
-  //           movieCd: movieCd,
-  //         },
-  //       });
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
+  const sendScore = async function (v: number) {
+    // if (account === null) return;
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: `${LOCALAPI}/api/user-reports/score`,
+        // url: `${LOCALAPI}/user/selectMovieGrade`,
+        data: {
+          // account: account,
+          // cineToken: token,
+          // grade: v,
+          // movieCd: movieCd,
+          user_id: 6,
+          movie_id: movieId,
+          score: v,
+          created: '2024-04-07T20:35:00.117Z',
+          updated: '2024-04-07T20:35:00.117Z',
+        },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const calculateScore = (e: any) => {
     const { width, left } = e.currentTarget.getBoundingClientRect();
@@ -260,28 +258,28 @@ export default function Detail() {
           <section>
             <div className="movie-info">
               <div className="movie-info1">
-                <img
-                  src={`${movieInfo.mainImg}`}
-                  alt={`${movieInfo.movieNm}포스터`}
-                />
+                <img src={`${noImg}`} alt={`${movieInfo.movie_title}포스터`} />
                 <div className="box2">
                   <p className="movie-title">
-                    {movieInfo.movieNm}
+                    {movieInfo.movie_title} {`(${movieInfo.movie_title_en})`}
                     <button className="bookmark" onClick={handleBookmark}>
                       <Bookmark bookmark={bookmark} />
                       <span>보고싶어요</span>
                     </button>
                   </p>
                   <p className="movie-sub-info">
-                    {movieInfo.openDt} <span>{movieInfo.janres}</span>
+                    {movieInfo.open_date} <span>{movieInfo.genres}</span>
                     <span>{movieInfo.nations}</span>
                   </p>
-                  <p className="movie-sub-info">{movieInfo.showTm}분</p>
+                  <p className="movie-sub-info">{movieInfo.running_time}분</p>
                   <p className="movie-sub-info2">
                     <span>
                       <FullStar1 />
                     </span>
-                    평점 {Number(movieInfo.grade).toFixed(1)}
+                    평점{' '}
+                    {movieInfo.score === null
+                      ? '(아직 평가되지 않았습니다.)'
+                      : Number(movieInfo.score).toFixed(1)}
                   </p>
                   {/* 만약 평점 {score} 부분을 실시간으로 보고 싶지 않다면, {movieInfo.grade}로 변경하면 된다. */}
                   <div className="rating">
@@ -313,7 +311,8 @@ export default function Detail() {
                 <div className="movie-sub-info3">
                   <dl>
                     <div>
-                      <dd>{movieInfo.content}</dd>
+                      {/* <dd>{movieInfo.content}</dd> */}
+                      <dd>준비중입니다.</dd>
                     </div>
                   </dl>
                 </div>
@@ -322,19 +321,20 @@ export default function Detail() {
 
               <div className="movie-info3">
                 <h3>출연/제작</h3>
-                {/* <ul>
-                  {movieInfo.characterList.map((character, index) => (
+                <ul>
+                  {movieInfo.actors.map((character, index) => (
                     <li key={index}>
                       <img
-                        src={`${character.characterImg}`}
-                        alt={`${character.realNm}`}
+                        // src={`${character.characterImg}`}
+                        // alt={`${character.realNm}`}
+                        src={'../images/profile_picture.png'}
                       />
-                      <p>{character.realNm}</p>
-                      <p>{character.movieRoll}</p>
-                      <p>{character.characterNm}</p>
+                      <p>{character}</p>
+                      {/* <p>{character.movieRoll}</p>
+                      <p>{character.characterNm}</p> */}
                     </li>
                   ))}
-                </ul> */}
+                </ul>
               </div>
               <div className="movie-info4">
                 <h3>한줄리뷰</h3>

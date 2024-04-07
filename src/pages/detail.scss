@@ -277,7 +277,9 @@ $border-color: #eee;
         flex-wrap: wrap;
         justify-content: flex-start;
         li {
-          width: calc(100% / 7 - 40px);
+          font-size: 0.9rem;
+          text-align: center;
+          width: calc(100% / 10 - 40px);
           box-sizing: content-box;
           padding: 10px 20px;
           img {

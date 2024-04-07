@@ -2,14 +2,12 @@ import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 
 interface boxofficeListProps {
-  id: number;
-  movieCd: string;
-  movieNm: string;
-  openDt?: string;
-  nations?: string;
-  showTm?: string;
-  rating?: number;
-  mainImg: string;
+  movieId?: string | number;
+  rank?: string | number;
+  movieTitle?: string;
+  nation?: string;
+  productionYear?: string | number;
+  runningTime?: string | number;
 }
 
 interface movieListCarousel {
@@ -41,15 +39,15 @@ function CineSuggestion({ title, list }: movieListCarousel) {
         <ul ref={slideWrap}>
           {list.map((v: any, i: any) => (
             <li key={i}>
-              <Link to={`/detail/${v.movieCd}`}>
-                {title !== 'none' && <p className="ranking">{v.id}</p>}
-                <img src={v.mainImg} alt={v.movieNm} />
+              <Link to={`/detail/${v.movieId}`}>
+                {title !== 'none' && <p className="ranking">{v.rank}</p>}
+                {/* <img src={v.mainImg} alt={v.movieNm} /> */}
                 {title !== 'none' ? (
                   <div className="movie-info">
-                    <p className="movie-title">{v.movieNm}</p>
-                    <p>{v.openDt}</p>
+                    <p className="movie-title">{v.movieTitle}</p>
+                    <p>{v.productionYear}</p>
                     <p>
-                      {v.nations} {v.showTm}분
+                      {v.nation} {v.runningTime}분
                     </p>
                   </div>
                 ) : (

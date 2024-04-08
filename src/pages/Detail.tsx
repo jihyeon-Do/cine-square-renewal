@@ -32,9 +32,11 @@ type movieDetailInfoType = {
   actors: string[];
   content: string;
   movie_title_en: string;
+  production_year?: number;
 };
 
 type commentsList = {
+  content: string;
   score: number;
   comment: string;
   nickname: string;
@@ -44,6 +46,21 @@ type commentsList = {
 const MAX_SCORE = 5;
 
 export default function Detail() {
+  const [score, setScore] = useState(0);
+  const [displayScore, setDisplayScore] = useState(score);
+  const [bookmark, setBookmark] = useState(false);
+  const [value, setvalue] = useState('');
+  const [comments, setComments] = useState<commentsList>([]);
+  const [seeMore, setSeeMore] = useState(false);
+  const [movieInfo, setMovieInfo] = useState<movieDetailInfoType | null>(null);
+  const formtag = useRef(null);
+
+  const { movieId } = useParams();
+
+  //   const token = useSelector((state) => state.auth.token);
+  //   const account = useSelector((state) => state.auth.account);
+  //   const userName = useSelector((state) => state.auth.userName);
+
   const commentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -54,119 +71,45 @@ export default function Detail() {
     return todayDate;
   };
 
-  const [score, setScore] = useState(0);
-  const [displayScore, setDisplayScore] = useState(score);
-  const [bookmark, setBookmark] = useState(false);
-  const [value, setvalue] = useState('');
-  const [comments, setComments] = useState<commentsList>([]);
-  const [seeMore, setSeeMore] = useState(false);
-  const [movieInfo, setMovieInfo] = useState<movieDetailInfoType | null>(null);
-  const { movieId } = useParams();
-
-  //   const token = useSelector((state) => state.auth.token);
-  //   const account = useSelector((state) => state.auth.account);
-  //   const userName = useSelector((state) => state.auth.userName);
-
-  const formtag = useRef(null);
-
   const requiredLogin = () => {
     alert('로그인 후 이용해 주세요');
     // dispatch(push('/signin'));
   };
 
-  const handleChange = (v: any) => {
-    // if (token === null) {
-    //   requiredLogin();
-    // } else {
-    //   if (score === 0 && displayScore === 0) return;
-    //   sendScore(v);
-    //   setScore(v);
-    // }
-    if (score === 0 && displayScore === 0) return;
-    sendScore(v);
-    setScore(v);
-  };
-
-  const commentsList = [
-    {
-      score: 3.5,
-      comment:
-        '영화룰 반으로 잘라서 평가하면 전반부는 정말 잘 만들었는데 후반부는 실망스럽다 다만 그래서 후반을 어떻게 해야 하냐고 물어본다면 흠 더 나은 방법이 있을까 싶다',
-      nickname: 'wlgus_57',
-      like: 248,
-    },
-    {
-      score: 3.5,
-      comment:
-        '영화룰 반으로 잘라서 평가하면 전반부는 정말 잘 만들었는데 후반부는 실망스럽다 다만 그래서 후반을 어떻게 해야 하냐고 물어본다면 흠 더 나은 방법이 있을까 싶다',
-      nickname: 'wlgus_57',
-      like: 248,
-    },
-    {
-      score: 3.5,
-      comment:
-        '영화룰 반으로 잘라서 평가하면 전반부는 정말 잘 만들었는데 후반부는 실망스럽다 다만 그래서 후반을 어떻게 해야 하냐고 물어본다면 흠 더 나은 방법이 있을까 싶다',
-      nickname: 'wlgus_57',
-      like: 248,
-    },
-    {
-      score: 3.5,
-      comment:
-        '영화룰 반으로 잘라서 평가하면 전반부는 정말 잘 만들었는데 후반부는 실망스럽다 다만 그래서 후반을 어떻게 해야 하냐고 물어본다면 흠 더 나은 방법이 있을까 싶다',
-      nickname: 'wlgus_57',
-      like: 248,
-    },
-    {
-      score: 3.5,
-      comment:
-        '영화룰 반으로 잘라서 평가하면 전반부는 정말 잘 만들었는데 후반부는 실망스럽다 다만 그래서 후반을 어떻게 해야 하냐고 물어본다면 흠 더 나은 방법이 있을까 싶다',
-      nickname: 'wlgus_57',
-      like: 248,
-    },
-    {
-      score: 3.5,
-      comment:
-        '영화룰 반으로 잘라서 평가하면 전반부는 정말 잘 만들었는데 후반부는 실망스럽다 다만 그래서 후반을 어떻게 해야 하냐고 물어본다면 흠 더 나은 방법이 있을까 싶다 영화룰 반으로 잘라서 평가하면 전반부는 정말 잘 만들었는데 후반부는 실망스럽다 다만 그래서 후반을 어떻게 해야 하냐고 물어본다면 흠 더 나은 방법이 있을까 싶다',
-      nickname: 'wlgus_57',
-      like: 248,
-    },
-    {
-      score: 3.5,
-      comment:
-        '영화룰 반으로 잘라서 평가하면 전반부는 정말 잘 만들었는데 후반부는 실망스럽다 다만 그래서 후반을 어떻게 해야 하냐고 물어본다면 흠 더 나은 방법이 있을까 싶다',
-      nickname: 'wlgus_57',
-      like: 248,
-    },
-    {
-      score: 3.5,
-      comment:
-        '영화룰 반으로 잘라서 평가하면 전반부는 정말 잘 만들었는데 후반부는 실망스럽다 다만 그래서 후반을 어떻게 해야 하냐고 물어본다면 흠 더 나은 방법이 있을까 싶다',
-      nickname: 'wlgus_57',
-      like: 248,
-    },
-    {
-      score: 3.5,
-      comment:
-        '영화룰 반으로 잘라서 평가하면 전반부는 정말 잘 만들었는데 후반부는 실망스럽다 다만 그래서 후반을 어떻게 해야 하냐고 물어본다면 흠 더 나은 방법이 있을까 싶다',
-      nickname: 'wlgus_57',
-      like: 248,
-    },
-  ];
-
+  //: 영화 상세 정보, 유저가 평가한 점수, 유저 보고싶어요 상태
   useEffect(() => {
-    setComments(commentsList);
-    console.log(new Date());
+    async function userMovieInfo() {
+      try {
+        const statusResponse = await axios.get(
+          `${LOCALAPI}/api/user-reports/status/movies/${movieId}/users/${6}`,
+        );
+        setBookmark(statusResponse.data.result === 0 ? false : true);
+        const scoreResponse = await axios.get(
+          `${LOCALAPI}/api/user-reports/score/movies/${movieId}/users/${6}`,
+        );
+        setDisplayScore(scoreResponse.data.result);
+        const commentScore = await axios.get(
+          `${LOCALAPI}/api/movie-reports/summary/movies/${movieId}`,
+        );
+        setComments(commentScore.data.list);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    userMovieInfo();
   }, []);
 
   useEffect(() => {
     async function getMovieInfo() {
       try {
-        const response = await axios.get(
-          `${LOCALAPI}/api/movies/${movieId}/detail`,
-        );
-        const actor = response.data.data.actors.split(',');
-        const copyMovieDetail = { ...response.data.data, actors: actor };
-        setMovieInfo(copyMovieDetail);
+        const response = await axios.get(`${LOCALAPI}/api/movies/${movieId}`);
+        if (response.data.data.actors) {
+          const actor = response.data.data.actors.split(',');
+          const copyMovieDetail = { ...response.data.data, actors: actor };
+          setMovieInfo(copyMovieDetail);
+        } else {
+          setMovieInfo(response.data.data);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -194,6 +137,19 @@ export default function Detail() {
   //     getMovieGrade();
   //   }, [token, movieCd]);
 
+  const handleChange = (v: any) => {
+    // if (token === null) {
+    //   requiredLogin();
+    // } else {
+    //   if (score === 0 && displayScore === 0) return;
+    //   sendScore(v);
+    //   setScore(v);
+    // }
+    if (score === 0 && displayScore === 0) return;
+    sendScore(v);
+    setScore(v);
+  };
+
   const sendScore = async function (v: number) {
     // if (account === null) return;
     try {
@@ -202,15 +158,9 @@ export default function Detail() {
         url: `${LOCALAPI}/api/user-reports/score`,
         // url: `${LOCALAPI}/user/selectMovieGrade`,
         data: {
-          // account: account,
-          // cineToken: token,
-          // grade: v,
-          // movieCd: movieCd,
           user_id: 6,
           movie_id: movieId,
           score: v,
-          created: '2024-04-07T20:35:00.117Z',
-          updated: '2024-04-07T20:35:00.117Z',
         },
       });
     } catch (error) {
@@ -218,7 +168,10 @@ export default function Detail() {
     }
   };
 
-  const calculateScore = (e: any) => {
+  const calculateScore = (e: {
+    currentTarget: { getBoundingClientRect: () => { width: any; left: any } };
+    clientX: number;
+  }) => {
     const { width, left } = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - left;
     const scale = width / MAX_SCORE / 2;
@@ -229,18 +182,69 @@ export default function Detail() {
     setDisplayScore(calculateScore(e));
   }, []);
 
-  const handleBookmark = () => {
+  const handleBookmark = async () => {
     // if (token === null) {
     //   requiredLogin();
     // } else {
     //   setBookmark(!bookmark);
     // }
+    // setBookmark(!bookmark);
+    const response = await axios.post(`${LOCALAPI}/api/user-reports/status`, {
+      user_id: 6,
+      movie_id: movieId,
+      status: bookmark === false ? 1 : 0,
+    });
+    if (response.data.result) {
+      setBookmark(!bookmark);
+    }
   };
 
   const maxId = () => {
     // let commentsId = comments.map((v) => v.id);
     // return Math.max(0, ...commentsId) + 1;
   };
+
+  function addComment(e: any) {
+    setvalue(e.target.value);
+  }
+
+  async function handleAddComment() {
+    // if (token === null) {
+    //   requiredLogin();
+    // } else {
+    //   setComments([
+    //     ...comments,
+    //     {
+    //       id: maxId(),
+    //       nickName: userName,
+    //       comment: value,
+    //       dates: commentDate(),
+    //     },
+    //   ]);
+    //   setvalue('');
+    // }
+    try {
+      const response = await axios.post(
+        `${LOCALAPI}/api/movie-reports/comment`,
+        {
+          comment_id: 0,
+          content: 'string',
+          reply_count: 0,
+          like: 0,
+          user_id: 0,
+          movie_id: 0,
+        },
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function enterPressComment(e: { key: string; preventDefault: () => void }) {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    handleAddComment();
+  }
 
   return (
     <>
@@ -268,7 +272,8 @@ export default function Detail() {
                     </button>
                   </p>
                   <p className="movie-sub-info">
-                    {movieInfo.open_date} <span>{movieInfo.genres}</span>
+                    {movieInfo.open_date || movieInfo.production_year}
+                    <span>{movieInfo.genres}</span>
                     <span>{movieInfo.nations}</span>
                   </p>
                   <p className="movie-sub-info">{movieInfo.running_time}분</p>
@@ -322,18 +327,22 @@ export default function Detail() {
               <div className="movie-info3">
                 <h3>출연/제작</h3>
                 <ul>
-                  {movieInfo.actors.map((character, index) => (
-                    <li key={index}>
-                      <img
-                        // src={`${character.characterImg}`}
-                        // alt={`${character.realNm}`}
-                        src={'../images/profile_picture.png'}
-                      />
-                      <p>{character}</p>
-                      {/* <p>{character.movieRoll}</p>
+                  {movieInfo.actors ? (
+                    movieInfo.actors.map((character, index) => (
+                      <li key={index}>
+                        <img
+                          // src={`${character.characterImg}`}
+                          // alt={`${character.realNm}`}
+                          src={'../images/profile_picture.png'}
+                        />
+                        <p>{character}</p>
+                        {/* <p>{character.movieRoll}</p>
                       <p>{character.characterNm}</p> */}
-                    </li>
-                  ))}
+                      </li>
+                    ))
+                  ) : (
+                    <p>준비중입니다</p>
+                  )}
                 </ul>
               </div>
               <div className="movie-info4">
@@ -346,7 +355,7 @@ export default function Detail() {
                       value={value}
                       placeholder="관람평을 작성해주세요"
                       onChange={addComment}
-                      onKeyPress={enterPressComment}
+                      onKeyDown={enterPressComment}
                     />
                     <button type="button" onClick={handleAddComment}>
                       관람평 작성
@@ -354,21 +363,25 @@ export default function Detail() {
                   </fieldset>
                 </form>
                 <ul className="comments">
-                  {comments.map((v, i) => (
-                    <li key={i}>
-                      <div>
-                        <p>{v.comment}</p>
-                        <p>
-                          <span>
-                            <img src={unlike_thumb} alt="좋아요 안한 상태" />
-                            {v.like}
-                          </span>
-                          <button>좋아요</button>
-                        </p>
-                      </div>
-                      <span>{v.nickname}</span>
-                    </li>
-                  ))}
+                  {comments.length !== 0 ? (
+                    comments.map((v, i) => (
+                      <li key={i}>
+                        <div>
+                          <p>{v.content}</p>
+                          <p>
+                            <span>
+                              <img src={unlike_thumb} alt="좋아요 안한 상태" />
+                              {v.like}
+                            </span>
+                            <button>좋아요</button>
+                          </p>
+                        </div>
+                        <span>{v.nickname}</span>
+                      </li>
+                    ))
+                  ) : (
+                    <p>관람평이 없습니다.</p>
+                  )}
                 </ul>
                 <button className="add-content">더보기</button>
               </div>
@@ -379,33 +392,6 @@ export default function Detail() {
       <FooterTemplate />
     </>
   );
-
-  function addComment(e: any) {
-    setvalue(e.target.value);
-  }
-
-  function handleAddComment() {
-    // if (token === null) {
-    //   requiredLogin();
-    // } else {
-    //   setComments([
-    //     ...comments,
-    //     {
-    //       id: maxId(),
-    //       nickName: userName,
-    //       comment: value,
-    //       dates: commentDate(),
-    //     },
-    //   ]);
-    //   setvalue('');
-    // }
-  }
-
-  function enterPressComment(e: any) {
-    if (e.key !== 'Enter') return;
-    e.preventDefault();
-    handleAddComment();
-  }
 }
 
 const Star = ({ score, i }: any) => {
@@ -422,8 +408,8 @@ const Star = ({ score, i }: any) => {
 
 const Bookmark = ({ bookmark }: any) => {
   if (bookmark) {
-    return <img src={BookmarkEmpty} alt="" />;
-  } else {
     return <img src={BookmarkFull} alt="" />;
+  } else {
+    return <img src={BookmarkEmpty} alt="" />;
   }
 };

@@ -2,6 +2,10 @@ $border-color: #eee;
 
 .detail-main {
   padding-top: 0;
+  section {
+    max-width: 1200px;
+    width: 100%;
+  }
   .header-container {
     // background-color: transparent;
   }

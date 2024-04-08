@@ -71,7 +71,7 @@ function Home() {
     async function getMovieInfo() {
       try {
         const response = await axios.get(
-          `${LOCALAPI}/api/movies/boxoffice?end_date=${'20240328'}`,
+          `${LOCALAPI}/api/movies/boxoffice?request_date=${'20240328'}`,
         );
         let boxofficeArray: SimpleMoiveInfo[] = [];
         response.data.list.map(
@@ -129,7 +129,7 @@ function Home() {
     async function getAverageRatingMovie() {
       try {
         const response = await axios.get(
-          `${LOCALAPI}/api/movies/cinesquare-rank`,
+          `${LOCALAPI}/api/movies/cinesquare-ranking`,
         );
         let averageRatingArray: SimpleMoiveInfo[] = [];
         response.data.list.map(
@@ -154,7 +154,7 @@ function Home() {
       await Promise.all(
         averageRatingArray.map(async (v, i) => {
           const averageRatingListDetail = await axios.get(
-            `${LOCALAPI}/api/movies/${v.movieId}`,
+            `${LOCALAPI}/api/movies/${v.movieId}/simple`,
           );
           copyAverageRatingList = [
             ...copyAverageRatingList,
@@ -172,8 +172,6 @@ function Home() {
     } catch (error) {
       console.log(error);
     }
-
-    console.log(copyAverageRatingList);
 
     //* sort 메서드의 비교 함수는 반드시 숫자를 반환해야 하며, undefined이나 다른 타입을 반환하면 타입 에러가 발생할 수 있습니다.
     copyAverageRatingList = copyAverageRatingList.sort((a, b) => {

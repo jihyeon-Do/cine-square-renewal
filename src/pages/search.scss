@@ -1,7 +1,10 @@
 $text-left-padding: 20px;
 .search-main {
   background-color: #fff;
-
+  .search-section {
+    width: 100%;
+    max-width: 1200px;
+  }
   .search-results {
     width: 100%;
     box-sizing: border-box;
@@ -18,25 +21,24 @@ $text-left-padding: 20px;
   }
   .search-results-list {
     padding: 60px 0 0 0;
-
+    width: 100%;
+    max-width: 1200px;
     h2 {
       font-weight: bold;
       font-size: 1.3em;
       margin-bottom: 30px;
-      // padding-left: $text-left-padding;
     }
     ul {
-      width: 100%;
-      // background-color: bisque;
+      // width: 100%;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      row-gap: 30px;
+      column-gap: 10px;
       li {
-        width: calc(100% / 5);
-        float: left;
-        padding: $text-left-padding;
-        // background-color: cadetblue;
+        box-sizing: border-box;
         color: #000000;
-        font-size: 0.8rem;
-        // figure {
-        // margin: 0;
+        font-size: 0.9rem;
+
         a {
           display: block;
           width: 100%;
@@ -46,10 +48,11 @@ $text-left-padding: 20px;
           // height: 222px;
         }
         span {
+          width: 120px;
           display: block;
-          white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
+          white-space: nowrap;
         }
         span:nth-of-type(2) {
           display: flex;

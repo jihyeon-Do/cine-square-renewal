@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import './headerTemplate.scss';
 
 function HeaderTemplate() {
@@ -8,12 +8,19 @@ function HeaderTemplate() {
   const searchInput = useRef<HTMLInputElement>(null);
   const searchClickButton = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
+  const { keyword } = useParams();
 
-  //   useEffect(() => {
-  //     if (urlParameter === `/search/${keyword}`) {
-  //       setValue(keyword);
-  //     }
-  //   }, [urlParameter, keyword])
+  // useEffect(() => {
+  //   if (urlParameter === `/search/${keyword}`) {
+  //     setValue(keyword);
+  //   }
+  // }, [urlParameter, keyword]);
+
+  useEffect(() => {
+    if (keyword) {
+      setValue(keyword);
+    }
+  }, [keyword]);
 
   const logoutUser = useCallback(() => {
     // dispatch(startLogoutActionCreator());
@@ -97,11 +104,11 @@ function HeaderTemplate() {
   ) {
     if (value === '') return;
     if (
-      (e.target as HTMLFormElement).key === 'Enter' ||
-      e.target === searchClickButton.current
+      (e as React.KeyboardEvent<HTMLInputElement>).key === 'Enter' ||
+      (e.target === searchClickButton.current && e.type === 'click')
     ) {
-      //   getValue();
-      //   dispatch(push(`/search/${value}`));
+      // getValue();
+      navigate(`/search/${value}`);
     }
   }
 }

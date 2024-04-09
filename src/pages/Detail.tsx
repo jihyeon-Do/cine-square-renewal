@@ -41,6 +41,9 @@ type commentsList = {
   comment: string;
   nickname: string;
   like: number;
+  comment_id: number;
+  reply_count: number;
+  user_id: number;
 }[];
 
 const MAX_SCORE = 5;
@@ -53,6 +56,7 @@ export default function Detail() {
   const [comments, setComments] = useState<commentsList>([]);
   const [seeMore, setSeeMore] = useState(false);
   const [movieInfo, setMovieInfo] = useState<movieDetailInfoType | null>(null);
+  const [isLike, setIsLike] = useState(false);
   const formtag = useRef(null);
 
   const { movieId } = useParams();
@@ -60,16 +64,6 @@ export default function Detail() {
   //   const token = useSelector((state) => state.auth.token);
   //   const account = useSelector((state) => state.auth.account);
   //   const userName = useSelector((state) => state.auth.userName);
-
-  const commentDate = () => {
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = today.getMonth() + 1;
-    const date = today.getDate();
-
-    const todayDate = year + '.' + month + '.' + date;
-    return todayDate;
-  };
 
   const requiredLogin = () => {
     alert('로그인 후 이용해 주세요');
@@ -199,13 +193,36 @@ export default function Detail() {
     }
   };
 
-  const maxId = () => {
-    // let commentsId = comments.map((v) => v.id);
-    // return Math.max(0, ...commentsId) + 1;
-  };
-
   function addComment(e: any) {
     setvalue(e.target.value);
+  }
+
+  async function like(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    commentId: number,
+  ) {
+    let copyComments: any[] = [];
+    comments.map((v, i) => {
+      if (v.comment_id === commentId) {
+        copyComments = [...copyComments, { ...v, like: v.like === 0 ? 1 : 0 }];
+      } else {
+        copyComments = [...copyComments, v];
+      }
+    });
+    console.log(copyComments);
+    // try {
+    //   const response = await axios.post(
+    //     `${LOCALAPI}/api/user-reports/like-comment`,
+    //     {
+    //       user_id: 6,
+    //       comment_id: commentId,
+    //     },
+    //   );
+    //   if (response.data.result) {
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   }
 
   async function handleAddComment() {
@@ -227,14 +244,12 @@ export default function Detail() {
       const response = await axios.post(
         `${LOCALAPI}/api/movie-reports/comment`,
         {
-          comment_id: 0,
-          content: 'string',
-          reply_count: 0,
-          like: 0,
-          user_id: 0,
-          movie_id: 0,
+          content: value,
+          user_id: 5,
+          movie_id: movieId,
         },
       );
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
@@ -367,20 +382,26 @@ export default function Detail() {
                     comments.map((v, i) => (
                       <li key={i}>
                         <div>
+                          <p>
+                            <FullStar1 />
+                            {v.score}
+                          </p>
                           <p>{v.content}</p>
                           <p>
                             <span>
                               <img src={unlike_thumb} alt="좋아요 안한 상태" />
                               {v.like}
                             </span>
-                            <button>좋아요</button>
+                            <button onClick={(e) => like(e, v.comment_id)}>
+                              좋아요
+                            </button>
                           </p>
                         </div>
                         <span>{v.nickname}</span>
                       </li>
                     ))
                   ) : (
-                    <p>관람평이 없습니다.</p>
+                    <p className="no-comment">관람평이 없습니다.</p>
                   )}
                 </ul>
                 <button className="add-content">더보기</button>

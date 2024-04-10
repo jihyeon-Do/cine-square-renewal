@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, ChangeEvent } from 'react';
 import { useSelector } from 'react-redux';
 import FooterTemplate from '../components/FooterTemplate';
 import HeaderTemplate from '../components/HeaderTemplate';
@@ -20,8 +20,8 @@ import PersonListBox from '../components/PersonListBox';
 // let evaluatedMovieGrade = [];
 
 export default function Profile() {
-  const [imgUrl, setImgUrl] = useState(null);
-  const imageRef = useRef('');
+  const [imgUrl, setImgUrl] = useState<string>('');
+  const imageRef = useRef(null);
   const canvasDom = useRef(null);
   const [evaluatedCount, setEvaluatedCount] = useState([]);
   const [evaluatedGrade, setEvaluatedGrade] = useState([]);
@@ -83,10 +83,13 @@ export default function Profile() {
 
   Chart.register(...registerables);
 
-  const hanedleImgChange = (e: React.KeyboardEvent<HTMLElement>) => {
-    // const fileUrl = e.target.files[0];
-    // const objectURL = URL.createObjectURL(fileUrl);
-    // setImgUrl(objectURL);
+  const hanedleImgChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const fileUrl = files[0];
+      const objectURL = URL.createObjectURL(fileUrl);
+      setImgUrl(objectURL);
+    }
   };
 
   //   useEffect(() => {
@@ -135,8 +138,8 @@ export default function Profile() {
                   >
                     <input
                       id="file_upload"
-                      // onChange={hanedleImgChange}
-                      // ref={imageRef}
+                      onChange={hanedleImgChange}
+                      ref={imageRef}
                       className="custom-thumbnail-input"
                       type="file"
                       alt="profile-image"
@@ -184,19 +187,19 @@ export default function Profile() {
             <div className="user-evaluate">
               <ul>
                 <li>
-                  <Link to="#">
+                  <Link to="/mychoice/:listname">
                     <span>평가한 영화</span>
                     <span>50</span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="#">
+                  <Link to="/mychoice/:listname">
                     <span>보고싶어요</span>
                     <span>50</span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="#">
+                  <Link to="/review">
                     <span>작성한 리뷰</span>
                     <span>14</span>
                   </Link>
@@ -282,19 +285,19 @@ export default function Profile() {
                     <span>100</span>시간
                   </p>
                   <p>
-                    무려 <span>{totalCount}</span>편의 영화를 보셨어요!
+                    무려 <span>{totalCount}56</span>편의 영화를 보셨어요!
                   </p>
                 </div>
               </div>
               <div className="profile-info-cont8 cont">
-                <h3>
-                  좋아요
-                  <Link to="/mybooks" className="add">
-                    더보기
-                  </Link>
-                </h3>
+                <h3>좋아요</h3>
                 <div>
-                  <h4>좋아하는 인물</h4>
+                  <h4>
+                    좋아하는 인물
+                    <Link to="/favorite/person" className="add">
+                      더보기
+                    </Link>
+                  </h4>
                   <div>
                     <ul>
                       <li>
@@ -336,7 +339,12 @@ export default function Profile() {
                   </div>
                 </div>
                 <div>
-                  <h4>좋아요한 리뷰</h4>
+                  <h4>
+                    좋아요한 리뷰
+                    <Link to="/favorite/review" className="add">
+                      더보기
+                    </Link>
+                  </h4>
                 </div>
               </div>
               {/* <div className="profile-info-cont6 cont">

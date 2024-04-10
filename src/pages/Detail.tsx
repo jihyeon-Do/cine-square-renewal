@@ -402,7 +402,7 @@ export default function Detail() {
                       </li>
                     ))
                   ) : (
-                    <p className="no-comment">관람평이 없습니다.</p>
+                    <p className="no-comment">코멘트가 없습니다.</p>
                   )}
                 </ul>
                 <button className="add-content">더보기</button>

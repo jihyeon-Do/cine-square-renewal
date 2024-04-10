@@ -82,6 +82,7 @@ export default function Detail() {
           `${LOCALAPI}/api/user-reports/score/movies/${movieId}/users/${6}`,
         );
         setDisplayScore(scoreResponse.data.result);
+        setScore(scoreResponse.data.result);
         const commentScore = await axios.get(
           `${LOCALAPI}/api/movie-reports/summary/movies/${movieId}`,
         );
@@ -361,14 +362,14 @@ export default function Detail() {
                 </ul>
               </div>
               <div className="movie-info4">
-                <h3>한줄리뷰</h3>
+                <h3>코멘트</h3>
                 <form action="/detail" ref={formtag}>
                   <fieldset>
-                    <legend className="readable-hidden">영화 감상평</legend>
+                    <legend className="readable-hidden">코멘트 작성</legend>
                     <input
                       type="text"
                       value={value}
-                      placeholder="관람평을 작성해주세요"
+                      placeholder="기대평, 관람평을 자유롭게 작성해주세요!"
                       onChange={addComment}
                       onKeyDown={enterPressComment}
                     />

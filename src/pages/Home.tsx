@@ -26,6 +26,7 @@ type SimpleMoiveInfo = {
   nation?: string;
   productionYear?: number;
   runningTime?: number;
+  moviePoster?: string | null;
 };
 
 function Home() {
@@ -35,10 +36,11 @@ function Home() {
   //   return state.boxoffice.boxOfficeList;
   // });
   const [modalId, setModalId] = useState(0);
-  const [boxofficeList, setBoxofficeList] = useState<SimpleMoiveInfo[]>([]);
-  const [averageRatingList, setAverageRatingList] = useState<SimpleMoiveInfo[]>(
-    [],
-  );
+  const [boxofficeArray, setBoxofficeArray] = useState<SimpleMoiveInfo[]>([]);
+  const [averageRatingArray, setAverageRatingArray] = useState<
+    SimpleMoiveInfo[]
+  >([]);
+  const [individualArray, setIndividualArray] = useState<SimpleMoiveInfo[]>([]);
   const LOCALAPI = 'http://3.38.64.130:8080';
   // const token = useSelector((state: RootState) => state.auth.token);
   // const account = useSelector((state) => state.auth.account);
@@ -96,7 +98,7 @@ function Home() {
       await Promise.all(
         boxofficeArray.map(async (v, i) => {
           const boxofficeListDetail = await axios.get(
-            `${LOCALAPI}/api/movies/${v.movieId}`,
+            `${LOCALAPI}/api/movies/${v.movieId}/simple`,
           );
           copyBoxofficeList = [
             ...copyBoxofficeList,
@@ -107,6 +109,7 @@ function Home() {
               nation: boxofficeListDetail.data.data.nation,
               productionYear: boxofficeListDetail.data.data.production_year,
               runningTime: boxofficeListDetail.data.data.running_time,
+              moviePoster: null,
             },
           ];
         }),
@@ -122,9 +125,10 @@ function Home() {
       }
       return 0;
     });
-    setBoxofficeList(copyBoxofficeList);
+    setBoxofficeArray(copyBoxofficeList);
   }
 
+  //: 평균별점 높은 순위
   useEffect(() => {
     async function getAverageRatingMovie() {
       try {
@@ -148,6 +152,33 @@ function Home() {
     getAverageRatingMovie();
   }, []);
 
+  //: 개인별 추천 순위
+  useEffect(() => {
+    let copyBoxofficeList: SimpleMoiveInfo[] = [];
+    individualList.map((v, i) => {
+      copyBoxofficeList = [
+        ...copyBoxofficeList,
+        {
+          rank: v.rank,
+          movieId: v.movie_id,
+          movieTitle: v.movie_title,
+          nation: v.nation,
+          productionYear: v.production_year,
+          runningTime: v.running_time,
+          moviePoster: v.movie_poster,
+        },
+      ];
+    }),
+      //* sort 메서드의 비교 함수는 반드시 숫자를 반환해야 하며, undefined이나 다른 타입을 반환하면 타입 에러가 발생할 수 있습니다.
+      (copyBoxofficeList = copyBoxofficeList.sort((a, b) => {
+        if (a.rank !== undefined && b.rank !== undefined) {
+          return a.rank - b.rank;
+        }
+        return 0;
+      }));
+    setIndividualArray(copyBoxofficeList);
+  }, []);
+
   async function averageRatingDetail(averageRatingArray: SimpleMoiveInfo[]) {
     let copyAverageRatingList: SimpleMoiveInfo[] = [];
     try {
@@ -165,6 +196,7 @@ function Home() {
               nation: averageRatingListDetail.data.data.nation,
               productionYear: averageRatingListDetail.data.data.production_year,
               runningTime: averageRatingListDetail.data.data.running_time,
+              moviePoster: null,
             },
           ];
         }),
@@ -180,7 +212,7 @@ function Home() {
       }
       return 0;
     });
-    setAverageRatingList(copyAverageRatingList);
+    setAverageRatingArray(copyAverageRatingList);
   }
 
   // const getBoxOfficeList = useCallback(() => {
@@ -200,13 +232,13 @@ function Home() {
         {modalId > 0 && <VideoFrameContainer hide={hide} id={modalId} />}
         <section>
           <article className="rank cine-square-rank">
-            <CineSuggestion title={'boxoffice'} list={boxofficeList} />
+            <CineSuggestion title={'boxoffice'} list={boxofficeArray} />
           </article>
           <article className="rank cine-square-rank">
-            <CineSuggestion title={'starRating'} list={averageRatingList} />
+            <CineSuggestion title={'starRating'} list={averageRatingArray} />
           </article>
           <article className="rank cine-square-rank">
-            <CineSuggestion title={'individual'} list={individualList} />
+            <CineSuggestion title={'individual'} list={individualArray} />
           </article>
         </section>
       </main>

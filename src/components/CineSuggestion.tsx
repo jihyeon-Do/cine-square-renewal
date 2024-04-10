@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
+import noImg from '../images/no-images.png';
 
 interface boxofficeListProps {
   movieId?: string | number;
@@ -22,6 +23,8 @@ function CineSuggestion({ title, list }: movieListCarousel) {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
 
+  console.log(list);
+
   return (
     <>
       {title !== 'none' && (
@@ -37,11 +40,14 @@ function CineSuggestion({ title, list }: movieListCarousel) {
       )}
       <div className="slide-container">
         <ul ref={slideWrap}>
-          {list.map((v: any, i: any) => (
+          {list.map((v: any, i: number) => (
             <li key={i}>
               <Link to={`/detail/${v.movieId}`}>
                 {title !== 'none' && <p className="ranking">{v.rank}</p>}
-                {/* <img src={v.mainImg} alt={v.movieNm} /> */}
+                <img
+                  src={v.moviePoster === null ? noImg : v.moviePoster}
+                  alt={v.movieNm}
+                />
                 {title !== 'none' ? (
                   <div className="movie-info">
                     <p className="movie-title">{v.movieTitle}</p>

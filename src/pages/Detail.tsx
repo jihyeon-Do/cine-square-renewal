@@ -98,12 +98,35 @@ export default function Detail() {
     async function getMovieInfo() {
       try {
         const response = await axios.get(`${LOCALAPI}/api/movies/${movieId}`);
+        //: actor가 null이 아닐 때
         if (response.data.data.actors) {
           const actor = response.data.data.actors.split(',');
-          const copyMovieDetail = { ...response.data.data, actors: actor };
-          setMovieInfo(copyMovieDetail);
+          //: directors도 null이 아닌지 체크
+          if (response.data.data.directors) {
+            const directors = response.data.data.directors.split(',');
+            const copyMovieDetail = {
+              ...response.data.data,
+              actors: [...actor, ...directors],
+            };
+            setMovieInfo(copyMovieDetail);
+          } else {
+            //: actor는 null이 아니고 directors는 null일때
+            const copyMovieDetail = { ...response.data.data, actors: actor };
+            setMovieInfo(copyMovieDetail);
+          }
         } else {
-          setMovieInfo(response.data.data);
+          //: actor가 null인 상황
+          if (response.data.data.directors) {
+            //: directors는 null인지 체크
+            const directors = response.data.data.directors.split(',');
+            const copyMovieDetail = {
+              ...response.data.data,
+              actors: directors,
+            };
+            setMovieInfo(copyMovieDetail);
+          } else {
+            setMovieInfo(response.data.data);
+          }
         }
       } catch (error) {
         console.log(error);

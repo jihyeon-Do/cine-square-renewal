@@ -76,7 +76,7 @@ function HeaderTemplate() {
           <div className="my-profile-btn">
             {token && (
               <div>
-                {/* <Link to="/evaluate">평가하기</Link> */}
+                <Link to="/evaluation">평가하기</Link>
                 <button onClick={() => navigate('/profile')}>내정보</button>
                 <p onClick={logOut}>로그아웃</p>
               </div>

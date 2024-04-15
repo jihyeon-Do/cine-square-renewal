@@ -14,6 +14,7 @@ import Detail from './pages/Detail';
 import Profile from './pages/Profile';
 
 import MyChoice from './pages/MyChoice';
+import Evaluation from './pages/Evaluation';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route path={'/favorite/review'} element={<MyChoice />} />
         <Route path={'/favorite/person'} element={<MyChoice />} />
         <Route path={'/search/:keyword'} element={<Search />} />
+        <Route path={'/evaluation'} element={<Evaluation />} />
         <Route path={'/'} element={<Home />} />
         {/* <Route element={<NotFound />} /> */}
       </Routes>

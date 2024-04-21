@@ -217,6 +217,14 @@ export default function Detail() {
     }
   };
 
+  //: 유저별 코멘트 좋아요 리스트
+  // const userLikeComments = async () => {
+  //   const response = await axios.get(
+  //     `${LOCALAPI}/api/user-reports/like-comments/users/${6}`,
+  //   );
+  //   console.log(response);
+  // };
+
   function addComment(e: any) {
     setvalue(e.target.value);
   }
@@ -225,28 +233,31 @@ export default function Detail() {
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     commentId: number,
   ) {
-    let copyComments: any[] = [];
-    comments.map((v, i) => {
-      if (v.comment_id === commentId) {
-        copyComments = [...copyComments, { ...v, like: v.like === 0 ? 1 : 0 }];
-      } else {
-        copyComments = [...copyComments, v];
+    try {
+      const response = await axios.post(
+        `${LOCALAPI}/api/user-reports/like-comment`,
+        {
+          user_id: 6,
+          comment_id: commentId,
+        },
+      );
+      if (response.data.result) {
+        let copyComments: any[] = [];
+        comments.map((v, i) => {
+          if (v.comment_id === commentId) {
+            copyComments = [
+              ...copyComments,
+              { ...v, like: v.like === 0 ? 1 : 0 },
+            ];
+          } else {
+            copyComments = [...copyComments, v];
+          }
+        });
+        console.log(copyComments);
       }
-    });
-    console.log(copyComments);
-    // try {
-    //   const response = await axios.post(
-    //     `${LOCALAPI}/api/user-reports/like-comment`,
-    //     {
-    //       user_id: 6,
-    //       comment_id: commentId,
-    //     },
-    //   );
-    //   if (response.data.result) {
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async function handleAddComment() {
@@ -266,14 +277,14 @@ export default function Detail() {
     // }
     try {
       const response = await axios.post(
-        `${LOCALAPI}/api/movie-reports/comment`,
+        `${LOCALAPI}/api/movie-reports/${movieId}/comments`,
         {
           content: value,
-          user_id: 5,
-          movie_id: movieId,
+          user_id: 6,
         },
       );
-      console.log(response);
+      setComments([...comments, response.data.data]);
+      // setvalue('');
     } catch (error) {
       console.log(error);
     }

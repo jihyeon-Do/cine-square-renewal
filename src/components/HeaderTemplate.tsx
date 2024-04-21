@@ -52,7 +52,7 @@ function HeaderTemplate() {
           //   }}
           onClick={() => navigate('/')}
         >
-          <img src="../images/test.svg" alt="main_logo" />
+          <img src="../images/main_logo.svg" alt="main_logo" />
         </h1>
         <div className="right-content">
           <div className="input-box" role="search">

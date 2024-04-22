@@ -28,6 +28,14 @@ function HeaderTemplate() {
   }, []);
 
   function logOut() {
+    if (confirm('로그아웃 하시겠습니까?')) {
+      sessionStorage.removeItem('token');
+      alert('로그아웃 되었습니다.');
+      navigate('/');
+      location.reload();
+    } else {
+      return;
+    }
     // TokenService.delete();
     // AccountService.deleteAccount();
     // AccountService.deleteUserName();

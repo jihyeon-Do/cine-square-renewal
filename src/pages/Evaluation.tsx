@@ -77,13 +77,13 @@ export default function Evaluation() {
           </div>
           <ul>
             {individualList.map((v, i) => (
-              <li key={v.movie_id}>
-                <img src={v.movie_poster} alt={v.movie_title} />
+              <li key={v.movie.movie_id}>
+                <img src={v.movie.thumbnail} alt={v.movie.title} />
                 <div>
                   <div>
-                    <p>{v.movie_title}</p>
+                    <p>{v.movie.title}</p>
                     <span>
-                      {v.production_year} {v.nation}
+                      {v.movie.production_year} {v.movie.nation}
                     </span>
                   </div>
                   <div className="rating">

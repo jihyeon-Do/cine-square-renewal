@@ -2,18 +2,24 @@ import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import noImg from '../images/no-images.png';
 
-interface boxofficeListProps {
-  movieId?: string | number;
-  rank?: string | number;
-  movieTitle?: string;
+interface MovieListProps {
+  movie_id?: string | number;
+  title?: string;
   nation?: string;
-  productionYear?: string | number;
-  runningTime?: string | number;
+  production_year?: number;
+  running_time?: number;
+  score?: number | null;
+  thumbnail?: string | null;
+}
+
+interface CommonMovieList {
+  movie: MovieListProps;
+  rank?: string | number;
 }
 
 interface movieListCarousel {
   title: string;
-  list: Array<boxofficeListProps>;
+  list: Array<CommonMovieList>;
 }
 
 function CineSuggestion({ title, list }: movieListCarousel) {
@@ -22,6 +28,8 @@ function CineSuggestion({ title, list }: movieListCarousel) {
   const slideWrap = useRef<HTMLUListElement>(null);
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
+
+  console.log(list);
 
   return (
     <>
@@ -38,31 +46,37 @@ function CineSuggestion({ title, list }: movieListCarousel) {
       )}
       <div className="slide-container">
         <ul ref={slideWrap}>
-          {list.map((v: any, i: number) => (
-            <li key={i}>
-              <Link to={`/detail/${v.movieId}`}>
-                {title !== 'none' && <p className="ranking">{v.rank}</p>}
-                <img
-                  src={v.moviePoster === null ? noImg : v.moviePoster}
-                  alt={v.movieNm}
-                />
-                {title !== 'none' ? (
-                  <div className="movie-info">
-                    <p className="movie-title">{v.movieTitle}</p>
-                    <p>{v.productionYear}</p>
-                    <p>
-                      {v.nation} {v.runningTime}분
-                    </p>
+          {list.length !== 0 &&
+            list.map((v: any, i: number) => (
+              <li key={i}>
+                <Link to={`/detail/${v.movie.movie_id}`}>
+                  {title !== 'none' && <p className="ranking">{v.rank}</p>}
+                  <div className="thumbnail-wrapper">
+                    <img
+                      src={
+                        v.movie.thumbnail === null ? noImg : v.movie.thumbnail
+                      }
+                      alt={v.movie.movie_id}
+                    />
                   </div>
-                ) : (
-                  <div className="movie-info">
-                    <p className="movie-title">{v.movieNm}</p>
-                    <p>평가함 ★ {v.rating}</p>
-                  </div>
-                )}
-              </Link>
-            </li>
-          ))}
+
+                  {title !== 'none' ? (
+                    <div className="movie-info">
+                      <p className="movie-title">{v.movie.title}</p>
+                      <p>{v.movie.production_year}</p>
+                      <p>
+                        {v.movie.nation} {v.movie.running_time}분
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="movie-info">
+                      <p className="movie-title">{v.movie.movie_id}</p>
+                      <p>평가함 ★ {v.movie.score}</p>
+                    </div>
+                  )}
+                </Link>
+              </li>
+            ))}
         </ul>
       </div>
       <button

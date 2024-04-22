@@ -218,8 +218,10 @@ function Signup() {
               </div>
               <div className="signin-box">
                 <p>
-                  이미 가입하셨나요?{' '}
-                  <button onClick={() => navigate('/signin')}>로그인</button>
+                  이미 가입하셨나요?
+                  <button type="button" onClick={() => navigate('/signin')}>
+                    로그인
+                  </button>
                 </p>
               </div>
               {/* 

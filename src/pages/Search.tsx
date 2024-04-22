@@ -9,11 +9,11 @@ import noImg from '../images/no-images.png';
 
 type searchListType = {
   movie_id: number;
-  movie_title: string;
+  title: string;
   production_year: number;
   nation: string;
-  showTm: string;
-  mainImg: string;
+  running_time: number;
+  thumbnail: string;
 }[];
 
 export default function Search() {
@@ -66,8 +66,8 @@ export default function Search() {
                   <li key={index}>
                     <Link to={`/detail/${list.movie_id}`}>
                       {/* <img src={`${list.mainImg}`} alt={`${list.movie_title}`} /> */}
-                      <img src={`${noImg}`} alt={`${list.movie_title}`} />
-                      <span>{list.movie_title}</span>
+                      <img src={list.thumbnail} alt={`${list.title}`} />
+                      <span>{list.title}</span>
                       <span>
                         {list.production_year} <span>{list.nation}</span>
                       </span>

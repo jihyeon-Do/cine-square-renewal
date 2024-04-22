@@ -38,13 +38,15 @@ $text-left-padding: 20px;
         box-sizing: border-box;
         color: #000000;
         font-size: 0.9rem;
-
+        overflow: hidden;
         a {
           display: block;
           width: 100%;
         }
         img {
           width: 100%;
+          border-radius: 5px;
+          object-fit: cover;
           // height: 222px;
         }
         span {

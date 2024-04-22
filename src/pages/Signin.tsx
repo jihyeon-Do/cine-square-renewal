@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { message } from 'antd';
 import './signin.scss';
 import { useNavigate } from 'react-router-dom';
@@ -21,12 +21,12 @@ function Signin() {
         account: account,
         password: password,
       });
-      if (response.data.result) {
+      if (response.data.access_token) {
         setIsValidation({
           ...isValidation,
           confirm: false,
         });
-        sessionStorage.setItem('token', '1');
+        sessionStorage.setItem('token', response.data.access_token);
         alert('로그인성공');
         navigate('/');
       } else {
@@ -55,6 +55,10 @@ function Signin() {
       setPassword(e.target.value);
     }
   }
+
+  useEffect(() => {
+    console.log(isValidation);
+  }, [isValidation]);
 
   return (
     <>

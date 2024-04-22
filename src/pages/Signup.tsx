@@ -94,7 +94,7 @@ function Signup() {
         `${LOCALAPI}/api/users/check-account/${account}`,
       );
       if (!isDuplication.data.result) {
-        const response = await axios.post(`${LOCALAPI}/api/users`, {
+        const response = await axios.post(`${LOCALAPI}/api/auth/sign-up`, {
           account: account,
           password: password,
           name: userName,

@@ -17,7 +17,7 @@ function Signin() {
 
   async function click() {
     try {
-      const response = await axios.post(`${LOCALAPI}/api/users/login`, {
+      const response = await axios.post(`${LOCALAPI}/api/auth/sign-in`, {
         account: account,
         password: password,
       });

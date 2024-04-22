@@ -56,10 +56,6 @@ function Signin() {
     }
   }
 
-  useEffect(() => {
-    console.log(isValidation);
-  }, [isValidation]);
-
   return (
     <>
       {/* <HeaderTemplate /> */}

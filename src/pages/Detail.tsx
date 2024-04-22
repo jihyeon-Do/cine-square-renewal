@@ -22,17 +22,19 @@ const LOCALAPI = APIService.LOCALAPI;
 // const PROXY = APIService.PROXY;
 
 type movieDetailInfoType = {
-  movie_title: string;
+  title: string;
   open_date: number;
-  genres: string;
-  nations: string;
+  genres: string[];
+  nations: string[];
   running_time: string;
-  mainImg: string;
+  images: string[];
   score: number;
   actors: string[];
   content: string;
-  movie_title_en: string;
+  title_en: string;
   production_year?: number;
+  synopsys: string;
+  thumbnail: string;
 };
 
 type commentsList = {
@@ -75,7 +77,7 @@ export default function Detail() {
     async function userMovieInfo() {
       try {
         const statusResponse = await axios.get(
-          `${LOCALAPI}/api/user-reports/status/movies/${movieId}/users/${6}`,
+          `${LOCALAPI}/api/user-reports/movies/${movieId}/status`,
         );
         setBookmark(statusResponse.data.result === 0 ? false : true);
         const scoreResponse = await axios.get(
@@ -98,12 +100,13 @@ export default function Detail() {
     async function getMovieInfo() {
       try {
         const response = await axios.get(`${LOCALAPI}/api/movies/${movieId}`);
+        console.log(response);
         //: actor가 null이 아닐 때
         if (response.data.data.actors) {
-          const actor = response.data.data.actors.split(',');
+          const actor = response.data.data.actors;
           //: directors도 null이 아닌지 체크
           if (response.data.data.directors) {
-            const directors = response.data.data.directors.split(',');
+            const directors = response.data.data.directors;
             const copyMovieDetail = {
               ...response.data.data,
               actors: [...actor, ...directors],
@@ -118,7 +121,7 @@ export default function Detail() {
           //: actor가 null인 상황
           if (response.data.data.directors) {
             //: directors는 null인지 체크
-            const directors = response.data.data.directors.split(',');
+            const directors = response.data.data.directors;
             const copyMovieDetail = {
               ...response.data.data,
               actors: directors,
@@ -171,16 +174,12 @@ export default function Detail() {
   const sendScore = async function (v: number) {
     // if (account === null) return;
     try {
-      const response = await axios({
-        method: 'POST',
-        url: `${LOCALAPI}/api/user-reports/score`,
-        // url: `${LOCALAPI}/user/selectMovieGrade`,
-        data: {
-          user_id: 6,
-          movie_id: movieId,
+      const response = await axios.post(
+        `${LOCALAPI}/api/user-reports/movies/${movieId}/score`,
+        {
           score: v,
         },
-      });
+      );
     } catch (error) {
       console.log(error);
     }
@@ -312,10 +311,13 @@ export default function Detail() {
           <section>
             <div className="movie-info">
               <div className="movie-info1">
-                <img src={`${noImg}`} alt={`${movieInfo.movie_title}포스터`} />
+                <img
+                  src={`${movieInfo.thumbnail}`}
+                  alt={`${movieInfo.title}포스터`}
+                />
                 <div className="box2">
                   <p className="movie-title">
-                    {movieInfo.movie_title} {`(${movieInfo.movie_title_en})`}
+                    {movieInfo.title} {`(${movieInfo.title_en})`}
                     <button className="bookmark" onClick={handleBookmark}>
                       <Bookmark bookmark={bookmark} />
                       <span>보고싶어요</span>
@@ -323,15 +325,19 @@ export default function Detail() {
                   </p>
                   <p className="movie-sub-info">
                     {movieInfo.open_date || movieInfo.production_year}
-                    <span>{movieInfo.genres}</span>
-                    <span>{movieInfo.nations}</span>
+                    {movieInfo.genres.map((v, i) => (
+                      <span key={i}>{v}</span>
+                    ))}
+                    {movieInfo.nations.map((v, i) => (
+                      <span key={i}>{v}</span>
+                    ))}
                   </p>
                   <p className="movie-sub-info">{movieInfo.running_time}분</p>
                   <p className="movie-sub-info2">
                     <span>
                       <FullStar1 />
                     </span>
-                    평점{' '}
+                    평점
                     {movieInfo.score === null
                       ? '(아직 평가되지 않았습니다.)'
                       : Number(movieInfo.score).toFixed(1)}
@@ -366,8 +372,34 @@ export default function Detail() {
                 <div className="movie-sub-info3">
                   <dl>
                     <div>
-                      {/* <dd>{movieInfo.content}</dd> */}
-                      <dd>준비중입니다.</dd>
+                      {movieInfo.synopsys ? (
+                        <dd
+                          dangerouslySetInnerHTML={{
+                            __html: movieInfo.synopsys,
+                          }}
+                        ></dd>
+                      ) : (
+                        <dd>
+                          Lorem ipsum dolor sit amet consectetur adipisicing
+                          elit. Eveniet, explicabo aut consequatur ullam
+                          pariatur illum? Fuga magni architecto dolores, iusto
+                          quisquam ut recusandae earum nostrum, consequuntur qui
+                          voluptatem veniam minus? Lorem ipsum dolor sit amet
+                          consectetur adipisicing elit. Eveniet, explicabo aut
+                          consequatur ullam pariatur illum? Fuga magni
+                          architecto dolores, iusto quisquam ut recusandae earum
+                          nostrum, consequuntur qui voluptatem veniam minus?
+                          Lorem ipsum dolor sit amet consectetur adipisicing
+                          elit. Eveniet, explicabo aut consequatur ullam
+                          pariatur illum? Fuga magni architecto dolores, iusto
+                          quisquam ut recusandae earum nostrum, consequuntur qui
+                          voluptatem veniam minus? Lorem ipsum dolor sit amet
+                          consectetur adipisicing elit. Eveniet, explicabo aut
+                          consequatur ullam pariatur illum? Fuga magni
+                          architecto dolores, iusto quisquam ut recusandae earum
+                          nostrum, consequuntur qui voluptatem veniam minus?
+                        </dd>
+                      )}
                     </div>
                   </dl>
                 </div>

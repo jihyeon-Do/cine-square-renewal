@@ -20,7 +20,7 @@ $text-left-padding: 20px;
     }
   }
   .search-results-list {
-    padding: 60px 0 0 0;
+    padding: 60px 0 30px 0;
     width: 100%;
     max-width: 1200px;
     h2 {
@@ -57,6 +57,8 @@ $text-left-padding: 20px;
             height: 100%;
             overflow: hidden;
             border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
           }
         }
         img {

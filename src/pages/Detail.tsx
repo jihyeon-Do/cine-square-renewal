@@ -100,6 +100,10 @@ export default function Detail() {
           bearer_header,
         );
         setComments(commentScore.data.list);
+        const myComment = await axios.get(
+          `${LOCALAPI}/api/user-reports/movies/${movieId}/comment`,
+          bearer_header,
+        );
       } catch (error) {
         console.log(error);
       }
@@ -334,6 +338,8 @@ export default function Detail() {
     handleAddComment();
   }
 
+  console.log(comments);
+
   return (
     <>
       <HeaderTemplate />
@@ -409,6 +415,23 @@ export default function Detail() {
                     </section>
                     <span>{displayScore} 점으로 평가하셨습니다.</span>
                   </div>
+                  <div className="my-comment">
+                    <form action="/detail" ref={formtag}>
+                      <fieldset>
+                        <legend>코멘트 작성하기</legend>
+                        <input
+                          type="text"
+                          value={value}
+                          placeholder="기대평, 관람평을 자유롭게 작성해주세요!"
+                          onChange={addComment}
+                          onKeyDown={enterPressComment}
+                        />
+                        <button type="button" onClick={handleAddComment}>
+                          코멘트 작성
+                        </button>
+                      </fieldset>
+                    </form>
+                  </div>
                 </div>
               </div>
               <div className="movie-info2">
@@ -473,49 +496,47 @@ export default function Detail() {
               </div>
               <div className="movie-info4">
                 <h3>코멘트</h3>
-                <form action="/detail" ref={formtag}>
-                  <fieldset>
-                    <legend className="readable-hidden">코멘트 작성</legend>
-                    <input
-                      type="text"
-                      value={value}
-                      placeholder="기대평, 관람평을 자유롭게 작성해주세요!"
-                      onChange={addComment}
-                      onKeyDown={enterPressComment}
-                    />
-                    <button type="button" onClick={handleAddComment}>
-                      관람평 작성
-                    </button>
-                  </fieldset>
-                </form>
                 <ul className="comments">
                   {comments.length !== 0 ? (
                     comments.map((v, i) => (
                       <li key={i}>
-                        <div>
-                          <p>
-                            <FullStar1 />
-                            {v.score}
-                          </p>
-                          <p>{v.content}</p>
-                          <p>
+                        <p className="writer">
+                          {v.nickname}
+                          {v.score ? (
                             <span>
-                              <img src={unlike_thumb} alt="좋아요 안한 상태" />
-                              {v.like}
+                              <FullStar />
+                              {v.score}
                             </span>
-                            <button onClick={(e) => like(e, v.comment_id)}>
-                              좋아요
-                            </button>
-                          </p>
+                          ) : (
+                            <></>
+                          )}
+                        </p>
+                        <div className="content">{v.content}</div>
+                        <div className="like-recomment">
+                          <span>
+                            <img src={like_thumb} alt="좋아요 안한 상태" />
+                            {v.like}
+                          </span>
+                          <span>
+                            <img src={like_thumb} alt="좋아요 안한 상태" />
+                            {v.like}
+                          </span>
                         </div>
-                        <span>{v.nickname}</span>
+                        <div className="like-btn">
+                          <button
+                            // className={`active`}
+                            onClick={(e) => like(e, v.comment_id)}
+                          >
+                            좋아요
+                          </button>
+                        </div>
                       </li>
                     ))
                   ) : (
                     <p className="no-comment">코멘트가 없습니다.</p>
                   )}
                 </ul>
-                <button className="add-content">더보기</button>
+                {/* <button className="add-content">더보기</button> */}
               </div>
             </div>
           </section>

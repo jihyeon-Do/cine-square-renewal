@@ -12,9 +12,9 @@ import Search from './pages/Search';
 // import NotFound from './pages/NotFound';
 import Detail from './pages/Detail';
 import Profile from './pages/Profile';
-// // import Evaluate from './pages/Evaluate';
-// import MyBooks from './pages/MyBooks';
+
 import MyChoice from './pages/MyChoice';
+import Evaluation from './pages/Evaluation';
 
 function App() {
   return (
@@ -22,16 +22,14 @@ function App() {
       <Routes>
         <Route path={'/signin'} element={<Signin />} />
         <Route path={'/signup'} element={<Signup />} />
-        {/* <Route path={'/complete'} element={<Complete />} /> */}
         <Route path={'/profile'} element={<Profile />} />
-        <Route path={'/detail/:movieCd'} element={<Detail />} />
-        {/* <Route path="/evaluate" component={Evaluate} /> */}
-        {/* <Route path={'/mybooks'} element={<MyBooks />} /> */}
+        <Route path={'/detail/:movieId'} element={<Detail />} />
         <Route path={'/mychoice/:listname'} element={<MyChoice />} />
         <Route path={'/review'} element={<MyChoice />} />
         <Route path={'/favorite/review'} element={<MyChoice />} />
         <Route path={'/favorite/person'} element={<MyChoice />} />
         <Route path={'/search/:keyword'} element={<Search />} />
+        <Route path={'/evaluation'} element={<Evaluation />} />
         <Route path={'/'} element={<Home />} />
         {/* <Route element={<NotFound />} /> */}
       </Routes>

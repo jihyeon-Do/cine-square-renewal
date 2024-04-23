@@ -1,18 +1,26 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import './headerTemplate.scss';
 
 function HeaderTemplate() {
   const [value, setValue] = useState('');
+  const [token, setToken] = useState<string | null>(null);
   const searchInput = useRef<HTMLInputElement>(null);
   const searchClickButton = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
+  const { keyword } = useParams();
 
-  //   useEffect(() => {
-  //     if (urlParameter === `/search/${keyword}`) {
-  //       setValue(keyword);
-  //     }
-  //   }, [urlParameter, keyword])
+  // useEffect(() => {
+  //   if (urlParameter === `/search/${keyword}`) {
+  //     setValue(keyword);
+  //   }
+  // }, [urlParameter, keyword]);
+
+  useEffect(() => {
+    if (keyword) {
+      setValue(keyword);
+    }
+  }, [keyword]);
 
   const logoutUser = useCallback(() => {
     // dispatch(startLogoutActionCreator());
@@ -20,11 +28,27 @@ function HeaderTemplate() {
   }, []);
 
   function logOut() {
+    if (confirm('로그아웃 하시겠습니까?')) {
+      sessionStorage.removeItem('token');
+      alert('로그아웃 되었습니다.');
+      navigate('/');
+      location.reload();
+    } else {
+      return;
+    }
     // TokenService.delete();
     // AccountService.deleteAccount();
     // AccountService.deleteUserName();
     // logoutUser()
   }
+
+  useEffect(() => {
+    if (sessionStorage.getItem('token')) {
+      setToken(sessionStorage.getItem('token'));
+    } else {
+      setToken(null);
+    }
+  }, []);
 
   return (
     <header className="header-container">
@@ -36,7 +60,7 @@ function HeaderTemplate() {
           //   }}
           onClick={() => navigate('/')}
         >
-          <img src="../images/test.svg" alt="main_logo" />
+          <img src="../images/main_logo.svg" alt="main_logo" />
         </h1>
         <div className="right-content">
           <div className="input-box" role="search">
@@ -58,19 +82,19 @@ function HeaderTemplate() {
             </button>
           </div>
           <div className="my-profile-btn">
-            {/* {token && (
+            {token && (
               <div>
-                <Link to="/evaluate">평가하기</Link>
-                <Link to="/profile">내정보</Link>
+                <Link to="/evaluation">평가하기</Link>
+                <button onClick={() => navigate('/profile')}>내정보</button>
                 <p onClick={logOut}>로그아웃</p>
               </div>
-            )} */}
-            {/* {!token && ( */}
-            <div>
-              <Link to="/signin">로그인</Link>
-              <Link to="/signup">회원가입</Link>
-            </div>
-            {/* )} */}
+            )}
+            {!token && (
+              <div>
+                <Link to="/signin">로그인</Link>
+                <Link to="/signup">회원가입</Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -88,11 +112,11 @@ function HeaderTemplate() {
   ) {
     if (value === '') return;
     if (
-      (e.target as HTMLFormElement).key === 'Enter' ||
-      e.target === searchClickButton.current
+      (e as React.KeyboardEvent<HTMLInputElement>).key === 'Enter' ||
+      (e.target === searchClickButton.current && e.type === 'click')
     ) {
-      //   getValue();
-      //   dispatch(push(`/search/${value}`));
+      // getValue();
+      navigate(`/search/${value}`);
     }
   }
 }

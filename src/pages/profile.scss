@@ -431,6 +431,13 @@
       .profile-info-cont8 {
         h4 {
           font-weight: 500;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          a {
+            font-size: 0.8rem;
+            color: #8c8c8c;
+          }
         }
         & > div {
           padding: 15px 15px;

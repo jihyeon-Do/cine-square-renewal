@@ -13,6 +13,7 @@
     padding: 5px 0;
     justify-content: space-between;
     .header {
+      padding-left: 10px;
       cursor: pointer;
       position: relative;
       img {
@@ -78,14 +79,17 @@
       }
       .my-profile-btn {
         line-height: 32px;
+        button,
         a,
         p {
           display: inline-block;
           margin-left: 35px;
           color: #5e5e5e;
           font-size: 0.8rem;
+          background-color: transparent;
         }
-        a:hover {
+
+        button:hover {
           color: #5e5e5e;
         }
         p {

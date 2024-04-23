@@ -35,10 +35,10 @@ export default function FooterTemplate() {
             </li>
           </ul>
           <span>
-            고객센터 :{' '}
+            고객센터 :
             <a href="mailto:ehwlgus22@gmail.com?">ehwlgus22@gmail.com</a>
           </span>
-          <p>주식회사 씨네스퀘어</p>
+          <p>씨네스퀘어</p>
           <p>대표 : 도지현 이정준 조수민</p>
           <small className="copyright">
             CINE SQUARE &copy; 2021 by CINESQUARE, Inc. All rights reserved.

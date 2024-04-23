@@ -38,8 +38,7 @@ $border-color: #eee;
     }
     .slide-container {
       position: relative;
-      // overflow: hidden;
-      overflow: scroll;
+      overflow-x: clip;
       scrollbar-width: none;
     }
     .rank,
@@ -55,17 +54,16 @@ $border-color: #eee;
       }
       ul {
         display: flex;
-        transform: translate(0);
         transition: all 1s;
         position: relative;
-        z-index: 1;
         gap: 16px;
         flex-wrap: nowrap;
         overflow: visible;
+
         li {
           position: relative;
-          flex: 0 0 auto;
-          width: calc((100% - 64px) / 5);
+          flex: 0 0 auto !important;
+          width: calc(20% - 12.8px);
           .ranking {
             background-color: #000000ad;
             display: inline-block;
@@ -82,22 +80,52 @@ $border-color: #eee;
             top: 5px;
             left: 5px;
             border-radius: 3px;
+            z-index: 1;
           }
-          // li:nth-child(5n) {
-          //   margin-right: 0;
-          // }
-          // li:nth-child(6n) {
-          //   margin-left: 0;
-          // }
-          img {
+          a {
+            display: inline-block;
+            text-decoration: none;
             width: 100%;
-            border-radius: 5px;
-            border: 1px solid #eaeaea;
+            .test1 {
+              position: relative;
+              width: 100%;
+              height: 0px;
+              padding-bottom: 145.37%;
+            }
+            .test2 {
+              overflow: hidden;
+              position: absolute;
+              top: 0px;
+              left: 0px;
+              box-sizing: border-box;
+              width: 100%;
+              height: 100%;
+              border: 1px solid rgb(234, 233, 232);
+              border-radius: 5px;
+              background: rgb(248, 248, 248);
+              transition: all 300ms ease 0s;
+            }
           }
+          img {
+            vertical-align: top;
+            width: 100%;
+            height: 100%;
+            min-height: 1px;
+            opacity: 1;
+            object-fit: cover;
+            transition: opacity 420ms ease 0s;
+          }
+
           .movie-info {
             p {
               font-size: 0.8em;
               color: rgb(126, 126, 126);
+              @media all and (max-width: 1200px) {
+                font-size: 0.7em;
+              }
+              @media all and (max-width: 360px) {
+                font-size: 0.6em;
+              }
             }
             .movie-title {
               font-size: 1.1em;
@@ -106,6 +134,15 @@ $border-color: #eee;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;
+              @media all and (max-width: 1200px) {
+                font-size: 1em;
+              }
+              @media all and (max-width: 600px) {
+                font-size: 0.9em;
+              }
+              @media all and (max-width: 360px) {
+                font-size: 0.7em;
+              }
             }
             span {
               display: inline-block;

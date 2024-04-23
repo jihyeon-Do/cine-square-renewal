@@ -80,7 +80,7 @@ function Home() {
     async function getMovieInfo() {
       try {
         const response = await axios.get(
-          `${LOCALAPI}/api/movies/boxoffice?request_date=${'20240328'}`,
+          `${LOCALAPI}/api/movies/boxoffice?request_date=${today}`,
         );
         setBoxofficeArray(response.data.list);
       } catch (error) {

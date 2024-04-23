@@ -34,7 +34,6 @@ export default function Search() {
   useEffect(() => {
     async function getSearchList() {
       try {
-        console.log(keyword);
         const response = await axios.get(
           `${LOCALAPI}/api/movies?title=${keyword}`,
         );
@@ -66,7 +65,14 @@ export default function Search() {
                   <li key={index}>
                     <Link to={`/detail/${list.movie_id}`}>
                       {/* <img src={`${list.mainImg}`} alt={`${list.movie_title}`} /> */}
-                      <img src={list.thumbnail} alt={`${list.title}`} />
+                      <div className="thumbnail-wrapper">
+                        <div className="wrapper">
+                          <img
+                            src={list.thumbnail ? list.thumbnail : noImg}
+                            alt={`${list.title}`}
+                          />
+                        </div>
+                      </div>
                       <span>{list.title}</span>
                       <span>
                         {list.production_year} <span>{list.nation}</span>

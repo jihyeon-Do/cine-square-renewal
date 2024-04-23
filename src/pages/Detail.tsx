@@ -13,7 +13,7 @@ import unlike_thumb from '../images/unlike_thumb.png';
 import like_thumb from '../images/like_thumb.png';
 import noImg from '../images/no-images.png';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import APIService from '../service/APIService';
 
@@ -61,7 +61,14 @@ export default function Detail() {
   const [isLike, setIsLike] = useState(false);
   const formtag = useRef(null);
 
+  const navigate = useNavigate();
   const { movieId } = useParams();
+  const access_token = sessionStorage.getItem('token');
+  const bearer_header = {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  };
 
   //   const token = useSelector((state) => state.auth.token);
   //   const account = useSelector((state) => state.auth.account);
@@ -69,6 +76,7 @@ export default function Detail() {
 
   const requiredLogin = () => {
     alert('로그인 후 이용해 주세요');
+    navigate('/signin');
     // dispatch(push('/signin'));
   };
 
@@ -78,29 +86,33 @@ export default function Detail() {
       try {
         const statusResponse = await axios.get(
           `${LOCALAPI}/api/user-reports/movies/${movieId}/status`,
+          bearer_header,
         );
-        setBookmark(statusResponse.data.result === 0 ? false : true);
+        setBookmark(statusResponse.data.result);
         const scoreResponse = await axios.get(
-          `${LOCALAPI}/api/user-reports/score/movies/${movieId}/users/${6}`,
+          `${LOCALAPI}/api/user-reports/movies/${movieId}/score`,
+          bearer_header,
         );
         setDisplayScore(scoreResponse.data.result);
         setScore(scoreResponse.data.result);
         const commentScore = await axios.get(
           `${LOCALAPI}/api/movie-reports/summary/movies/${movieId}`,
+          bearer_header,
         );
         setComments(commentScore.data.list);
       } catch (error) {
         console.log(error);
       }
     }
-    userMovieInfo();
+    if (access_token) {
+      userMovieInfo();
+    }
   }, []);
 
   useEffect(() => {
     async function getMovieInfo() {
       try {
         const response = await axios.get(`${LOCALAPI}/api/movies/${movieId}`);
-        console.log(response);
         //: actor가 null이 아닐 때
         if (response.data.data.actors) {
           const actor = response.data.data.actors;
@@ -158,30 +170,50 @@ export default function Detail() {
   //     getMovieGrade();
   //   }, [token, movieCd]);
 
-  const handleChange = (v: any) => {
-    // if (token === null) {
-    //   requiredLogin();
-    // } else {
-    //   if (score === 0 && displayScore === 0) return;
-    //   sendScore(v);
-    //   setScore(v);
-    // }
-    if (score === 0 && displayScore === 0) return;
-    sendScore(v);
-    setScore(v);
+  const handleChange = (v: number, type: string) => {
+    if (access_token) {
+      if (score === 0 && displayScore === 0) return;
+
+      sendScore(v, type);
+      setScore(v);
+    } else {
+      requiredLogin();
+    }
   };
 
-  const sendScore = async function (v: number) {
-    // if (account === null) return;
-    try {
-      const response = await axios.post(
-        `${LOCALAPI}/api/user-reports/movies/${movieId}/score`,
-        {
-          score: v,
-        },
-      );
-    } catch (error) {
-      console.log(error);
+  const sendScore = async function (v: number, type: string) {
+    if (access_token) {
+      try {
+        if (score === 0 && type === 'registration') {
+          //: 첫 등록
+          const response = await axios.post(
+            `${LOCALAPI}/api/user-reports/movies/${movieId}/score`,
+            {
+              score: v,
+            },
+            bearer_header,
+          );
+        } else if (score !== 0 && type === 'registration') {
+          //: 수정
+          const response = await axios.patch(
+            `${LOCALAPI}/api/user-reports/movies/${movieId}/score`,
+            {
+              score: v,
+            },
+            bearer_header,
+          );
+        } else if (score !== 0 && type === 'delete') {
+          //: 점수 삭제
+          const response = await axios.delete(
+            `${LOCALAPI}/api/user-reports/movies/${movieId}/score`,
+            bearer_header,
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      requiredLogin();
     }
   };
 
@@ -200,19 +232,27 @@ export default function Detail() {
   }, []);
 
   const handleBookmark = async () => {
-    // if (token === null) {
-    //   requiredLogin();
-    // } else {
-    //   setBookmark(!bookmark);
-    // }
-    // setBookmark(!bookmark);
-    const response = await axios.post(`${LOCALAPI}/api/user-reports/status`, {
-      user_id: 6,
-      movie_id: movieId,
-      status: bookmark === false ? 1 : 0,
-    });
-    if (response.data.result) {
-      setBookmark(!bookmark);
+    if (access_token) {
+      if (bookmark) {
+        const response = await axios.delete(
+          `${LOCALAPI}/api/user-reports/movies/${movieId}/status`,
+          bearer_header,
+        );
+        if (response.status === 200) {
+          setBookmark(!bookmark);
+        }
+      } else {
+        const response = await axios.post(
+          `${LOCALAPI}/api/user-reports/movies/${movieId}/status`,
+          {},
+          bearer_header,
+        );
+        if (response.status === 200) {
+          setBookmark(!bookmark);
+        }
+      }
+    } else {
+      requiredLogin();
     }
   };
 
@@ -252,7 +292,6 @@ export default function Detail() {
             copyComments = [...copyComments, v];
           }
         });
-        console.log(copyComments);
       }
     } catch (error) {
       console.log(error);
@@ -279,8 +318,8 @@ export default function Detail() {
         `${LOCALAPI}/api/movie-reports/${movieId}/comments`,
         {
           content: value,
-          user_id: 6,
         },
+        bearer_header,
       );
       setComments([...comments, response.data.data]);
       // setvalue('');
@@ -311,10 +350,13 @@ export default function Detail() {
           <section>
             <div className="movie-info">
               <div className="movie-info1">
-                <img
-                  src={`${movieInfo.thumbnail}`}
-                  alt={`${movieInfo.title}포스터`}
-                />
+                <div className="thumbnail-wrapper">
+                  <img
+                    src={`${movieInfo.thumbnail}`}
+                    alt={`${movieInfo.title}포스터`}
+                  />
+                </div>
+
                 <div className="box2">
                   <p className="movie-title">
                     {movieInfo.title} {`(${movieInfo.title_en})`}
@@ -349,7 +391,9 @@ export default function Detail() {
                         className="stars"
                         onMouseMove={handleMouseMove}
                         onMouseLeave={() => setDisplayScore(score)}
-                        onClick={() => handleChange(displayScore)}
+                        onClick={() =>
+                          handleChange(displayScore, 'registration')
+                        }
                       >
                         {[...Array(MAX_SCORE)].map((_, i) => (
                           <Star key={i} score={displayScore} i={i} />
@@ -358,7 +402,7 @@ export default function Detail() {
                       <Reset
                         className="reset"
                         onClick={() => {
-                          handleChange(0);
+                          handleChange(0, 'delete');
                           setDisplayScore(0);
                         }}
                       ></Reset>

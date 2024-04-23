@@ -29,8 +29,6 @@ function CineSuggestion({ title, list }: movieListCarousel) {
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
 
-  console.log(list);
-
   return (
     <>
       {title !== 'none' && (

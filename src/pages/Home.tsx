@@ -76,11 +76,11 @@ function Home() {
 
   //: 박스오피스
   useEffect(() => {
-    const today = getToday();
+    // const today = getToday();
     async function getMovieInfo() {
       try {
         const response = await axios.get(
-          `${LOCALAPI}/api/movies/boxoffice?request_date=${today}`,
+          `${LOCALAPI}/api/movies/boxoffice?request_date=${20240423}`,
         );
         setBoxofficeArray(response.data.list);
       } catch (error) {

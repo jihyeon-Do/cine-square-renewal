@@ -9,8 +9,8 @@ import { ReactComponent as FullStar1 } from '../images/star-full.svg';
 import { ReactComponent as Reset } from '../images/reset.svg';
 import BookmarkEmpty from '../images/unlike.png';
 import BookmarkFull from '../images/like.png';
-import unlike_thumb from '../images/unlike_thumb.png';
 import like_thumb from '../images/like_thumb.png';
+import commentIcon from '../images/comment_icon.png';
 import noImg from '../images/no-images.png';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -48,18 +48,30 @@ type commentsList = {
   user_id: number;
 }[];
 
+type Comment = {
+  comment_id: number;
+  content: string;
+  created: string;
+  like: number;
+  reply_count: number;
+  updated: string;
+};
+
 const MAX_SCORE = 5;
 
 export default function Detail() {
   const [score, setScore] = useState(0);
   const [displayScore, setDisplayScore] = useState(score);
   const [bookmark, setBookmark] = useState(false);
-  const [value, setvalue] = useState('');
+  const [value, setValue] = useState('');
+  const [status, setStatus] = useState('readOnly');
+  const [comment, setComment] = useState<Comment | null>(null);
   const [comments, setComments] = useState<commentsList>([]);
   const [seeMore, setSeeMore] = useState(false);
   const [movieInfo, setMovieInfo] = useState<movieDetailInfoType | null>(null);
   const [isLike, setIsLike] = useState(false);
   const formtag = useRef(null);
+  const editCommentInput = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
   const { movieId } = useParams();
@@ -95,15 +107,12 @@ export default function Detail() {
         );
         setDisplayScore(scoreResponse.data.result);
         setScore(scoreResponse.data.result);
-        const commentScore = await axios.get(
-          `${LOCALAPI}/api/movie-reports/summary/movies/${movieId}`,
-          bearer_header,
-        );
-        setComments(commentScore.data.list);
         const myComment = await axios.get(
           `${LOCALAPI}/api/user-reports/movies/${movieId}/comment`,
           bearer_header,
         );
+        setComment(myComment.data.result);
+        setValue(myComment.data.result.content);
       } catch (error) {
         console.log(error);
       }
@@ -147,32 +156,18 @@ export default function Detail() {
             setMovieInfo(response.data.data);
           }
         }
+        //: 영화별 comments
+        const commentScore = await axios.get(
+          `${LOCALAPI}/api/movie-reports/summary/movies/${movieId}`,
+          bearer_header,
+        );
+        setComments(commentScore.data.list);
       } catch (error) {
         console.log(error);
       }
     }
     getMovieInfo();
   }, [movieId]);
-
-  //   useEffect(() => {
-  //     async function getMovieGrade() {
-  //       try {
-  //         const response = await axios({
-  //           method: 'POST',
-  //           url: `${PROXY}/user/gradeAndReview`,
-  //           data: {
-  //             cineToken: token,
-  //             movieCd: movieCd,
-  //           },
-  //         });
-  //         setScore(response.data.result.grade);
-  //         setDisplayScore(response.data.result.grade);
-  //       } catch (error) {
-  //         console.log(error);
-  //       }
-  //     }
-  //     getMovieGrade();
-  //   }, [token, movieCd]);
 
   const handleChange = (v: number, type: string) => {
     if (access_token) {
@@ -269,66 +264,111 @@ export default function Detail() {
   // };
 
   function addComment(e: any) {
-    setvalue(e.target.value);
+    setValue(e.target.value);
   }
 
   async function like(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     commentId: number,
   ) {
+    if (access_token) {
+      try {
+        const response = await axios.post(
+          `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${commentId}`,
+          bearer_header,
+        );
+        if (response.data.result) {
+          let copyComments: any[] = [];
+          comments.map((v, i) => {
+            if (v.comment_id === commentId) {
+              copyComments = [...copyComments, { ...v, like: +v.like }];
+            } else {
+              copyComments = [...copyComments, v];
+            }
+          });
+          setComments(copyComments);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      requiredLogin();
+    }
+  }
+
+  async function handleAddComment() {
+    if (access_token) {
+      try {
+        const response = await axios.post(
+          `${LOCALAPI}/api/movie-reports/${movieId}/comments`,
+          {
+            content: value,
+          },
+          bearer_header,
+        );
+        // setComments([...comments, response.data.data]);
+        const myComment = await axios.get(
+          `${LOCALAPI}/api/user-reports/movies/${movieId}/comment`,
+          bearer_header,
+        );
+        setComment(myComment.data.result);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      requiredLogin();
+    }
+  }
+
+  function editComment() {
+    if (editCommentInput.current) {
+      editCommentInput.current.readOnly = false;
+      editCommentInput.current.className = 'active';
+      setStatus('edit');
+    }
+  }
+
+  async function sendEditComment() {
     try {
-      const response = await axios.post(
-        `${LOCALAPI}/api/user-reports/like-comment`,
-        {
-          user_id: 6,
-          comment_id: commentId,
-        },
+      const response = await axios.patch(
+        `${LOCALAPI}/api/movie-reports/${movieId}/comments/${comment?.comment_id}`,
+        { content: value },
+        bearer_header,
       );
-      if (response.data.result) {
-        let copyComments: any[] = [];
-        comments.map((v, i) => {
-          if (v.comment_id === commentId) {
-            copyComments = [
-              ...copyComments,
-              { ...v, like: v.like === 0 ? 1 : 0 },
-            ];
-          } else {
-            copyComments = [...copyComments, v];
-          }
-        });
+      if (response.status === 200) {
+        setStatus('readOnly');
+        if (editCommentInput.current) {
+          editCommentInput.current.className = '';
+          editCommentInput.current.readOnly = true;
+        }
       }
     } catch (error) {
       console.log(error);
     }
   }
 
-  async function handleAddComment() {
-    // if (token === null) {
-    //   requiredLogin();
-    // } else {
-    //   setComments([
-    //     ...comments,
-    //     {
-    //       id: maxId(),
-    //       nickName: userName,
-    //       comment: value,
-    //       dates: commentDate(),
-    //     },
-    //   ]);
-    //   setvalue('');
-    // }
+  async function deleteComment() {
     try {
-      const response = await axios.post(
-        `${LOCALAPI}/api/movie-reports/${movieId}/comments`,
-        {
-          content: value,
-        },
+      const response = await axios.delete(
+        `${LOCALAPI}/api/movie-reports/${movieId}/comments/${comment?.comment_id}`,
         bearer_header,
       );
-      setComments([...comments, response.data.data]);
-      // setvalue('');
+      setComment(null);
+      setValue('');
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  function cancel() {
+    setStatus('readOnly');
+    if (editCommentInput.current) {
+      editCommentInput.current.className = '';
+      editCommentInput.current.readOnly = true;
+    }
+
+    if (comment !== null) {
+      setValue(comment.content);
     }
   }
 
@@ -337,8 +377,6 @@ export default function Detail() {
     e.preventDefault();
     handleAddComment();
   }
-
-  console.log(comments);
 
   return (
     <>
@@ -416,21 +454,65 @@ export default function Detail() {
                     <span>{displayScore} 점으로 평가하셨습니다.</span>
                   </div>
                   <div className="my-comment">
-                    <form action="/detail" ref={formtag}>
-                      <fieldset>
-                        <legend>코멘트 작성하기</legend>
-                        <input
-                          type="text"
-                          value={value}
-                          placeholder="기대평, 관람평을 자유롭게 작성해주세요!"
-                          onChange={addComment}
-                          onKeyDown={enterPressComment}
-                        />
-                        <button type="button" onClick={handleAddComment}>
-                          코멘트 작성
-                        </button>
-                      </fieldset>
-                    </form>
+                    {comment ? (
+                      <form
+                        action="/detail"
+                        ref={formtag}
+                        className="is-comment"
+                      >
+                        <fieldset>
+                          <legend>내가 작성한 코멘트</legend>
+                          <input
+                            type="text"
+                            value={value}
+                            // placeholder={comment.content}
+                            onChange={addComment}
+                            onKeyDown={enterPressComment}
+                            readOnly={true}
+                            ref={editCommentInput}
+                          />
+                          {status === 'readOnly' ? (
+                            <div>
+                              <button type="button" onClick={editComment}>
+                                수정
+                              </button>
+                              <button type="button" onClick={deleteComment}>
+                                삭제
+                              </button>
+                            </div>
+                          ) : (
+                            <div>
+                              <button type="button" onClick={cancel}>
+                                취소
+                              </button>
+                              <button type="button" onClick={sendEditComment}>
+                                완료
+                              </button>
+                            </div>
+                          )}
+                        </fieldset>
+                      </form>
+                    ) : (
+                      <form
+                        action="/detail"
+                        ref={formtag}
+                        className="no-comment"
+                      >
+                        <fieldset>
+                          <legend>코멘트 작성하기</legend>
+                          <input
+                            type="text"
+                            value={value}
+                            placeholder="기대평, 관람평을 자유롭게 작성해주세요!"
+                            onChange={addComment}
+                            onKeyDown={enterPressComment}
+                          />
+                          <button type="button" onClick={handleAddComment}>
+                            코멘트 작성
+                          </button>
+                        </fieldset>
+                      </form>
+                    )}
                   </div>
                 </div>
               </div>
@@ -514,17 +596,17 @@ export default function Detail() {
                         <div className="content">{v.content}</div>
                         <div className="like-recomment">
                           <span>
-                            <img src={like_thumb} alt="좋아요 안한 상태" />
+                            <img src={like_thumb} alt="좋아요" />
                             {v.like}
                           </span>
                           <span>
-                            <img src={like_thumb} alt="좋아요 안한 상태" />
+                            <img src={commentIcon} alt="코멘트" />
                             {v.like}
                           </span>
                         </div>
                         <div className="like-btn">
                           <button
-                            // className={`active`}
+                            className={`${isLike && 'active'}`}
                             onClick={(e) => like(e, v.comment_id)}
                           >
                             좋아요

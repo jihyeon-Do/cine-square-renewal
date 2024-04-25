@@ -46,7 +46,8 @@ type commentsList = {
   comment_id: number;
   reply_count: number;
   user_id: number;
-}[];
+  isLike?: boolean;
+};
 
 type Comment = {
   comment_id: number;
@@ -66,7 +67,7 @@ export default function Detail() {
   const [value, setValue] = useState('');
   const [status, setStatus] = useState('readOnly');
   const [comment, setComment] = useState<Comment | null>(null);
-  const [comments, setComments] = useState<commentsList>([]);
+  const [comments, setComments] = useState<commentsList[]>([]);
   const [seeMore, setSeeMore] = useState(false);
   const [movieInfo, setMovieInfo] = useState<movieDetailInfoType | null>(null);
   const [isLike, setIsLike] = useState(false);
@@ -161,7 +162,34 @@ export default function Detail() {
           `${LOCALAPI}/api/movie-reports/summary/movies/${movieId}`,
           bearer_header,
         );
-        setComments(commentScore.data.list);
+        const addIsLike = commentScore.data.list.map((value: commentsList) => {
+          return { ...value, isLike: false };
+        });
+        setComments(addIsLike);
+        const userLikeCommentsList = await axios.get(
+          `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments`,
+          bearer_header,
+        );
+        if (userLikeCommentsList.data.list.length) {
+          let copyCommentList: commentsList[] = [];
+          addIsLike.map((value: commentsList) => {
+            for (let i = 0; i < userLikeCommentsList.data.list.length; i++) {
+              if (
+                value.comment_id ===
+                userLikeCommentsList.data.list[i].comment_id
+              ) {
+                copyCommentList = [
+                  ...copyCommentList,
+                  { ...value, isLike: true },
+                ];
+                break;
+              } else if (i === userLikeCommentsList.data.list.length - 1) {
+                copyCommentList = [...copyCommentList, value];
+              }
+            }
+          });
+          setComments(copyCommentList);
+        }
       } catch (error) {
         console.log(error);
       }
@@ -270,26 +298,58 @@ export default function Detail() {
   async function like(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     commentId: number,
+    isLike?: boolean,
   ) {
     if (access_token) {
-      try {
-        const response = await axios.post(
-          `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${commentId}`,
-          bearer_header,
-        );
-        if (response.data.result) {
-          let copyComments: any[] = [];
-          comments.map((v, i) => {
-            if (v.comment_id === commentId) {
-              copyComments = [...copyComments, { ...v, like: +v.like }];
-            } else {
-              copyComments = [...copyComments, v];
-            }
-          });
-          setComments(copyComments);
+      //: like 가 false 면 like를 해야함
+      if (!isLike) {
+        try {
+          const response = await axios.post(
+            `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${commentId}`,
+            {},
+            bearer_header,
+          );
+          if (response.status === 200) {
+            let copyComments: any[] = [];
+            comments.map((v, i) => {
+              if (v.comment_id === commentId) {
+                copyComments = [
+                  ...copyComments,
+                  { ...v, like: v.like + 1, isLike: true },
+                ];
+              } else {
+                copyComments = [...copyComments, v];
+              }
+            });
+            setComments(copyComments);
+          }
+        } catch (error) {
+          console.log(error);
         }
-      } catch (error) {
-        console.log(error);
+      } else {
+        //: like 취소하기
+        try {
+          const response = await axios.delete(
+            `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${commentId}`,
+            bearer_header,
+          );
+          if (response.status === 200) {
+            let copyComments: any[] = [];
+            comments.map((v, i) => {
+              if (v.comment_id === commentId) {
+                copyComments = [
+                  ...copyComments,
+                  { ...v, like: v.like - 1, isLike: false },
+                ];
+              } else {
+                copyComments = [...copyComments, v];
+              }
+            });
+            setComments(copyComments);
+          }
+        } catch (error) {
+          console.log(error);
+        }
       }
     } else {
       requiredLogin();
@@ -601,15 +661,15 @@ export default function Detail() {
                           </span>
                           <span>
                             <img src={commentIcon} alt="코멘트" />
-                            {v.like}
+                            {v.reply_count}
                           </span>
                         </div>
                         <div className="like-btn">
                           <button
-                            className={`${isLike && 'active'}`}
-                            onClick={(e) => like(e, v.comment_id)}
+                            className={`${v.isLike && 'active'}`}
+                            onClick={(e) => like(e, v.comment_id, v.isLike)}
                           >
-                            좋아요
+                            {v.isLike ? '좋아요 취소' : '좋아요'}
                           </button>
                         </div>
                       </li>

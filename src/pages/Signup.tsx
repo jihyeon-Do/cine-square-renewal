@@ -100,7 +100,7 @@ function Signup() {
           name: userName,
           nickname: nickname,
         });
-        if (response.data.data.user_id) {
+        if (response.status === 200) {
           alert('회원가입 성공');
           navigate('/signin');
         }

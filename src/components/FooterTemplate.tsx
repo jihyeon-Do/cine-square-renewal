@@ -19,7 +19,7 @@ export default function FooterTemplate() {
             </a>
           </li>
         </ul>
-        <div>
+        <div className="footer-content">
           <ul className="footer_list">
             <li>
               <Link to="#">회사소개</Link>
@@ -34,15 +34,17 @@ export default function FooterTemplate() {
               <Link to="#">이메일주소 무단수집 거부</Link>
             </li>
           </ul>
-          <span>
-            고객센터 :
-            <a href="mailto:ehwlgus22@gmail.com?">ehwlgus22@gmail.com</a>
-          </span>
-          <p>씨네스퀘어</p>
-          <p>대표 : 도지현 이정준 조수민</p>
-          <small className="copyright">
-            CINE SQUARE &copy; 2021 by CINESQUARE, Inc. All rights reserved.
-          </small>
+          <div className="company-info">
+            <span>
+              고객센터 :
+              <a href="mailto:ehwlgus22@gmail.com?">ehwlgus22@gmail.com</a>
+            </span>
+            <p>씨네스퀘어</p>
+            <p>대표 : 도지현 이정준 조수민</p>
+            <small className="copyright">
+              CINE SQUARE &copy; 2021 by CINESQUARE, Inc. All rights reserved.
+            </small>
+          </div>
         </div>
       </section>
     </footer>

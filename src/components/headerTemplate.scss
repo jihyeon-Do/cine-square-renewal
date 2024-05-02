@@ -35,8 +35,10 @@
         width: 65%;
       }
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       padding: 10px;
+      align-items: center;
+
       .input-box {
         position: relative;
         form {
@@ -87,23 +89,22 @@
         }
       }
       .my-profile-btn {
-        line-height: 32px;
+        // line-height: 32px;
         button,
-        a,
-        p {
+        a {
           display: inline-block;
-          margin-left: 35px;
           color: #5e5e5e;
           font-size: 0.8rem;
           background-color: transparent;
+          padding: 5px 15px;
         }
-        a {
+        button {
           margin: 0;
-          padding: 0 15px;
           &:last-child {
             border: 1px solid #ddd;
             border-radius: 5px;
-            margin-left: 10px;
+            // margin-left: 10px;
+            box-sizing: border-box;
           }
         }
 

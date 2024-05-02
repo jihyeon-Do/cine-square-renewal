@@ -112,7 +112,7 @@ function HeaderTemplate() {
               <div>
                 <Link to="/evaluation">평가하기</Link>
                 <button onClick={() => navigate('/profile')}>내정보</button>
-                <p onClick={logOut}>로그아웃</p>
+                <button onClick={logOut}>로그아웃</button>
               </div>
             )}
             {!token && (

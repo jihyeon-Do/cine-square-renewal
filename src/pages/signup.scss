@@ -33,6 +33,13 @@
     padding: 50px 30px;
     box-sizing: border-box;
     color: #5e5e5e;
+    @media all and (max-width: 500px) {
+      width: 80%;
+    }
+    @media all and (max-width: 350px) {
+      width: 90%;
+      padding: 50px 10px;
+    }
     .input-box {
       margin-bottom: 10px;
       & > p {
@@ -52,6 +59,9 @@
     form {
       padding: 0px 30px;
       height: 100%;
+      @media all and (max-width: 500px) {
+        padding: 0px 0;
+      }
       img {
         width: 80%;
         cursor: pointer;

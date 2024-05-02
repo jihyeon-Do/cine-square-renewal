@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './signup.scss';
-import HeaderTemplate from '../components/HeaderTemplate';
+import logo from '../images/main_logo.svg';
 import axios from 'axios';
 
 function Signup() {
@@ -129,10 +129,7 @@ function Signup() {
         {/* <h1><img src="./images/login_logo.png" alt="login_logo" /></h1> */}
         <div className="signup-form">
           <form>
-            <img
-              src="./images/CINE_SQUARE_logo.svg"
-              onClick={() => navigate('/')}
-            />
+            <img src={logo} onClick={() => navigate('/')} />
             <fieldset>
               <legend>회원가입</legend>
               <div className="input-box">

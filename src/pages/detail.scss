@@ -249,7 +249,7 @@ $border-color: #eee;
           //   font-size: 0.7rem;
           // }
           span::before {
-            content: '•';
+            content: '|';
             padding: 0 8px;
             vertical-align: text-bottom;
             @media all and (max-width: 800px) {

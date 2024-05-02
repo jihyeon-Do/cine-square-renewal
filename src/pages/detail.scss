@@ -240,6 +240,9 @@ $border-color: #eee;
           border-bottom: 0.5px solid $border-color;
           padding: 5px 0;
           @media all and (max-width: 800px) {
+            font-size: 0.9rem;
+          }
+          @media all and (max-width: 350px) {
             font-size: 0.8rem;
           }
           // @media all and (max-width: 350px) {
@@ -262,6 +265,9 @@ $border-color: #eee;
           border-bottom: 0.5px solid $border-color;
           padding: 5px 0;
           @media all and (max-width: 800px) {
+            font-size: 0.9rem;
+          }
+          @media all and (max-width: 350px) {
             font-size: 0.8rem;
           }
           // @media all and (max-width: 350px) {
@@ -445,7 +451,7 @@ $border-color: #eee;
           font-size: 0.9rem;
           margin-bottom: 10px;
           line-height: 22px;
-          @media all and (max-width: 800px) {
+          @media all and (max-width: 350px) {
             font-size: 0.8rem;
           }
         }
@@ -483,13 +489,12 @@ $border-color: #eee;
           font-size: 0.9rem;
           text-align: center;
           box-sizing: content-box;
-          padding: 10px 20px;
-
+          padding: 10px 10px;
           @media all and (max-width: 800px) {
             font-size: 0.8rem;
           }
           @media all and (max-width: 400px) {
-            font-size: 0.7rem;
+            padding: 10px 3px;
           }
 
           img {
@@ -518,7 +523,12 @@ $border-color: #eee;
         display: grid;
         grid-template-columns: repeat(4, minmax(0px, 1fr));
         gap: 8px;
-
+        @media all and (max-width: 800px) {
+          grid-template-columns: repeat(2, minmax(0px, 1fr));
+        }
+        @media all and (max-width: 600px) {
+          grid-template-columns: repeat(1, minmax(0px, 1fr));
+        }
         .no-comment {
           // padding: 10px 0;
           color: #3c3c3c;
@@ -533,6 +543,9 @@ $border-color: #eee;
             padding-bottom: 8px;
             display: flex;
             justify-content: space-between;
+            @media all and (max-width: 400px) {
+              font-size: 1rem;
+            }
             span {
               display: inline-block;
               background-color: #fff;
@@ -540,11 +553,17 @@ $border-color: #eee;
               font-size: 0.9rem;
               border-radius: 20px;
               color: rgb(255, 153, 0);
+              @media all and (max-width: 400px) {
+                font-size: 0.8rem;
+              }
               svg {
                 width: 15px;
                 height: auto;
                 margin-bottom: -1px;
                 margin-right: 3px;
+                @media all and (max-width: 400px) {
+                  width: 13px;
+                }
               }
             }
           }
@@ -554,6 +573,9 @@ $border-color: #eee;
             padding: 10px 0;
             height: 150px;
             font-size: 0.85rem;
+            @media all and (max-width: 400px) {
+              font-size: 0.8rem;
+            }
           }
           .like-recomment {
             display: flex;
@@ -568,6 +590,9 @@ $border-color: #eee;
             span {
               display: flex;
               align-items: center;
+              @media all and (max-width: 400px) {
+                font-size: 0.9rem;
+              }
               &:first-child {
                 margin-right: 10px;
               }
@@ -581,8 +606,12 @@ $border-color: #eee;
           .like-btn {
             padding: 10px 0;
             padding-bottom: 0;
+
             button {
               color: #8e00fd;
+              @media all and (max-width: 400px) {
+                font-size: 0.75rem;
+              }
               &.active {
                 background-color: #8e00fd;
                 padding: 5px 10px;

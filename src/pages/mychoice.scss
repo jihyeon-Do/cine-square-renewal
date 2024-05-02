@@ -6,7 +6,10 @@
   margin: 0 auto;
   text-align: left;
   margin-top: 30px;
-
+  @media all and (max-width: 1220px) {
+    padding: 10px 20px;
+    box-sizing: border-box;
+  }
   img {
     height: 16px;
   }

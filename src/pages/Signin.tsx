@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { message } from 'antd';
 import './signin.scss';
+import logo from '../images/main_logo.svg';
 import { useNavigate } from 'react-router-dom';
+
 import axios from 'axios';
 
 function Signin() {
@@ -63,11 +65,7 @@ function Signin() {
         <h1 className="a11y-hidden">로그인 페이지</h1>
         <div className="login-form">
           <form>
-            <img
-              src="./images/CINE_SQUARE_logo.svg"
-              onClick={() => navigate('/')}
-            />
-
+            <img src={logo} onClick={() => navigate('/')} />
             <fieldset>
               <legend>로그인</legend>
               <div className="input-box">

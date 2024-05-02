@@ -298,7 +298,7 @@ export default function Profile() {
                       더보기
                     </Link>
                   </h4>
-                  <div>
+                  <div className="favorite-person">
                     <ul>
                       <li>
                         <figure>
@@ -337,6 +337,31 @@ export default function Profile() {
                       </li>
                     </ul>
                   </div>
+                  <div className="favorite-person-xs">
+                    <ul>
+                      <li>
+                        <figure>
+                          <img src="../images/profile_picture.png" alt="" />
+                        </figure>
+                        <p>도경수</p>
+                        <p>배우</p>
+                      </li>
+                      <li>
+                        <figure>
+                          <img src="../images/profile_picture.png" alt="" />
+                        </figure>
+                        <p>도경수</p>
+                        <p>배우</p>
+                      </li>
+                      <li>
+                        <figure>
+                          <img src="../images/profile_picture.png" alt="" />
+                        </figure>
+                        <p>도경수</p>
+                        <p>배우</p>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
                 <div>
                   <h4>
@@ -347,32 +372,6 @@ export default function Profile() {
                   </h4>
                 </div>
               </div>
-              {/* <div className="profile-info-cont6 cont">
-                <h3>마이 컬렉션</h3>
-                <ul>
-                  <li>
-                    <img src="../images/cruella.jpg" alt="cruella" />
-                  </li>
-                  <li>
-                    <img src="../images/voyagers.jpg" alt="voyagers" />
-                  </li>
-                  <li>
-                    <img
-                      src="../images/Fast_and_the_Furious.jpg"
-                      alt="Fast_and_the_Furious"
-                    />
-                  </li>
-                  <li>
-                    <img src="../images/pipe_line.jpg" alt="pipe_line" />
-                  </li>
-                  <li>
-                    <img src="../images/poupelle.jpg" alt="poupelle" />
-                  </li>
-                </ul>
-                <Link to="/mybooks" className="add">
-                  더보기
-                </Link>
-              </div> */}
             </div>
           </section>
         </div>

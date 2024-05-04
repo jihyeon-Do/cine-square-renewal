@@ -69,8 +69,25 @@ function HeaderTemplate() {
     }
   }
 
-  function mHandleSearch() {
-    setIsSearch(!isSearch);
+  function mHandleSearch(
+    e:
+      | React.KeyboardEvent<HTMLInputElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    type: string,
+  ) {
+    if (type === 'click') {
+      setIsSearch(!isSearch);
+    }
+    if (value === '') return;
+    if (
+      (e as React.KeyboardEvent<HTMLInputElement>).key === 'Enter' ||
+      (e.target === searchClickButton.current && e.type === 'click')
+    ) {
+      if (type === 'enter') {
+        setIsSearch(false);
+      }
+      navigate(`/search/${value}`);
+    }
   }
 
   return (
@@ -141,7 +158,7 @@ function HeaderTemplate() {
           >
             <input
               ref={searchInput}
-              onKeyUp={(e) => handleSearch(e)}
+              onKeyUp={(e) => mHandleSearch(e, 'enter')}
               type="text"
               value={value}
               onChange={search}
@@ -152,7 +169,7 @@ function HeaderTemplate() {
             <button
               ref={searchClickButton}
               className="search-button"
-              onClick={mHandleSearch}
+              onClick={(e) => mHandleSearch(e, 'click')}
             >
               검색버튼
             </button>

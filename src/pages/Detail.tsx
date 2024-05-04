@@ -108,6 +108,7 @@ export default function Detail() {
         );
         setDisplayScore(scoreResponse.data.result);
         setScore(scoreResponse.data.result);
+        //: 내 코멘트
         const myComment = await axios.get(
           `${LOCALAPI}/api/user-reports/movies/${movieId}/comment`,
           bearer_header,
@@ -115,7 +116,7 @@ export default function Detail() {
         setComment(myComment.data.result);
         setValue(myComment.data.result.content);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
     if (access_token) {

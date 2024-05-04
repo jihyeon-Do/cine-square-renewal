@@ -258,6 +258,11 @@
   section {
     .profile-full-info {
       // padding-top: 100px;
+      .profile-info-cont2 {
+        & > div {
+          padding: 10px 20px;
+        }
+      }
 
       .profile-info-cont1 {
         .person-info {
@@ -510,13 +515,24 @@
         }
       }
       .profile-info-cont8 {
-        h4 {
-          font-weight: 500;
+        .like-comment-list {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          @media all and (max-width: 500px) {
-            font-size: 0.9rem;
+          h4 {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            span {
+              font-size: 0.9rem;
+              font-weight: 400;
+              color: #848484;
+              margin-left: 8px;
+            }
+            @media all and (max-width: 500px) {
+              font-size: 0.9rem;
+            }
           }
           a {
             font-size: 0.8rem;
@@ -526,6 +542,7 @@
             }
           }
         }
+
         & > div {
           padding: 15px 15px;
         }

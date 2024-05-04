@@ -1,4 +1,10 @@
-import React, { useRef, useState, useEffect, ChangeEvent } from 'react';
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  ChangeEvent,
+  useLayoutEffect,
+} from 'react';
 import { useSelector } from 'react-redux';
 import FooterTemplate from '../components/FooterTemplate';
 import HeaderTemplate from '../components/HeaderTemplate';
@@ -10,6 +16,7 @@ import CineSuggestion from '../components/CineSuggestion';
 import { movieStorage } from '../data/CineSuggestionMovieList';
 import { actor } from '../data/MyInfo';
 import PersonListBox from '../components/PersonListBox';
+import APIService from '../service/APIService';
 
 // import APIService from '../service/APIService';
 
@@ -19,76 +26,147 @@ import PersonListBox from '../components/PersonListBox';
 // let evaluatedMovieCount = [];
 // let evaluatedMovieGrade = [];
 
+type UserInfo = {
+  account: string;
+  name: string;
+  nickname: string;
+  user_id: number;
+};
+
 export default function Profile() {
   const [imgUrl, setImgUrl] = useState<string>('');
-  const imageRef = useRef(null);
-  const canvasDom = useRef(null);
   const [evaluatedCount, setEvaluatedCount] = useState([]);
   const [evaluatedGrade, setEvaluatedGrade] = useState([]);
-  const [totalCount, setTotalCount] = useState();
+  const [totalCount, setTotalCount] = useState(0);
   const [evaluatedMovieList, setEvaluatedMovieList] = useState([]);
+  const [userInfo, setUserInfo] = useState<UserInfo>();
+  const [evaluated, setEvaluated] = useState({
+    movie: 0,
+    see: 0,
+    comment: 0,
+  });
+  const [likeCommentCounts, setLikeCommentCounts] = useState();
+
+  const imageRef = useRef(null);
+  const canvasDom = useRef<HTMLCanvasElement | null>(null);
+
+  const access_token = sessionStorage.getItem('token');
+  const bearer_header = {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  };
+  const LOCALAPI = APIService.LOCALAPI;
 
   //   const account = useSelector((state) => state.auth.account);
   //   const userName = useSelector((state) => state.auth.userName);
 
-  //   useEffect(() => {
-  //     async function Evaluated() {
-  //       try {
-  //         const response = await axios({
-  //           method: 'POST',
-  //           url: `${PROXY}/user/gradeList`,
-  //           data: {
-  //             account: account,
-  //           },
-  //         });
-  //         const result = response.data.result;
-  //         evaluatedMovieCount = result.map((v) => +v.count);
-  //         evaluatedMovieGrade = result.map((v) => v.grade + '점');
-  //         setEvaluatedCount(evaluatedMovieCount);
-  //         setEvaluatedGrade(evaluatedMovieGrade);
-  //         let a = 0;
-  //         for (let i = 0; i < evaluatedMovieCount.length; i++) {
-  //           a += evaluatedMovieCount[i];
-  //         }
-  //         setTotalCount(a);
-  //       } catch (e) {
-  //         console.log(e);
-  //       }
-  //     }
-  //     Evaluated();
-  //   }, [account]);
-
-  //   useEffect(() => {
-  //     const ctx = canvasDom.current.getContext('2d');
-  //     var myChart = new Chart(ctx, {
-  //       type: 'bar',
-  //       data: {
-  //         labels: evaluatedGrade,
-  //         datasets: [
-  //           {
-  //             barPercentage: 1,
-  //             barThickness: 30,
-  //             // minBarLength: 2,
-  //             backgroundColor: '#6100ff',
-  //             label: '내가 해당 점수로 평가한 영화 갯수',
-  //             data: evaluatedCount,
-  //           },
-  //         ],
-  //       },
-  //     });
-  //     return () => {
-  //       myChart.destroy();
-  //     };
-  //   }, [evaluatedCount, evaluatedGrade]);
-
+  //: 평가한 영화 분포 점수 리스트 받아오기
   Chart.register(...registerables);
 
-  const hanedleImgChange = (e: ChangeEvent<HTMLInputElement>) => {
+  useEffect(() => {
+    async function Evaluated() {
+      try {
+        const response = await axios(
+          `${LOCALAPI}/api/user-reports/movie-rating`,
+          bearer_header,
+        );
+        const result = response.data.list;
+        console.log(result);
+        const evaluatedMovieCount = result.map((v: any) => +v.count);
+        const evaluatedMovieGrade = result.map((v: any) => v.score + '점');
+        setEvaluatedCount(evaluatedMovieCount);
+        setEvaluatedGrade(evaluatedMovieGrade);
+        let a = 0;
+        for (let i = 0; i < evaluatedMovieCount.length; i++) {
+          a += evaluatedMovieCount[i];
+        }
+        setTotalCount(a);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    Evaluated();
+  }, []);
+
+  //: 평가한 영화 분포 점수 리스트 차트로 그리기
+  useEffect(() => {
+    if (canvasDom.current) {
+      const ctx = canvasDom.current.getContext(
+        '2d',
+      ) as CanvasRenderingContext2D;
+      const myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: evaluatedGrade,
+          datasets: [
+            {
+              barPercentage: 1,
+              barThickness: 25,
+              backgroundColor: '#6100ff',
+              label: '내가 해당 점수로 평가한 영화 갯수',
+              data: evaluatedCount,
+            },
+          ],
+        },
+      });
+      return () => {
+        myChart.destroy();
+      };
+    }
+  }, [evaluatedCount, evaluatedGrade]);
+
+  //: 내정보 가져오기
+  useEffect(() => {
+    const getMyInfo = async () => {
+      const myInfo = await axios.get(`${LOCALAPI}/api/users/me`, bearer_header);
+      setUserInfo(myInfo.data.data);
+    };
+    getMyInfo();
+  }, []);
+
+  //: 평가한 영화 갯수, 작성한 코멘트 갯수 가져오기
+  useEffect(() => {
+    const evaluateCounts = async () => {
+      const moive = await axios.get(
+        `${LOCALAPI}/api/user-reports/score-counts`,
+        bearer_header,
+      );
+      const comment = await axios.get(
+        `${LOCALAPI}/api/movie-reports/comments/counts`,
+        bearer_header,
+      );
+      setEvaluated({
+        ...evaluated,
+        comment: comment.data.data,
+        movie: moive.data.data,
+      });
+    };
+    evaluateCounts();
+  }, []);
+
+  useEffect(() => {
+    const getLikeCommentCounts = async () => {
+      const comment = await axios.get(
+        `${LOCALAPI}/api/user-reports/like-comment-counts`,
+        bearer_header,
+      );
+      setLikeCommentCounts(comment.data.data);
+    };
+    getLikeCommentCounts();
+  }, []);
+
+  const hanedleImgChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files && files.length > 0) {
       const fileUrl = files[0];
       const objectURL = URL.createObjectURL(fileUrl);
       setImgUrl(objectURL);
+      // const response = await axios.post(
+      //   `${LOCALAPI}/api/upload/users/${myInfo.data.data.user_id}`,
+      //   { file: objectURL },
+      //   bearer_header,
+      // );
     }
   };
 
@@ -158,13 +236,13 @@ export default function Profile() {
                 <form>
                   <div className="profile-name user-profile">
                     <label htmlFor="user_name" className="a11y-hidden">
-                      이름
+                      {userInfo && userInfo.nickname}
                     </label>
                     <input
                       type="text"
                       id="user_name"
                       // placeholder={userName}
-                      placeholder="도지현"
+                      placeholder={userInfo?.nickname}
                       disabled
                     />
                   </div>
@@ -175,7 +253,7 @@ export default function Profile() {
                     <input
                       type="text"
                       id="user_email"
-                      placeholder="wlgus_57@naver.com"
+                      placeholder={userInfo?.account}
                       // placeholder={account}
                       disabled
                     />
@@ -189,19 +267,19 @@ export default function Profile() {
                 <li>
                   <Link to="/mychoice/:listname">
                     <span>평가한 영화</span>
-                    <span>50</span>
+                    <span>{evaluated.movie}</span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/mychoice/:listname">
                     <span>보고싶어요</span>
-                    <span>50</span>
+                    <span>{evaluated.see}</span>
                   </Link>
                 </li>
                 <li>
                   <Link to="/review">
-                    <span>작성한 리뷰</span>
-                    <span>14</span>
+                    <span>작성한 코멘트</span>
+                    <span>{evaluated.comment}</span>
                   </Link>
                 </li>
               </ul>
@@ -363,13 +441,13 @@ export default function Profile() {
                     </ul>
                   </div>
                 </div>
-                <div>
+                <div className="like-comment-list">
                   <h4>
-                    좋아요한 리뷰
-                    <Link to="/favorite/review" className="add">
-                      더보기
-                    </Link>
+                    좋아요한 코멘트 <span>{likeCommentCounts}</span>
                   </h4>
+                  <Link to="/favorite/review" className="add">
+                    더보기
+                  </Link>
                 </div>
               </div>
             </div>

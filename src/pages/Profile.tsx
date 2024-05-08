@@ -56,6 +56,7 @@ export default function Profile() {
       Authorization: `Bearer ${access_token}`,
     },
   };
+
   const LOCALAPI = APIService.LOCALAPI;
 
   //   const account = useSelector((state) => state.auth.account);
@@ -119,6 +120,7 @@ export default function Profile() {
   useEffect(() => {
     const getMyInfo = async () => {
       const myInfo = await axios.get(`${LOCALAPI}/api/users/me`, bearer_header);
+      setImgUrl(myInfo.data.data.image);
       setUserInfo(myInfo.data.data);
     };
     getMyInfo();
@@ -161,11 +163,18 @@ export default function Profile() {
       const fileUrl = files[0];
       const objectURL = URL.createObjectURL(fileUrl);
       setImgUrl(objectURL);
-      // const response = await axios.post(
-      //   `${LOCALAPI}/api/upload/users/${myInfo.data.data.user_id}`,
-      //   { file: objectURL },
-      //   bearer_header,
-      // );
+      const formData = new FormData();
+      formData.append('file', fileUrl);
+      const response = await axios.post(
+        `${LOCALAPI}/api/users/me/image`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        },
+      );
     }
   };
 
@@ -221,7 +230,7 @@ export default function Profile() {
                       type="file"
                       alt="profile-image"
                       aria-label="프로필사진"
-                      accept="image/jpeg, image/png, image/jpg, image/webp"
+                      accept="image/*"
                       required
                     />
                     <div

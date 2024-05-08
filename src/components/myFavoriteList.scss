@@ -14,119 +14,141 @@
   }
 
   ul {
-    padding-top: 20px;
-    padding-bottom: 40px;
-    max-width: 640px;
     width: 100%;
-    margin: 0 auto;
+    margin-top: 20px;
+    @media all and (max-width: 800px) {
+      grid-template-columns: repeat(2, minmax(0px, 1fr));
+    }
+    @media all and (max-width: 600px) {
+      grid-template-columns: repeat(1, minmax(0px, 1fr));
+    }
+    .no-comment {
+      // padding: 10px 0;
+      color: #3c3c3c;
+    }
     li {
-      background-color: #f8f8f8;
-      box-sizing: border-box;
-      padding: 15px;
+      padding: 15px 15px;
+      background-color: rgb(242, 242, 242);
+      color: #3c3c3c;
       border-radius: 5px;
-      margin-bottom: 14px;
-      p:first-child {
+      .writer {
+        font-size: 1.1rem;
+        padding-bottom: 8px;
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        font-size: 1rem;
-        @media all and (max-width: 600px) {
-          font-size: 0.9rem;
+        justify-content: space-between;
+        @media all and (max-width: 400px) {
+          font-size: 1rem;
         }
-        @media all and (max-width: 350px) {
+        .profile {
+          display: flex;
+          align-items: center;
+          img {
+            width: 30px;
+            // display: inline-block;
+            margin-right: 10px;
+          }
+        }
+        span {
+          display: inline-block;
+          background-color: #fff;
+          padding: 3px 5px;
+          font-size: 0.9rem;
+          border-radius: 20px;
+          color: rgb(255, 153, 0);
+          @media all and (max-width: 400px) {
+            font-size: 0.8rem;
+          }
+          svg {
+            width: 15px;
+            height: auto;
+            margin-bottom: -1px;
+            margin-right: 3px;
+            @media all and (max-width: 400px) {
+              width: 13px;
+            }
+          }
+        }
+      }
+      .content {
+        border-top: 1px solid rgb(229, 229, 229);
+        border-bottom: 1px solid rgb(229, 229, 229);
+        padding: 10px 0;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+        @media all and (max-width: 400px) {
           font-size: 0.8rem;
         }
-        svg {
-          width: auto;
-          height: 16px;
-          margin-right: 3px;
+        img {
+          width: 100px;
+          height: auto;
+          border-radius: 5px;
         }
-        div:first-child {
-          font-size: 1.1rem;
-          @media all and (max-width: 600px) {
-            font-size: 1rem;
-          }
-          @media all and (max-width: 350px) {
-            font-size: 0.9rem;
+        & > div {
+          margin-left: 15px;
+          p {
+            &:first-of-type {
+              font-size: 1rem;
+              font-weight: 500;
+              margin-bottom: 2px;
+            }
+            &:last-of-type {
+              font-size: 0.9rem;
+              font-weight: 300;
+              margin-bottom: 2px;
+            }
           }
           span {
             font-size: 0.8rem;
-            color: #b5b5b5;
-            margin-left: 5px;
-            @media all and (max-width: 600px) {
-              font-size: 0.7rem;
-            }
-            @media all and (max-width: 350px) {
-              font-size: 0.65rem;
-            }
+            color: rgb(120, 120, 120);
+            font-weight: 400;
+            display: inline-block;
+            margin-bottom: 15px;
           }
         }
-        div:last-child {
-          display: flex;
-          align-items: flex-start;
-          color: #ffaa00;
-        }
       }
-      p:nth-child(2) {
-        margin: 7px 0 4px 0;
-        color: rgb(16, 16, 16);
-        @media all and (max-width: 600px) {
-          font-size: 0.9rem;
-        }
-        @media all and (max-width: 350px) {
-          font-size: 0.8rem;
-        }
-      }
-      p:nth-child(3) {
-        @media all and (max-width: 600px) {
-          font-size: 0.9rem;
-        }
-        @media all and (max-width: 350px) {
-          font-size: 0.8rem;
+      .like-recomment {
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid rgb(229, 229, 229);
+        padding: 10px 0;
+        img {
+          width: 20px;
+          margin-top: -5px;
+          margin-right: 1px;
         }
         span {
-          color: #939396;
-          display: inline-block;
-          margin-left: 5px;
-          @media all and (max-width: 600px) {
+          display: flex;
+          align-items: center;
+          @media all and (max-width: 400px) {
             font-size: 0.9rem;
           }
-          @media all and (max-width: 350px) {
-            font-size: 0.7rem;
+          &:first-child {
+            margin-right: 10px;
+          }
+          &:last-child {
+            img {
+              margin-top: -1px;
+            }
           }
         }
       }
-      p:nth-child(4) {
-        width: 60px;
-        margin-top: 5px;
-        font-size: 0.9rem;
+      .like-btn {
+        padding: 10px 0;
+        padding-bottom: 0;
 
-        // border-radius: 10px;
         button {
-          width: 100%;
-          padding: 5px;
-          background-color: transparent;
-          display: flex;
-          align-items: flex-end;
-          justify-content: center;
-          border: 1px solid rgb(16, 16, 16);
-          border-radius: 10px;
-          @media all and (max-width: 600px) {
-            font-size: 0.8rem;
+          color: #8e00fd;
+          @media all and (max-width: 400px) {
+            font-size: 0.75rem;
           }
-          @media all and (max-width: 350px) {
-            font-size: 0.7rem;
-          }
-        }
-        img {
-          height: 17px;
-          display: inline-block;
-          margin-right: 3px;
-          @media all and (max-width: 600px) {
-            height: 15px;
-          }
-          @media all and (max-width: 350px) {
-            height: 13px;
+          &.active {
+            background-color: #8e00fd;
+            padding: 5px 10px;
+            color: white;
+            border-radius: 5px;
           }
         }
       }

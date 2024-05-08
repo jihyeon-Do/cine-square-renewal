@@ -2,32 +2,81 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './myFavoriteList.scss';
 import { ReactComponent as FullStar1 } from '../images/star-full.svg';
+import { ReactComponent as EmptyStar } from '../images/star-empty1.svg';
+import { ReactComponent as HalfStar } from '../images/star-half1.svg';
+import { ReactComponent as FullStar } from '../images/star-full1.svg';
+import like_thumb from '../images/like_thumb.png';
+import commentIcon from '../images/comment_icon.png';
+
 import unlike_thumb from '../images/unlike_thumb.png';
 import { useLocation } from 'react-router-dom';
 import personProfileImg from '../images/profile_picture.png';
 
+import APIService from '../service/APIService';
+import axios from 'axios';
+
 type Review = {
-  nickname?: string;
-  score?: number;
-  comment?: string;
-  like?: number;
-  myLikes?: number;
-  date?: string;
-  movieInfo?: {
-    title: string;
-    date: string;
-  };
-  name?: string;
-  role?: string;
-  work?: string;
+  comment_id: number;
+  content: string;
+  like: number;
+  movie_id: number;
+  nickname: string;
+  reply_count: number;
+  score: number;
+  user_id: number;
+  open_date: string;
+  title: string;
+  thumbnail: string;
+  isLike: boolean;
 };
 
 interface MyMovieListProps {
   data: Review[];
   pageName: string;
+  func: any;
 }
 
-function MyFavotieList({ data, pageName }: MyMovieListProps) {
+function MyFavotieList({ data, pageName, func }: MyMovieListProps) {
+  const LOCALAPI = APIService.LOCALAPI;
+  const access_token = sessionStorage.getItem('token');
+  const bearer_header = {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  };
+  //: 좋아요 토글
+  const like = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    id: number,
+    likeStatus: boolean,
+    movieId: number,
+  ) => {
+    try {
+      if (likeStatus) {
+        await axios.delete(
+          `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${id}`,
+          bearer_header,
+        );
+      } else {
+        await axios.post(
+          `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${id}`,
+          {},
+          bearer_header,
+        );
+      }
+      const toggleLike = data.map((v, i) => {
+        if (v.comment_id === id) {
+          return { ...v, isLike: !v.isLike };
+        } else {
+          return v;
+        }
+      });
+      func(toggleLike);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <section className="my-choice">
       {
@@ -43,40 +92,63 @@ function MyFavotieList({ data, pageName }: MyMovieListProps) {
       }
       {pageName === 'review' || pageName === 'favoriteReview' ? (
         <ul>
-          {data.map((v, i) => (
-            <li key={i}>
-              <p>
-                <div>
-                  {v.movieInfo?.title}
-                  <span>영화</span>
-                  <span>{v.movieInfo?.date}</span>
+          {data.length !== 0 ? (
+            data.map((v, i) => (
+              <li key={i}>
+                <div className="writer">
+                  <div className="profile">
+                    <img src={personProfileImg} alt="" />
+                    {v.nickname}
+                  </div>
+                  {v.score ? (
+                    <span>
+                      <FullStar />
+                      {v.score}
+                    </span>
+                  ) : (
+                    <></>
+                  )}
                 </div>
-                <div>
-                  <FullStar1 />
-                  {v.score}점
+                <div className="content">
+                  <img src={v.thumbnail} alt="" />
+                  <div>
+                    <p>{v.title}</p>
+                    <span>영화 {v.open_date}</span>
+                    <p>{v.content}</p>
+                  </div>
                 </div>
-              </p>
-              <p>{v.comment}</p>
-              <p>
-                {v.nickname?.slice(0, 4) + '****'} <span>{v.date}</span>
-              </p>
-              <p>
-                <button>
-                  <img src={unlike_thumb} alt="" />
-                  <span>{v.like}</span>
-                </button>
-              </p>
-            </li>
-          ))}
+                <div className="like-recomment">
+                  <span>
+                    <img src={like_thumb} alt="좋아요" />
+                    {v.like}
+                  </span>
+                  <span>
+                    <img src={commentIcon} alt="코멘트" />
+                    {v.reply_count}
+                  </span>
+                </div>
+                <div className="like-btn">
+                  <button
+                    className={`${v.isLike && 'active'}`}
+                    onClick={(e) => like(e, v.comment_id, v.isLike, v.movie_id)}
+                  >
+                    {v.isLike ? '좋아요 취소' : '좋아요'}
+                  </button>
+                </div>
+              </li>
+            ))
+          ) : (
+            <p className="no-comment">코멘트가 없습니다.</p>
+          )}
         </ul>
       ) : (
         <ul className="favorite-person">
           {data.map((v, i) => (
             <li key={i}>
               <img src={personProfileImg} alt="인물 프로필 기본이미지" />
-              <p>{v.name}</p>
-              <p>{v.role}</p>
-              <p>{v.work}</p>
+              <p>{v.nickname}</p>
+              {/* <p>{v.role}</p> */}
+              {/* <p>{v.work}</p> */}
             </li>
           ))}
         </ul>

@@ -72,7 +72,6 @@ export default function Profile() {
           bearer_header,
         );
         const result = response.data.list;
-        console.log(result);
         const evaluatedMovieCount = result.map((v: any) => +v.count);
         const evaluatedMovieGrade = result.map((v: any) => v.score + '점');
         setEvaluatedCount(evaluatedMovieCount);

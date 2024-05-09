@@ -12,6 +12,7 @@ import Owlslide from '../components/Owlslide';
 import VideoFrameContainer from '../containers/VideoFrameContainer';
 import CineSuggestion from '../components/CineSuggestion';
 import axios from 'axios';
+import APIService from '../service/APIService';
 // import { startGetBoxOfficeListActionCreator } from '../redux/modules/boxoffice';
 // import BoxOffice from '../components/BoxOffice';
 // import TokenService from '../service/TokenService';
@@ -48,7 +49,7 @@ function Home() {
   const [individualArray, setIndividualArray] = useState<SimpleMoiveInfos[]>(
     [],
   );
-  const LOCALAPI = 'http://3.38.64.130:8080';
+  const LOCALAPI = APIService.LOCALAPI;
   // const token = useSelector((state: RootState) => state.auth.token);
   // const account = useSelector((state) => state.auth.account);
   // const userName = useSelector((state) => state.auth.userName);

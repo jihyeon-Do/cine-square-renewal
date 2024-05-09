@@ -158,20 +158,29 @@ $border-color: #eee;
         position: absolute;
         img {
           height: 40px;
+          @media all and (max-width: 600px) {
+            height: 30px;
+          }
         }
       }
       .prev-btn {
         top: 50%;
         margin-top: -20px;
-        left: -15px;
+        left: -1.5%;
         display: none;
         z-index: 10;
+        @media all and (max-width: 600px) {
+          margin-top: -15px;
+        }
       }
       .next-btn {
         top: 50%;
         margin-top: -20px;
-        right: -15px;
+        right: -1.5%;
         z-index: 10;
+        @media all and (max-width: 600px) {
+          margin-top: -15px;
+        }
       }
     }
     .my-collection-wrapper {

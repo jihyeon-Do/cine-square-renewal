@@ -9,9 +9,10 @@ import { ReactComponent as FullStar1 } from '../images/star-full.svg';
 import { ReactComponent as Reset } from '../images/reset.svg';
 import BookmarkEmpty from '../images/unlike.png';
 import BookmarkFull from '../images/like.png';
-import like_thumb from '../images/like_thumb.png';
+import likeThumb from '../images/like_thumb.png';
 import commentIcon from '../images/comment_icon.png';
 import noImg from '../images/no-images.png';
+import profilePicture from '../images/profile_picture.png';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -625,7 +626,7 @@ export default function Detail() {
                         <img
                           // src={`${character.characterImg}`}
                           // alt={`${character.realNm}`}
-                          src={'../images/profile_picture.png'}
+                          src={profilePicture}
                         />
                         <p>{character}</p>
                         {/* <p>{character.movieRoll}</p>
@@ -657,7 +658,7 @@ export default function Detail() {
                         <div className="content">{v.content}</div>
                         <div className="like-recomment">
                           <span>
-                            <img src={like_thumb} alt="좋아요" />
+                            <img src={likeThumb} alt="좋아요" />
                             {v.like}
                           </span>
                           <span>

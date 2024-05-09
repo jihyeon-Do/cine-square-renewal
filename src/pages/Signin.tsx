@@ -29,6 +29,7 @@ function Signin() {
           confirm: false,
         });
         sessionStorage.setItem('token', response.data.access_token);
+        sessionStorage.setItem('refresh-token', response.data.refresh_token);
         alert('로그인성공');
         navigate('/');
       } else {

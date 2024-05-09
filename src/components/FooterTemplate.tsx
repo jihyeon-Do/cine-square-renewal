@@ -42,7 +42,7 @@ export default function FooterTemplate() {
             <p>씨네스퀘어</p>
             <p>대표 : 도지현 이정준 조수민</p>
             <small className="copyright">
-              CINE SQUARE &copy; 2021 by CINESQUARE, Inc. All rights reserved.
+              CINE SQUARE &copy; 2024 by CINESQUARE, Inc. All rights reserved.
             </small>
           </div>
         </div>

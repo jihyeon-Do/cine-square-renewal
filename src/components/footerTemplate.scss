@@ -56,6 +56,12 @@ footer {
       }
       li a {
         padding: 5px;
+        @media all and (max-width: 500px) {
+          padding: 5px 0;
+        }
+      }
+      li:first-child a {
+        padding-left: 0;
       }
 
       li:nth-child(n + 2)::before {

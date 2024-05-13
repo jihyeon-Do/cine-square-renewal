@@ -25,13 +25,13 @@ function App() {
         <Route path={'/signup'} element={<Signup />} />
         <Route path={'/profile'} element={<Profile />} />
         <Route path={'/detail/:movieId'} element={<Detail />} />
+        <Route path={'/comment/:commentId'} element={<CommentDetail />} />
         <Route path={'/mychoice/:listname'} element={<MyChoice />} />
         <Route path={'/review'} element={<MyChoice />} />
         <Route path={'/favorite/review'} element={<MyChoice />} />
         <Route path={'/favorite/person'} element={<MyChoice />} />
         <Route path={'/search/:keyword'} element={<Search />} />
         <Route path={'/evaluation'} element={<Evaluation />} />
-        <Route path={'/comment/detail'} element={<CommentDetail />} />
         <Route path={'/'} element={<Home />} />
         {/* <Route element={<NotFound />} /> */}
       </Routes>

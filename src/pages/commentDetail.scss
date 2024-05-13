@@ -22,8 +22,11 @@
               span {
                 font-size: 0.8rem;
                 font-weight: 300;
-                color: rgb(74, 74, 74);
+                color: rgb(61, 61, 61);
                 margin-left: 5px;
+                &:nth-of-type(2) {
+                  color: rgb(149, 149, 149);
+                }
               }
               &:nth-of-type(2) {
                 font-size: 1rem;
@@ -106,6 +109,8 @@
             padding: 10px 0;
             color: rgb(103, 104, 106);
             transition: all 0.2s;
+            font-size: 0.9rem;
+            font-weight: 300;
             &:hover {
               background-color: rgb(240, 240, 240);
               border-radius: 5px;
@@ -120,7 +125,7 @@
                 right: 0;
                 top: 50%;
                 transform: translate(0.5px, -50%);
-                background: rgb(240, 240, 240);
+                background: rgb(214, 214, 214);
                 width: 1px;
                 height: 14px;
                 margin-right: -5px;
@@ -178,4 +183,89 @@
       }
     }
   }
+}
+.reply-modal {
+  display: none;
+  &.active {
+    display: block;
+  }
+}
+.replies {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 200;
+  background-color: #fff;
+  width: 50%;
+  max-width: 500px;
+  border-radius: 10px;
+  padding: 30px;
+  box-sizing: border-box;
+  .write-replies {
+    width: 100%;
+    fieldset {
+      width: 100%;
+      padding: 0;
+      border: 0;
+      box-sizing: border-box;
+      margin: 0;
+    }
+    legend {
+      font-size: 1.1rem;
+      color: #000000;
+      margin-bottom: 20px;
+      font-weight: 500;
+      @media all and (max-width: 800px) {
+        font-size: 0.8rem;
+      }
+    }
+    // border-bottom: 0.5px solid $border-color;
+    // input {
+    //   border: 1px solid rgb(223, 223, 223);
+    //   box-sizing: border-box;
+    //   padding: 30px 30px;
+    //   width: 88%;
+    //   float: left;
+    //   font-weight: normal;
+    //   border-top-left-radius: 5px;
+    //   border-bottom-left-radius: 5px;
+    //   @media all and (max-width: 800px) {
+    //     padding: 20px 20px;
+    //     font-size: 0.75rem;
+    //   }
+    // }
+    textarea {
+      box-sizing: border-box;
+      // padding: 10px;
+      font-weight: normal;
+      border: none;
+      resize: none;
+      width: 100%;
+      min-height: 200px;
+      &:focus {
+        outline: none;
+      }
+    }
+    button {
+      float: right;
+      background-color: #8e00fd;
+      color: white;
+      display: block;
+      font-size: 0.9rem;
+      border-radius: 5px;
+      padding: 8px 15px;
+      box-sizing: border-box;
+      font-weight: 300;
+    }
+  }
+}
+.close-modal {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  background-color: #ddd;
+  padding: 4px 10px;
+  border-radius: 50%;
+  font-size: 1rem;
 }

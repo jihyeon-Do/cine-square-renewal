@@ -1,173 +1,254 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import HeaderTemplate from '../components/HeaderTemplate';
 import FooterTemplate from '../components/FooterTemplate';
 import profilePicture from '../images/profile_picture.png';
 import { ReactComponent as FullStar1 } from '../images/star-full.svg';
 import testPoster from '../images/test_poster.jpeg';
-
+import axios, { AxiosResponse } from 'axios';
+import APIService from '../service/APIService';
 import './commentDetail.scss';
 
+interface CommentContent {
+  comment_id: number;
+  content: string;
+  created: string;
+  like: number;
+  productionYear: number;
+  reply_count: number;
+  thumbnail: string;
+  title: string;
+  updated: string;
+}
+
+interface CommentDetailInfo {
+  comment_id: number;
+  content: string;
+  created: string;
+  like: number;
+  updated: string;
+}
+
 function CommentDetail() {
+  //: movie id는 location state에서 가져오고 comment id는 path에서 가져온다.
+  const [commentContent, setCommentContent] = useState<CommentContent | null>();
+  const [replies, setReplies] = useState([]);
+  const [value, setValue] = useState('');
+  const [comment, setComment] = useState<Comment | null>(null);
+  const [modal, setModal] = useState(false);
+
+  const formtag = useRef(null);
+  const navigate = useNavigate();
+
+  const LOCALAPI = APIService.LOCALAPI;
+  const location = useLocation();
+  const { commentId } = useParams();
+  const locationState = location.state as {
+    movieId: string;
+    nickname: string;
+    score: number;
+  };
+  const access_token = sessionStorage.getItem('token');
+  const bearer_header = {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  };
+
+  //: 날짜편집
+  const getCreatedDate = (data: CommentDetailInfo) => {
+    const date = new Date(data.created);
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const getDate = date.getDate();
+    const createdDate = `${year}-${month < 10 ? '0' + month : month}-${getDate}`;
+    return createdDate;
+  };
+
+  //: 코멘트 정보 가져오기
+  useEffect(() => {
+    const getCommentDetailInfo = async () => {
+      const response = await axios.get(
+        `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}`,
+      );
+      const createdDate = getCreatedDate(response.data.result);
+      const commentMovieInfo = await axios.get(
+        `${LOCALAPI}/api/movies/${locationState.movieId}`,
+      );
+      setCommentContent({
+        ...response.data.result,
+        thumbnail: commentMovieInfo.data.data.thumbnail,
+        title: commentMovieInfo.data.data.title,
+        productionYear: commentMovieInfo.data.data.production_year,
+        created: createdDate,
+      });
+    };
+    getCommentDetailInfo();
+  }, []);
+
+  //: 코멘트 대댓글 가져오기
+  useEffect(() => {
+    const getRelpies = async () => {
+      const response = await axios.get(
+        `${LOCALAPI}/api/movie-reports/comments/${commentId}`,
+      );
+      setReplies(response.data.list);
+    };
+    getRelpies();
+  }, []);
+
+  function addComment(e: any) {
+    setValue(e.target.value);
+  }
+
+  const requiredLogin = () => {
+    alert('로그인 후 이용해 주세요');
+    navigate('/signin');
+    // dispatch(push('/signin'));
+  };
+
+  function enterPressComment(e: { key: string; preventDefault: () => void }) {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    handleAddComment();
+  }
+
+  async function handleAddComment() {
+    if (access_token) {
+      try {
+        const response = await axios.post(
+          `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments`,
+          {
+            content: value,
+          },
+          bearer_header,
+        );
+        // setComments([...comments, response.data.data]);
+        const myComment = await axios.get(
+          `${LOCALAPI}/api/user-reports/movies/${locationState.movieId}/comment`,
+          bearer_header,
+        );
+        setComment(myComment.data.result);
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      requiredLogin();
+    }
+  }
+
   return (
     <>
       <HeaderTemplate />
       <main className="comment-detail-main">
         <h2 className="readable-hidden">코멘트 상세 페이지</h2>
         <section>
-          <article className="user-movie-info">
-            <div>
-              <p>
-                <img src={profilePicture} alt="코멘트 작성자 프로필 이미지" />
-                <span>영화보고 밥먹고 커피마시고</span>
-                <span>2024-05-16</span>
-              </p>
-              <p>범죄도시4</p>
-              <p>영화 | 2023</p>
-              <span>
-                <FullStar1 />
-                <span>3.5</span>
-              </span>
-            </div>
-            <div>
-              <img src={testPoster} alt="영화 포스터" />
-            </div>
-          </article>
-          <article className="comment-content">
-            분명 구릴거란 걸 알면서도 계속 냄새 맡게되는 꼬카인 마냥 안보고
-            넘기기에는 끊을 수 없는 중독성이 있는 시리즈.
-            <br />
-            흉악범죄와 사기가 만연한 요즘, 경찰 무능론이 팽배한 한국사회에서
-            어떤 범죄자도 맨손으로 때려 잡는 마석도 형사를 보면서 느끼는
-            카타르시스는 너무나 강력하다.
-            <br />
-            #사실상 이번 편이 범죄도시 3편이라 생각이 들정도로 1, 2편의 마석도
-            모습으로 돌아옴.
-            <br />
-            #주인공인 마석도는 여전히 아날로그적인 모습을 유지하고 있는데,
-            범죄수법과 수사방식의 복잡성으로 인해 항상 막무가내식 액션으로
-            사건을 마무리하게 되는 아쉬움.
-            <br />
-            #이번 용병출신의 빌런도 장첸의 야비함과 강해상의 막장스러운
-            잔인함에는 못미친다. 그래서인지 마석도의 무차별 액션을 줄이고 빌런의
-            잔인함에 더 집중함.
-            <br />
-            #폴리스 다크 아미 장이수는 이번편 최고의 씬 스틸러이자 웃음벨.
-            마석도와 함께 모든 시리즈에 등장하는 조연이라면 뭔가 이유가 있지
-            않겠냐?ㅎㅎ
-            <br />
-            #이쯤되면 범죄도시 결말부는 시리즈 공식 클리셰로 인정해야함.ㅋㅋ
-            <br />
-            #쿠키영상 없음.
-          </article>
-          <article className="comment-like-reply-write">
-            <div>
-              <p>
-                좋아요 <span>322</span>
-              </p>
-              <p>
-                댓글 <span>4</span>
-              </p>
-            </div>
-            <div>
-              <button>좋아요</button>
-              <button>댓글</button>
-            </div>
-          </article>
+          {commentContent && (
+            <>
+              <article className="user-movie-info">
+                <div>
+                  <p>
+                    <img
+                      src={profilePicture}
+                      alt="코멘트 작성자 프로필 이미지"
+                    />
+                    <span>{locationState.nickname}</span>
+                    <span>{commentContent.created}</span>
+                  </p>
+                  <p>{commentContent.title}</p>
+                  <p>영화 | {commentContent.productionYear}</p>
+                  {locationState.score !== 0 && (
+                    <span>
+                      <FullStar1 />
+                      <span>{locationState.score}</span>
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <img src={commentContent.thumbnail} alt="영화 포스터" />
+                </div>
+              </article>
+              <article className="comment-content">
+                {commentContent.content}
+              </article>
+              <article className="comment-like-reply-write">
+                <div>
+                  <p>
+                    좋아요 <span>{commentContent.like}</span>
+                  </p>
+                  <p>
+                    댓글 <span>{commentContent.reply_count}</span>
+                  </p>
+                </div>
+                <div>
+                  <button>좋아요</button>
+                  <button
+                    onClick={() => {
+                      setModal(true);
+                    }}
+                  >
+                    댓글
+                  </button>
+                </div>
+              </article>
+            </>
+          )}
+
           <article className="comment-reply-list">
-            {/* <div className="my-comment">
-              {comment ? (
-                <form action="/detail" ref={formtag} className="is-comment">
-                  <fieldset>
-                    <legend>내가 작성한 코멘트</legend>
-                    <input
-                      type="text"
-                      value={value}
-                      // placeholder={comment.content}
-                      onChange={addComment}
-                      onKeyDown={enterPressComment}
-                      readOnly={true}
-                      ref={editCommentInput}
-                    />
-                    {status === 'readOnly' ? (
-                      <div>
-                        <button type="button" onClick={editComment}>
-                          수정
-                        </button>
-                        <button type="button" onClick={deleteComment}>
-                          삭제
-                        </button>
-                      </div>
-                    ) : (
-                      <div>
-                        <button type="button" onClick={cancel}>
-                          취소
-                        </button>
-                        <button type="button" onClick={sendEditComment}>
-                          완료
-                        </button>
-                      </div>
-                    )}
-                  </fieldset>
-                </form>
-              ) : (
-                <form action="/detail" ref={formtag} className="no-comment">
-                  <fieldset>
-                    <legend>코멘트 작성하기</legend>
-                    <input
-                      type="text"
-                      value={value}
-                      placeholder="기대평, 관람평을 자유롭게 작성해주세요!"
-                      onChange={addComment}
-                      onKeyDown={enterPressComment}
-                    />
-                    <button type="button" onClick={handleAddComment}>
-                      코멘트 작성
-                    </button>
-                  </fieldset>
-                </form>
-              )}
-            </div> */}
             <ul>
-              <li>
-                <div className="writer-profile-img">
-                  <img src={profilePicture} alt="댓글 작성자 프로필 이미지" />
-                </div>
-                <div className="writer-content">
-                  <div>
-                    <p>소금사탕</p>
-                    <p>완벽 정리입니다!</p>
+              {replies.length !== 0 ? (
+                <li>
+                  <div className="writer-profile-img">
+                    <img src={profilePicture} alt="댓글 작성자 프로필 이미지" />
                   </div>
-                  <p className="writen-date">12일전</p>
-                </div>
-              </li>
-              <li>
-                <div className="writer-profile-img">
-                  <img src={profilePicture} alt="댓글 작성자 프로필 이미지" />
-                </div>
-                <div className="writer-content">
-                  <div>
-                    <p>소금사탕</p>
-                    <p>완벽 정리입니다!</p>
+                  <div className="writer-content">
+                    <div>
+                      <p>소금사탕</p>
+                      <p>완벽 정리입니다!</p>
+                    </div>
+                    <p className="writen-date">12일전</p>
                   </div>
-                  <p className="writen-date">12일전</p>
-                </div>
-              </li>
-              <li>
-                <div className="writer-profile-img">
-                  <img src={profilePicture} alt="댓글 작성자 프로필 이미지" />
-                </div>
-                <div className="writer-content">
-                  <div>
-                    <p>소금사탕</p>
-                    <p>완벽 정리입니다!</p>
-                  </div>
-                  <p className="writen-date">12일전</p>
-                </div>
-              </li>
+                </li>
+              ) : (
+                <li>댓글이 없습니다.</li>
+              )}
             </ul>
           </article>
         </section>
       </main>
+      <div className={`reply-modal ${modal ? 'active' : ''}`}>
+        <div
+          className="blur"
+          onClick={() => {
+            setModal(false);
+          }}
+        ></div>
+        <div className="replies">
+          <form action="/detail" ref={formtag} className="write-replies">
+            <fieldset>
+              <legend>댓글 작성하기</legend>
+              <textarea
+                // type="text"
+                value={value}
+                placeholder="자유롭게 댓글을 달아주세요!"
+                onChange={addComment}
+                onKeyDown={enterPressComment}
+              />
+              <button type="button" onClick={handleAddComment}>
+                댓글 작성
+              </button>
+            </fieldset>
+          </form>
+          <button
+            className="close-modal"
+            onClick={() => {
+              setModal(false);
+            }}
+          >
+            x
+          </button>
+        </div>
+      </div>
       <FooterTemplate />
     </>
   );

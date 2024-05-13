@@ -655,13 +655,36 @@ export default function Detail() {
                             <></>
                           )}
                         </p>
-                        <div className="content">{v.content}</div>
+                        <div
+                          className="content"
+                          onClick={() =>
+                            navigate(`/comment/${v.comment_id}`, {
+                              state: {
+                                movieId,
+                                nickname: v.nickname,
+                                score: v.score,
+                              },
+                            })
+                          }
+                        >
+                          {v.content}
+                        </div>
                         <div className="like-recomment">
                           <span>
                             <img src={likeThumb} alt="좋아요" />
                             {v.like}
                           </span>
-                          <span>
+                          <span
+                            onClick={() =>
+                              navigate(`/comment/${v.comment_id}`, {
+                                state: {
+                                  movieId,
+                                  nickname: v.nickname,
+                                  score: v.score,
+                                },
+                              })
+                            }
+                          >
                             <img src={commentIcon} alt="코멘트" />
                             {v.reply_count}
                           </span>

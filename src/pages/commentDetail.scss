@@ -1,0 +1,181 @@
+.comment-detail-main {
+  section {
+    max-width: 1000px;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    margin-top: 20px;
+
+    article {
+      &.user-movie-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        & > div {
+          &:first-child {
+            p {
+              display: flex;
+              align-items: center;
+              img {
+                width: 25px;
+              }
+              span {
+                font-size: 0.8rem;
+                font-weight: 300;
+                color: rgb(74, 74, 74);
+                margin-left: 5px;
+              }
+              &:nth-of-type(2) {
+                font-size: 1rem;
+                margin-top: 5px;
+                font-weight: 300;
+              }
+              &:nth-of-type(3) {
+                font-size: 0.7rem;
+                color: rgb(120, 120, 120);
+                font-weight: 300;
+                margin: 3px 0;
+              }
+            }
+            & > span {
+              display: inline-block;
+              padding: 1px 6px;
+              border: 1px solid rgb(255, 153, 0);
+              box-sizing: border-box;
+              border-radius: 30px;
+              svg {
+                width: 13px;
+                height: auto;
+                margin-right: 3px;
+              }
+              span {
+                font-size: 0.8rem;
+                color: rgb(255, 153, 0);
+              }
+            }
+          }
+          &:last-child {
+            width: 70px;
+            height: 100px;
+            border: 0.5px solid rgba(0, 0, 0, 0.16);
+            border-radius: 3px;
+            box-sizing: border-box;
+            overflow: hidden;
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+            }
+          }
+        }
+      }
+      &.comment-content {
+        font-size: 0.9rem;
+        font-weight: 300;
+        color: rgb(74, 74, 74);
+        line-height: 1.6rem;
+        white-space: pre-wrap;
+        margin: 20px 0 30px 0;
+      }
+      &.comment-like-reply-write {
+        & > div {
+          display: flex;
+          padding: 3px;
+          box-sizing: border-box;
+          &:first-child {
+            padding: 10px 0;
+          }
+          &:last-child {
+            border-top: 1px solid rgb(240, 240, 240);
+            border-bottom: 1px solid rgb(240, 240, 240);
+          }
+          p {
+            color: rgb(120, 120, 120);
+            font-size: 0.8rem;
+            font-weight: 300;
+            &:first-child {
+              margin-right: 20px;
+            }
+            span {
+              display: inline-block;
+            }
+          }
+          button {
+            width: 50%;
+            background-color: transparent;
+            padding: 10px 0;
+            color: rgb(103, 104, 106);
+            transition: all 0.2s;
+            &:hover {
+              background-color: rgb(240, 240, 240);
+              border-radius: 5px;
+              color: rgb(61, 61, 61);
+            }
+            &:nth-of-type(1) {
+              position: relative;
+              &::after {
+                content: '';
+                display: block;
+                position: absolute;
+                right: 0;
+                top: 50%;
+                transform: translate(0.5px, -50%);
+                background: rgb(240, 240, 240);
+                width: 1px;
+                height: 14px;
+                margin-right: -5px;
+              }
+            }
+            &:nth-of-type(2) {
+              margin-left: 10px;
+            }
+          }
+        }
+      }
+      &.comment-reply-list {
+        ul {
+          li {
+            display: flex;
+            padding: 10px 0;
+            width: 100%;
+            border-bottom: 1px solid rgb(240, 240, 240);
+            &:last-child {
+              border-bottom: 0;
+            }
+            .writer-profile-img {
+              width: 36px;
+              margin-right: 10px;
+              img {
+                width: 100%;
+                height: auto;
+              }
+            }
+            .writer-content {
+              display: flex;
+              justify-content: space-between;
+              width: 100%;
+              & > div {
+                p {
+                  margin-bottom: 5px;
+                  &:first-child {
+                    font-size: 1rem;
+                    font-weight: 400;
+                  }
+                  &:last-child {
+                    font-size: 0.9rem;
+                    font-weight: 300;
+                  }
+                }
+              }
+              .writen-date {
+                font-weight: 300;
+                font-size: 0.8rem;
+                color: rgb(120, 120, 120);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

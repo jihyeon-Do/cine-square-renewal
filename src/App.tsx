@@ -15,6 +15,7 @@ import Profile from './pages/Profile';
 
 import MyChoice from './pages/MyChoice';
 import Evaluation from './pages/Evaluation';
+import CommentDetail from './pages/CommentDetail';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
         <Route path={'/favorite/person'} element={<MyChoice />} />
         <Route path={'/search/:keyword'} element={<Search />} />
         <Route path={'/evaluation'} element={<Evaluation />} />
+        <Route path={'/comment/detail'} element={<CommentDetail />} />
         <Route path={'/'} element={<Home />} />
         {/* <Route element={<NotFound />} /> */}
       </Routes>

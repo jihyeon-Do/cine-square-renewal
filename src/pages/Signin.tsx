@@ -32,13 +32,12 @@ function Signin() {
         sessionStorage.setItem('refresh-token', response.data.refresh_token);
         alert('로그인성공');
         navigate('/');
-      } else {
-        setIsValidation({
-          ...isValidation,
-          confirm: true,
-        });
       }
     } catch (error) {
+      setIsValidation({
+        ...isValidation,
+        confirm: true,
+      });
       console.log(error);
     }
   }

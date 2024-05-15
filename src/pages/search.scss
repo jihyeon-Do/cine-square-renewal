@@ -119,7 +119,7 @@ $text-left-padding: 20px;
         // }
         span:nth-of-type(2) {
           span::before {
-            content: ' • ';
+            content: '/';
           }
         }
       }

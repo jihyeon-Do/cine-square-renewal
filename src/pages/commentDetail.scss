@@ -83,10 +83,45 @@
       &.comment-like-reply-write {
         & > div {
           display: flex;
+          justify-content: space-between;
+          align-items: center;
           padding: 3px;
           box-sizing: border-box;
           &:first-child {
             padding: 10px 0;
+            & > div {
+              // background-color: aqua;
+              display: flex;
+              button {
+                color: rgb(120, 120, 120);
+                font-size: 0.8rem;
+                font-weight: 300;
+                background-color: transparent;
+                padding: 5px 0;
+                width: 30px;
+                &:nth-child(1) {
+                  position: relative;
+                }
+                &:nth-child(2) {
+                  margin-left: 10px;
+                }
+                &:nth-child(1)::after {
+                  content: '';
+                  display: block;
+                  position: absolute;
+                  right: 0;
+                  top: 50%;
+                  transform: translate(0.5px, -50%);
+                  background: rgb(214, 214, 214);
+                  width: 1px;
+                  height: 14px;
+                  margin-right: -5px;
+                }
+                &:hover {
+                  cursor: pointer;
+                }
+              }
+            }
           }
           &:last-child {
             border-top: 1px solid rgb(240, 240, 240);
@@ -103,7 +138,7 @@
               display: inline-block;
             }
           }
-          button {
+          &.like-and-reply button {
             width: 50%;
             background-color: transparent;
             padding: 10px 0;
@@ -118,6 +153,9 @@
             }
             &:nth-of-type(1) {
               position: relative;
+              &.active {
+                color: #8e00fd;
+              }
               &::after {
                 content: '';
                 display: block;
@@ -170,12 +208,39 @@
                     font-size: 0.9rem;
                     font-weight: 300;
                   }
+                  &.writen-date {
+                    font-weight: 300;
+                    font-size: 0.8rem;
+                    color: rgb(120, 120, 120);
+                    margin-bottom: 0;
+                  }
                 }
-              }
-              .writen-date {
-                font-weight: 300;
-                font-size: 0.8rem;
-                color: rgb(120, 120, 120);
+                button {
+                  color: rgb(120, 120, 120);
+                  font-size: 0.7rem;
+                  font-weight: 300;
+                  background-color: transparent;
+                  padding: 5px 0;
+                  width: 20px;
+                  &:first-child {
+                    position: relative;
+                  }
+                  &:first-child::after {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    right: 0;
+                    top: 50%;
+                    transform: translate(0.5px, -50%);
+                    background: rgb(214, 214, 214);
+                    width: 1px;
+                    height: 12px;
+                    margin-right: -5px;
+                  }
+                  &:last-child {
+                    margin-left: 10px;
+                  }
+                }
               }
             }
           }
@@ -184,13 +249,13 @@
     }
   }
 }
-.reply-modal {
+.edit-modal {
   display: none;
   &.active {
     display: block;
   }
 }
-.replies {
+.content-value {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -202,7 +267,7 @@
   border-radius: 10px;
   padding: 30px;
   box-sizing: border-box;
-  .write-replies {
+  .write {
     width: 100%;
     fieldset {
       width: 100%;

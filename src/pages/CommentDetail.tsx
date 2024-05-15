@@ -8,6 +8,8 @@ import testPoster from '../images/test_poster.jpeg';
 import axios, { AxiosResponse } from 'axios';
 import APIService from '../service/APIService';
 import './commentDetail.scss';
+import Modal from '../components/Modal';
+import ConfirmModal from '../components/ConfirmModal';
 
 interface CommentContent {
   comment_id: number;
@@ -29,15 +31,34 @@ interface CommentDetailInfo {
   updated: string;
 }
 
+type UserInfo = {
+  account: string;
+  name: string;
+  nickname: string;
+  user_id: number;
+};
+
+interface Reply {
+  content: string;
+  created: string;
+  like: number;
+  reply_id: number;
+  updated: string;
+  user_id: number;
+}
+
 function CommentDetail() {
   //: movie id는 location state에서 가져오고 comment id는 path에서 가져온다.
-  const [commentContent, setCommentContent] = useState<CommentContent | null>();
-  const [replies, setReplies] = useState([]);
+  const [commentContent, setCommentContent] = useState<CommentContent>();
+  const [replies, setReplies] = useState<Reply[]>([]);
   const [value, setValue] = useState('');
   const [comment, setComment] = useState<Comment | null>(null);
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState('false');
+  const [isLike, setIsLike] = useState(false);
+  const [userInfo, setUserInfo] = useState<UserInfo>();
+  const [replyId, setReplyId] = useState(null);
+  const [confirm, setConfirm] = useState('false');
 
-  const formtag = useRef(null);
   const navigate = useNavigate();
 
   const LOCALAPI = APIService.LOCALAPI;
@@ -47,6 +68,7 @@ function CommentDetail() {
     movieId: string;
     nickname: string;
     score: number;
+    isMyComment: boolean;
   };
   const access_token = sessionStorage.getItem('token');
   const bearer_header = {
@@ -56,8 +78,8 @@ function CommentDetail() {
   };
 
   //: 날짜편집
-  const getCreatedDate = (data: CommentDetailInfo) => {
-    const date = new Date(data.created);
+  const getCreatedDate = (data: string) => {
+    const date = new Date(data);
     const year = date.getFullYear();
     const month = date.getMonth();
     const getDate = date.getDate();
@@ -71,7 +93,7 @@ function CommentDetail() {
       const response = await axios.get(
         `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}`,
       );
-      const createdDate = getCreatedDate(response.data.result);
+      const createdDate = getCreatedDate(response.data.result.created);
       const commentMovieInfo = await axios.get(
         `${LOCALAPI}/api/movies/${locationState.movieId}`,
       );
@@ -86,7 +108,7 @@ function CommentDetail() {
     getCommentDetailInfo();
   }, []);
 
-  //: 코멘트 대댓글 가져오기
+  //: 코멘트 대댓글 리스트 가져오기
   useEffect(() => {
     const getRelpies = async () => {
       const response = await axios.get(
@@ -97,43 +119,164 @@ function CommentDetail() {
     getRelpies();
   }, []);
 
-  function addComment(e: any) {
+  //: 해당 코멘트 좋아요 여부 확인
+  useEffect(() => {
+    const getLikeComments = async () => {
+      const response = await axios.get(
+        `${LOCALAPI}/api/user-reports/like-comments`,
+        bearer_header,
+      );
+      response.data.list.map((v: any) => {
+        if (v.comment_id === Number(commentId)) {
+          setIsLike(true);
+        }
+      });
+    };
+    if (access_token) {
+      getLikeComments();
+    }
+  }, []);
+
+  //: 내정보
+  useEffect(() => {
+    const getMyInfo = async () => {
+      const myInfo = await axios.get(`${LOCALAPI}/api/users/me`, bearer_header);
+      setUserInfo(myInfo.data.data);
+    };
+    if (access_token) {
+      getMyInfo();
+    }
+  }, []);
+
+  //: 댓글 value
+  function addReply(e: { target: { value: React.SetStateAction<string> } }) {
     setValue(e.target.value);
   }
-
+  //: 로그인 확인
   const requiredLogin = () => {
     alert('로그인 후 이용해 주세요');
     navigate('/signin');
     // dispatch(push('/signin'));
   };
 
-  function enterPressComment(e: { key: string; preventDefault: () => void }) {
-    if (e.key !== 'Enter') return;
-    e.preventDefault();
-    handleAddComment();
-  }
+  // //: 엔터로 댓글 달기
+  // function enterPressReply(e: { key: string; preventDefault: () => void }) {
+  //   if (e.key !== 'Enter') return;
+  //   e.preventDefault();
+  //   handleAddReply();
+  // }
 
-  async function handleAddComment() {
+  //: 버튼 클릭으로 댓글 달기
+  async function handleAddReply() {
     if (access_token) {
       try {
         const response = await axios.post(
-          `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments`,
+          `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}/replies`,
           {
             content: value,
           },
           bearer_header,
         );
+        setModal('false');
+        setReplies([response.data.data, ...replies]);
         // setComments([...comments, response.data.data]);
-        const myComment = await axios.get(
-          `${LOCALAPI}/api/user-reports/movies/${locationState.movieId}/comment`,
-          bearer_header,
-        );
-        setComment(myComment.data.result);
+        // const myComment = await axios.get(
+        //   `${LOCALAPI}/api/user-reports/movies/${locationState.movieId}/comment`,
+        //   bearer_header,
+        // );
+        // setComment(myComment.data.result);
       } catch (error) {
         console.log(error);
       }
     } else {
       requiredLogin();
+    }
+  }
+
+  //: 코멘트, 댓글 수정하기
+  async function handleEditModalValue() {
+    try {
+      if (replyId) {
+        const response = await axios.patch(
+          `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}/replies/${replyId}`,
+          { content: value },
+          bearer_header,
+        );
+        const AfterEditMyReplies = replies.map((v: any, i) => {
+          if (v.user_id === userInfo?.user_id) {
+            return { ...v, content: value };
+          }
+        });
+        setReplies(AfterEditMyReplies);
+      } else {
+        const response = await axios.patch(
+          `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}`,
+          { content: value },
+          bearer_header,
+        );
+        if (commentContent) {
+          setCommentContent({
+            ...commentContent,
+            content: response.data.data.content,
+          });
+        }
+      }
+      setModal('false');
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  //: 코멘트 삭제하기
+  async function deleteComment() {
+    try {
+      const response = await axios.delete(
+        `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}`,
+        bearer_header,
+      );
+      setConfirm('false');
+      navigate(-1);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  //: 댓글 삭제하기
+  async function deleteReply() {
+    try {
+      const response = await axios.delete(
+        `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}/replies/${replyId}`,
+        bearer_header,
+      );
+      setConfirm('false');
+      const filteringReplies = replies.filter((v, i) => {
+        return v.reply_id !== replyId;
+      });
+      setReplies(filteringReplies);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  //: 좋아요 토글
+  async function likeToggle() {
+    try {
+      if (isLike) {
+        const response = await axios.delete(
+          `${LOCALAPI}/api/user-reports/movies/${locationState.movieId}/like-comments/${commentId}`,
+          bearer_header,
+        );
+        if (response.status === 200) setIsLike(false);
+      } else {
+        const response = await axios.post(
+          `${LOCALAPI}/api/user-reports/movies/${locationState.movieId}/like-comments/${commentId}`,
+          {},
+          bearer_header,
+        );
+        if (response.status === 200) setIsLike(true);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -173,18 +316,43 @@ function CommentDetail() {
               </article>
               <article className="comment-like-reply-write">
                 <div>
-                  <p>
-                    좋아요 <span>{commentContent.like}</span>
-                  </p>
-                  <p>
-                    댓글 <span>{commentContent.reply_count}</span>
-                  </p>
+                  <div>
+                    <p>
+                      좋아요 <span>{commentContent.like}</span>
+                    </p>
+                    <p>
+                      댓글 <span>{commentContent.reply_count}</span>
+                    </p>
+                  </div>
+                  {locationState.isMyComment && (
+                    <div>
+                      <button
+                        onClick={() => {
+                          setModal('내 코멘트 수정하기');
+                          setValue(commentContent.content);
+                        }}
+                      >
+                        수정
+                      </button>
+                      <button onClick={() => setConfirm('코멘트')}>삭제</button>
+                    </div>
+                  )}
                 </div>
-                <div>
-                  <button>좋아요</button>
+                <div className="like-and-reply">
+                  <button
+                    onClick={likeToggle}
+                    className={`${isLike ? 'active' : ''}`}
+                  >
+                    좋아요
+                  </button>
                   <button
                     onClick={() => {
-                      setModal(true);
+                      if (access_token) {
+                        setModal('댓글 작성하기');
+                        setValue('');
+                      } else {
+                        requiredLogin();
+                      }
                     }}
                   >
                     댓글
@@ -197,18 +365,48 @@ function CommentDetail() {
           <article className="comment-reply-list">
             <ul>
               {replies.length !== 0 ? (
-                <li>
-                  <div className="writer-profile-img">
-                    <img src={profilePicture} alt="댓글 작성자 프로필 이미지" />
-                  </div>
-                  <div className="writer-content">
-                    <div>
-                      <p>소금사탕</p>
-                      <p>완벽 정리입니다!</p>
+                replies.map((v: any, i) => (
+                  <li key={i}>
+                    <div className="writer-profile-img">
+                      <img
+                        src={profilePicture}
+                        alt="댓글 작성자 프로필 이미지"
+                      />
                     </div>
-                    <p className="writen-date">12일전</p>
-                  </div>
-                </li>
+                    <div className="writer-content">
+                      <div>
+                        <p>소금사탕</p>
+                        <p>{v.content}</p>
+                      </div>
+                      <div>
+                        <p className="writen-date">
+                          {getCreatedDate(v.created)}
+                        </p>
+                        {userInfo?.user_id === v.user_id && (
+                          <div>
+                            <button
+                              onClick={() => {
+                                setModal('댓글 수정하기');
+                                setValue(v.content);
+                                setReplyId(v.reply_id);
+                              }}
+                            >
+                              수정
+                            </button>
+                            <button
+                              onClick={() => {
+                                setReplyId(v.reply_id);
+                                setConfirm('댓글');
+                              }}
+                            >
+                              삭제
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </li>
+                ))
               ) : (
                 <li>댓글이 없습니다.</li>
               )}
@@ -216,39 +414,21 @@ function CommentDetail() {
           </article>
         </section>
       </main>
-      <div className={`reply-modal ${modal ? 'active' : ''}`}>
-        <div
-          className="blur"
-          onClick={() => {
-            setModal(false);
-          }}
-        ></div>
-        <div className="replies">
-          <form action="/detail" ref={formtag} className="write-replies">
-            <fieldset>
-              <legend>댓글 작성하기</legend>
-              <textarea
-                // type="text"
-                value={value}
-                placeholder="자유롭게 댓글을 달아주세요!"
-                onChange={addComment}
-                onKeyDown={enterPressComment}
-              />
-              <button type="button" onClick={handleAddComment}>
-                댓글 작성
-              </button>
-            </fieldset>
-          </form>
-          <button
-            className="close-modal"
-            onClick={() => {
-              setModal(false);
-            }}
-          >
-            x
-          </button>
-        </div>
-      </div>
+      <Modal
+        modal={modal}
+        setModal={setModal}
+        value={value}
+        setValue={setValue}
+        handleAddReply={handleAddReply}
+        addReply={addReply}
+        handleEditModalValue={handleEditModalValue}
+      />
+      <ConfirmModal
+        confirm={confirm}
+        setConfirm={setConfirm}
+        deleteComment={deleteComment}
+        deleteReply={deleteReply}
+      />
       <FooterTemplate />
     </>
   );

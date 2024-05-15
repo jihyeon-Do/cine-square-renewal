@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import './headerTemplate.scss';
+import mainLogo from '../images/main_logo.svg';
 
 function HeaderTemplate() {
   const [value, setValue] = useState('');
@@ -149,7 +150,7 @@ function HeaderTemplate() {
           //   }}
           onClick={() => navigate('/')}
         >
-          <img src="../images/main_logo.svg" alt="main_logo" />
+          <img src={mainLogo} alt="main_logo" />
         </h1>
         <div className={`right-content ${isSearch ? 'active' : ''}`}>
           <div

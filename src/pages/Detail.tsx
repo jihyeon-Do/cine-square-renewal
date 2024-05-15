@@ -162,35 +162,36 @@ export default function Detail() {
         //: 영화별 comments
         const commentScore = await axios.get(
           `${LOCALAPI}/api/movie-reports/summary/movies/${movieId}`,
-          bearer_header,
         );
         const addIsLike = commentScore.data.list.map((value: commentsList) => {
           return { ...value, isLike: false };
         });
         setComments(addIsLike);
-        const userLikeCommentsList = await axios.get(
-          `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments`,
-          bearer_header,
-        );
-        if (userLikeCommentsList.data.list.length) {
-          let copyCommentList: commentsList[] = [];
-          addIsLike.map((value: commentsList) => {
-            for (let i = 0; i < userLikeCommentsList.data.list.length; i++) {
-              if (
-                value.comment_id ===
-                userLikeCommentsList.data.list[i].comment_id
-              ) {
-                copyCommentList = [
-                  ...copyCommentList,
-                  { ...value, isLike: true },
-                ];
-                break;
-              } else if (i === userLikeCommentsList.data.list.length - 1) {
-                copyCommentList = [...copyCommentList, value];
+        if (access_token) {
+          const userLikeCommentsList = await axios.get(
+            `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments`,
+            bearer_header,
+          );
+          if (userLikeCommentsList.data.list.length) {
+            let copyCommentList: commentsList[] = [];
+            addIsLike.map((value: commentsList) => {
+              for (let i = 0; i < userLikeCommentsList.data.list.length; i++) {
+                if (
+                  value.comment_id ===
+                  userLikeCommentsList.data.list[i].comment_id
+                ) {
+                  copyCommentList = [
+                    ...copyCommentList,
+                    { ...value, isLike: true },
+                  ];
+                  break;
+                } else if (i === userLikeCommentsList.data.list.length - 1) {
+                  copyCommentList = [...copyCommentList, value];
+                }
               }
-            }
-          });
-          setComments(copyCommentList);
+            });
+            setComments(copyCommentList);
+          }
         }
       } catch (error) {
         console.log(error);
@@ -663,6 +664,8 @@ export default function Detail() {
                                 movieId,
                                 nickname: v.nickname,
                                 score: v.score,
+                                isMyComment:
+                                  v.comment_id === comment?.comment_id,
                               },
                             })
                           }
@@ -681,6 +684,8 @@ export default function Detail() {
                                   movieId,
                                   nickname: v.nickname,
                                   score: v.score,
+                                  isMyComment:
+                                    v.comment_id === comment?.comment_id,
                                 },
                               })
                             }

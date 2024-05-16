@@ -14,7 +14,7 @@ import commentIcon from '../images/comment_icon.png';
 import noImg from '../images/no-images.png';
 import profilePicture from '../images/profile_picture.png';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
 import APIService from '../service/APIService';
 
@@ -641,6 +641,7 @@ export default function Detail() {
               </div>
               <div className="movie-info4">
                 <h3>코멘트</h3>
+                <Link to={`/${movieId}/comments`}>더보기</Link>
                 <ul className="comments">
                   {comments.length !== 0 ? (
                     comments.map((v, i) => (

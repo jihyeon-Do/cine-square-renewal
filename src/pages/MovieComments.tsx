@@ -90,6 +90,8 @@ function MovieComments() {
           } else {
             setMovieComments(copyMovieComments);
           }
+        } else {
+          setMovieComments(copyMovieComments);
         }
       });
     };

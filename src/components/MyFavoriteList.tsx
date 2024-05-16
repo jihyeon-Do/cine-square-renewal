@@ -1,17 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import './myFavoriteList.scss';
-import { ReactComponent as FullStar1 } from '../images/star-full.svg';
-import { ReactComponent as EmptyStar } from '../images/star-empty1.svg';
-import { ReactComponent as HalfStar } from '../images/star-half1.svg';
 import { ReactComponent as FullStar } from '../images/star-full1.svg';
 import like_thumb from '../images/like_thumb.png';
 import commentIcon from '../images/comment_icon.png';
-
-import unlike_thumb from '../images/unlike_thumb.png';
-import { useLocation } from 'react-router-dom';
 import personProfileImg from '../images/profile_picture.png';
-
 import APIService from '../service/APIService';
 import axios from 'axios';
 

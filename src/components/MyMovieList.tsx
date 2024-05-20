@@ -2,28 +2,40 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { ReactComponent as FullStar1 } from '../images/star-full.svg';
 import './MyMovieList.scss';
+import { useNavigate } from 'react-router-dom';
 
 type Movie = {
-  id: number;
-  movieCd: string;
-  movieNm: string;
+  movie_id: number;
   score: number;
-  mainImg: string;
+  title: string;
+  thumbnail: string;
 };
 
 interface MyMovieListProps {
-  movieList: Movie[];
+  movieArray: Movie[];
+  listname: string;
 }
 
-function MyMovieList({ movieList }: MyMovieListProps) {
+function MyMovieList({ movieArray, listname }: MyMovieListProps) {
+  const navigate = useNavigate();
+
+  function goDetailPage(movieId: number) {
+    navigate(`/detail/${movieId}`);
+  }
   return (
     <section className="my-choice-movie">
-      {<h3>평가한 영화 리스트</h3>}
+      <h3>
+        {listname === 'evaluated' ? '평가한 영화 리스트' : '보고싶은 영화'}
+      </h3>
       <ul>
-        {movieList.map((v, i) => (
-          <li key={i}>
-            <img src={v.mainImg} alt="영화 메인 포스터" />
-            <p>{v.movieNm}</p>
+        {movieArray.map((v, i) => (
+          <li key={i} onClick={() => goDetailPage(v.movie_id)}>
+            <div className="thumbnail-wrapper">
+              <div className="wrapper">
+                <img src={v.thumbnail} alt="영화 메인 포스터" />
+              </div>
+            </div>
+            <p>{v.title}</p>
             <p>
               <FullStar1 />
               {v.score}점으로 평가함

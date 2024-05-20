@@ -37,9 +37,34 @@
     }
     li {
       box-sizing: border-box;
-      img {
+      cursor: pointer;
+      .thumbnail-wrapper {
+        position: relative;
         width: 100%;
+        height: 0;
+        overflow: hidden;
+        padding-bottom: 144%;
+        .wrapper {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          overflow: hidden;
+          border-radius: 5px;
+          border: 1px solid #ccc;
+          box-sizing: border-box;
+          img {
+            width: 100%;
+            height: 100%;
+            vertical-align: top;
+            border-radius: 5px;
+            object-fit: cover;
+            min-height: 1px;
+          }
+        }
       }
+
       p {
         &:nth-of-type(2) {
           display: flex;

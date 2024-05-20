@@ -273,13 +273,13 @@ export default function Profile() {
             <div className="user-evaluate">
               <ul>
                 <li>
-                  <Link to="/mychoice/:listname">
+                  <Link to="/mychoice/evaluated">
                     <span>평가한 영화</span>
                     <span>{evaluated.movie}</span>
                   </Link>
                 </li>
                 <li>
-                  <Link to="/mychoice/:listname">
+                  <Link to="/mychoice/status-movie">
                     <span>보고싶어요</span>
                     <span>{evaluated.see}</span>
                   </Link>

@@ -545,6 +545,15 @@
 
         & > div {
           padding: 15px 15px;
+          h4 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            a {
+              font-size: 0.8rem;
+              color: #8c8c8c;
+            }
+          }
         }
         & > div:first-of-type {
           ul {

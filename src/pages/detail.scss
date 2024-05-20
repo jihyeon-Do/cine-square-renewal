@@ -5,6 +5,11 @@ $border-color: #eee;
   section {
     max-width: 1200px;
     width: 100%;
+    padding: 0 5px;
+    box-sizing: border-box;
+    @media all and (max-width: 1200px) {
+      padding: 0 20px;
+    }
   }
   .header-container {
     // background-color: transparent;
@@ -19,6 +24,9 @@ $border-color: #eee;
     font-size: 1.4rem;
     font-weight: bold;
     margin-bottom: 20px;
+    @media all and (max-width: 800px) {
+      font-size: 1.2rem;
+    }
   }
   .paragraph {
     padding-left: 20px;
@@ -149,17 +157,29 @@ $border-color: #eee;
   .movie-info {
     // background-color: chocolate;
     position: relative;
-
+    margin-top: 20px;
     .movie-info1 {
-      margin-top: 20px;
+      // margin-top: 20px;
       border-bottom: 0.5px solid rgb(231, 231, 231);
       // padding: 0 0 5px 0;
       display: flex;
       align-items: flex-start;
+      @media all and (max-width: 600px) {
+        flex-direction: column;
+        border-bottom: 0;
+      }
       .thumbnail-wrapper {
         border: 1px solid rgb(212, 212, 212);
         height: 320px;
         border-radius: 5px;
+        @media all and (max-width: 800px) {
+          height: 250px;
+        }
+        @media all and (max-width: 600px) {
+          order: 2;
+          margin-top: 30px;
+          margin: 30px auto 0 auto;
+        }
       }
       img {
         height: 100%;
@@ -168,6 +188,13 @@ $border-color: #eee;
         padding-left: 50px;
         position: relative;
         width: 100%;
+
+        @media all and (max-width: 800px) {
+          padding-left: 30px;
+        }
+        @media all and (max-width: 600px) {
+          padding-left: 0;
+        }
         .movie-title {
           font-size: 2rem;
           font-weight: bold;
@@ -176,6 +203,15 @@ $border-color: #eee;
           display: flex;
           align-items: center;
           justify-content: space-between;
+          @media all and (max-width: 800px) {
+            font-size: 1.4rem;
+          }
+          @media all and (max-width: 400px) {
+            font-size: 1.2rem;
+          }
+          @media all and (max-width: 350px) {
+            font-size: 1rem;
+          }
           .bookmark {
             img {
               width: 30px;
@@ -183,9 +219,18 @@ $border-color: #eee;
               display: block;
               margin-top: 0;
               margin: 0 auto;
+              @media all and (max-width: 800px) {
+                width: 24px;
+              }
+              @media all and (max-width: 350px) {
+                width: 20px;
+              }
             }
             span {
               font-size: 0.7rem;
+              @media all and (max-width: 800px) {
+                font-size: 0.6rem;
+              }
             }
           }
         }
@@ -194,16 +239,40 @@ $border-color: #eee;
           color: rgb(109, 109, 109);
           border-bottom: 0.5px solid $border-color;
           padding: 5px 0;
+          @media all and (max-width: 800px) {
+            font-size: 0.9rem;
+          }
+          @media all and (max-width: 350px) {
+            font-size: 0.8rem;
+          }
+          // @media all and (max-width: 350px) {
+          //   font-size: 0.7rem;
+          // }
           span::before {
-            content: '•';
+            content: '|';
             padding: 0 8px;
             vertical-align: text-bottom;
+            @media all and (max-width: 800px) {
+              padding: 0 4px;
+            }
+            @media all and (max-width: 350px) {
+              padding: 0 1px;
+            }
           }
         }
         .movie-sub-info2 {
           font-size: 1rem;
           border-bottom: 0.5px solid $border-color;
           padding: 5px 0;
+          @media all and (max-width: 800px) {
+            font-size: 0.9rem;
+          }
+          @media all and (max-width: 350px) {
+            font-size: 0.8rem;
+          }
+          // @media all and (max-width: 350px) {
+          //   font-size: 0.7rem;
+          // }
           span {
             display: inline-block;
             padding-right: 5px;
@@ -218,10 +287,16 @@ $border-color: #eee;
           // left: 45px;
           // bottom: 0;
           padding: 5px 0;
+          section {
+            padding: 0;
+          }
           span {
             display: block;
             font-size: 0.7rem;
             margin-left: 8px;
+            @media all and (max-width: 350px) {
+              font-size: 0.65rem;
+            }
           }
           section {
             justify-self: center;
@@ -233,12 +308,19 @@ $border-color: #eee;
             .stars {
               height: 52px;
               cursor: pointer;
+              @media all and (max-width: 800px) {
+                height: 42px;
+              }
               svg {
                 width: 40px;
                 height: 40px;
                 padding: 2px;
                 position: relative;
                 pointer-events: none;
+                @media all and (max-width: 800px) {
+                  width: 30px;
+                  height: 30px;
+                }
               }
             }
             .reset {
@@ -266,6 +348,9 @@ $border-color: #eee;
               font-size: 0.9rem;
               color: #000000;
               margin-bottom: 10px;
+              @media all and (max-width: 350px) {
+                font-size: 0.8rem;
+              }
             }
             input {
               width: 100%;
@@ -277,6 +362,9 @@ $border-color: #eee;
               &.active {
                 cursor: auto;
                 border: 2px solid #8e00fd;
+              }
+              @media all and (max-width: 350px) {
+                font-size: 0.8rem;
               }
             }
             div {
@@ -312,6 +400,9 @@ $border-color: #eee;
               font-size: 0.9rem;
               color: #000000;
               margin-bottom: 10px;
+              @media all and (max-width: 800px) {
+                font-size: 0.8rem;
+              }
             }
             // border-bottom: 0.5px solid $border-color;
             input {
@@ -323,6 +414,10 @@ $border-color: #eee;
               font-weight: normal;
               border-top-left-radius: 5px;
               border-bottom-left-radius: 5px;
+              @media all and (max-width: 800px) {
+                padding: 20px 20px;
+                font-size: 0.75rem;
+              }
             }
             button {
               float: right;
@@ -333,6 +428,9 @@ $border-color: #eee;
               font-size: 0.8rem;
               border-top-right-radius: 5px;
               border-bottom-right-radius: 5px;
+              @media all and (max-width: 800px) {
+                width: 25%;
+              }
             }
           }
         }
@@ -353,6 +451,9 @@ $border-color: #eee;
           font-size: 0.9rem;
           margin-bottom: 10px;
           line-height: 22px;
+          @media all and (max-width: 350px) {
+            font-size: 0.8rem;
+          }
         }
         p:nth-of-type(2) {
           color: rgb(109, 109, 109);
@@ -370,15 +471,32 @@ $border-color: #eee;
       border-bottom: 0.5px solid $border-color;
       padding: 50px 0 30px 0;
       ul {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start;
+        display: grid;
+        grid-template-columns: repeat(10, 1fr);
+        @media all and (max-width: 1200px) {
+          grid-template-columns: repeat(8, 1fr);
+        }
+        @media all and (max-width: 800px) {
+          grid-template-columns: repeat(6, 1fr);
+        }
+        @media all and (max-width: 600px) {
+          grid-template-columns: repeat(4, 1fr);
+        }
+        @media all and (max-width: 350px) {
+          grid-template-columns: repeat(3, 1fr);
+        }
         li {
           font-size: 0.9rem;
           text-align: center;
-          width: calc(100% / 10 - 40px);
           box-sizing: content-box;
-          padding: 10px 20px;
+          padding: 10px 10px;
+          @media all and (max-width: 800px) {
+            font-size: 0.8rem;
+          }
+          @media all and (max-width: 400px) {
+            padding: 10px 3px;
+          }
+
           img {
             width: 100%;
           }
@@ -389,23 +507,35 @@ $border-color: #eee;
       border-bottom: 0.5px solid $border-color;
       padding: 50px 0 30px 0;
       width: 100%;
+      position: relative;
       // max-width: 900px;
       margin: 0 auto;
-      fieldset {
-        border: 0;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        justify-content: space-between;
-        border-radius: 30px;
+      // fieldset {
+      //   border: 0;
+      //   padding: 0;
+      //   margin: 0;
+      //   display: flex;
+      //   justify-content: space-between;
+      //   border-radius: 30px;
+      // }
+      a {
+        position: absolute;
+        top: 55px;
+        right: 0;
+        font-size: 0.8rem;
+        color: #818181;
       }
-
       ul {
         width: 100%;
         display: grid;
         grid-template-columns: repeat(4, minmax(0px, 1fr));
         gap: 8px;
-
+        @media all and (max-width: 800px) {
+          grid-template-columns: repeat(2, minmax(0px, 1fr));
+        }
+        @media all and (max-width: 600px) {
+          grid-template-columns: repeat(1, minmax(0px, 1fr));
+        }
         .no-comment {
           // padding: 10px 0;
           color: #3c3c3c;
@@ -420,6 +550,9 @@ $border-color: #eee;
             padding-bottom: 8px;
             display: flex;
             justify-content: space-between;
+            @media all and (max-width: 400px) {
+              font-size: 1rem;
+            }
             span {
               display: inline-block;
               background-color: #fff;
@@ -427,11 +560,17 @@ $border-color: #eee;
               font-size: 0.9rem;
               border-radius: 20px;
               color: rgb(255, 153, 0);
+              @media all and (max-width: 400px) {
+                font-size: 0.8rem;
+              }
               svg {
                 width: 15px;
                 height: auto;
                 margin-bottom: -1px;
                 margin-right: 3px;
+                @media all and (max-width: 400px) {
+                  width: 13px;
+                }
               }
             }
           }
@@ -441,6 +580,10 @@ $border-color: #eee;
             padding: 10px 0;
             height: 150px;
             font-size: 0.85rem;
+            cursor: pointer;
+            @media all and (max-width: 400px) {
+              font-size: 0.8rem;
+            }
           }
           .like-recomment {
             display: flex;
@@ -455,10 +598,15 @@ $border-color: #eee;
             span {
               display: flex;
               align-items: center;
+
+              @media all and (max-width: 400px) {
+                font-size: 0.9rem;
+              }
               &:first-child {
                 margin-right: 10px;
               }
               &:last-child {
+                cursor: pointer;
                 img {
                   margin-top: -1px;
                 }
@@ -468,8 +616,12 @@ $border-color: #eee;
           .like-btn {
             padding: 10px 0;
             padding-bottom: 0;
+
             button {
               color: #8e00fd;
+              @media all and (max-width: 400px) {
+                font-size: 0.75rem;
+              }
               &.active {
                 background-color: #8e00fd;
                 padding: 5px 10px;

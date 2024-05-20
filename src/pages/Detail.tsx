@@ -9,11 +9,12 @@ import { ReactComponent as FullStar1 } from '../images/star-full.svg';
 import { ReactComponent as Reset } from '../images/reset.svg';
 import BookmarkEmpty from '../images/unlike.png';
 import BookmarkFull from '../images/like.png';
-import like_thumb from '../images/like_thumb.png';
+import likeThumb from '../images/like_thumb.png';
 import commentIcon from '../images/comment_icon.png';
 import noImg from '../images/no-images.png';
+import profilePicture from '../images/profile_picture.png';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 
 import APIService from '../service/APIService';
 
@@ -108,6 +109,7 @@ export default function Detail() {
         );
         setDisplayScore(scoreResponse.data.result);
         setScore(scoreResponse.data.result);
+        //: 내 코멘트
         const myComment = await axios.get(
           `${LOCALAPI}/api/user-reports/movies/${movieId}/comment`,
           bearer_header,
@@ -115,7 +117,7 @@ export default function Detail() {
         setComment(myComment.data.result);
         setValue(myComment.data.result.content);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
     if (access_token) {
@@ -160,35 +162,36 @@ export default function Detail() {
         //: 영화별 comments
         const commentScore = await axios.get(
           `${LOCALAPI}/api/movie-reports/summary/movies/${movieId}`,
-          bearer_header,
         );
         const addIsLike = commentScore.data.list.map((value: commentsList) => {
           return { ...value, isLike: false };
         });
         setComments(addIsLike);
-        const userLikeCommentsList = await axios.get(
-          `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments`,
-          bearer_header,
-        );
-        if (userLikeCommentsList.data.list.length) {
-          let copyCommentList: commentsList[] = [];
-          addIsLike.map((value: commentsList) => {
-            for (let i = 0; i < userLikeCommentsList.data.list.length; i++) {
-              if (
-                value.comment_id ===
-                userLikeCommentsList.data.list[i].comment_id
-              ) {
-                copyCommentList = [
-                  ...copyCommentList,
-                  { ...value, isLike: true },
-                ];
-                break;
-              } else if (i === userLikeCommentsList.data.list.length - 1) {
-                copyCommentList = [...copyCommentList, value];
+        if (access_token) {
+          const userLikeCommentsList = await axios.get(
+            `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments`,
+            bearer_header,
+          );
+          if (userLikeCommentsList.data.list.length) {
+            let copyCommentList: commentsList[] = [];
+            addIsLike.map((value: commentsList) => {
+              for (let i = 0; i < userLikeCommentsList.data.list.length; i++) {
+                if (
+                  value.comment_id ===
+                  userLikeCommentsList.data.list[i].comment_id
+                ) {
+                  copyCommentList = [
+                    ...copyCommentList,
+                    { ...value, isLike: true },
+                  ];
+                  break;
+                } else if (i === userLikeCommentsList.data.list.length - 1) {
+                  copyCommentList = [...copyCommentList, value];
+                }
               }
-            }
-          });
-          setComments(copyCommentList);
+            });
+            setComments(copyCommentList);
+          }
         }
       } catch (error) {
         console.log(error);
@@ -624,7 +627,7 @@ export default function Detail() {
                         <img
                           // src={`${character.characterImg}`}
                           // alt={`${character.realNm}`}
-                          src={'../images/profile_picture.png'}
+                          src={profilePicture}
                         />
                         <p>{character}</p>
                         {/* <p>{character.movieRoll}</p>
@@ -638,6 +641,7 @@ export default function Detail() {
               </div>
               <div className="movie-info4">
                 <h3>코멘트</h3>
+                <Link to={`/${movieId}/comments`}>더보기</Link>
                 <ul className="comments">
                   {comments.length !== 0 ? (
                     comments.map((v, i) => (
@@ -653,13 +657,40 @@ export default function Detail() {
                             <></>
                           )}
                         </p>
-                        <div className="content">{v.content}</div>
+                        <div
+                          className="content"
+                          onClick={() =>
+                            navigate(`/comment/${v.comment_id}`, {
+                              state: {
+                                movieId,
+                                nickname: v.nickname,
+                                score: v.score,
+                                isMyComment:
+                                  v.comment_id === comment?.comment_id,
+                              },
+                            })
+                          }
+                        >
+                          {v.content}
+                        </div>
                         <div className="like-recomment">
                           <span>
-                            <img src={like_thumb} alt="좋아요" />
+                            <img src={likeThumb} alt="좋아요" />
                             {v.like}
                           </span>
-                          <span>
+                          <span
+                            onClick={() =>
+                              navigate(`/comment/${v.comment_id}`, {
+                                state: {
+                                  movieId,
+                                  nickname: v.nickname,
+                                  score: v.score,
+                                  isMyComment:
+                                    v.comment_id === comment?.comment_id,
+                                },
+                              })
+                            }
+                          >
                             <img src={commentIcon} alt="코멘트" />
                             {v.reply_count}
                           </span>

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { message } from 'antd';
 import './signin.scss';
+import logo from '../images/main_logo.svg';
 import { useNavigate } from 'react-router-dom';
+import APIService from '../service/APIService';
+
 import axios from 'axios';
 
 function Signin() {
@@ -13,7 +16,7 @@ function Signin() {
   });
 
   const navigate = useNavigate();
-  const LOCALAPI = 'http://3.38.64.130:8080';
+  const LOCALAPI = APIService.LOCALAPI;
 
   async function click() {
     try {
@@ -27,15 +30,15 @@ function Signin() {
           confirm: false,
         });
         sessionStorage.setItem('token', response.data.access_token);
+        sessionStorage.setItem('refresh-token', response.data.refresh_token);
         alert('로그인성공');
         navigate('/');
-      } else {
-        setIsValidation({
-          ...isValidation,
-          confirm: true,
-        });
       }
     } catch (error) {
+      setIsValidation({
+        ...isValidation,
+        confirm: true,
+      });
       console.log(error);
     }
   }
@@ -63,11 +66,7 @@ function Signin() {
         <h1 className="a11y-hidden">로그인 페이지</h1>
         <div className="login-form">
           <form>
-            <img
-              src="./images/CINE_SQUARE_logo.svg"
-              onClick={() => navigate('/')}
-            />
-
+            <img src={logo} onClick={() => navigate('/')} />
             <fieldset>
               <legend>로그인</legend>
               <div className="input-box">

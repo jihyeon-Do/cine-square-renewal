@@ -19,15 +19,15 @@ export const store = createStore(
   combineReducers({
     router: routerReducer,
   }),
-  {
-    auth: {
-      token: TokenService.get(),
-      account: AccountService.getAccount(),
-      userName: AccountService.getUserName(),
-      loading: false,
-      error: null,
-    },
-  },
+  // {
+  //   auth: {
+  //     token: TokenService.get(),
+  //     account: AccountService.getAccount(),
+  //     userName: AccountService.getUserName(),
+  //     loading: false,
+  //     error: null,
+  //   },
+  // },
   composeWithDevTools(
     applyMiddleware(sagaMiddleware),
     applyMiddleware(routerMiddleware),

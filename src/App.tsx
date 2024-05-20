@@ -15,6 +15,8 @@ import Profile from './pages/Profile';
 
 import MyChoice from './pages/MyChoice';
 import Evaluation from './pages/Evaluation';
+import CommentDetail from './pages/CommentDetail';
+import MovieComments from './pages/MovieComments';
 
 function App() {
   return (
@@ -24,11 +26,13 @@ function App() {
         <Route path={'/signup'} element={<Signup />} />
         <Route path={'/profile'} element={<Profile />} />
         <Route path={'/detail/:movieId'} element={<Detail />} />
+        <Route path={'/comment/:commentId'} element={<CommentDetail />} />
         <Route path={'/mychoice/:listname'} element={<MyChoice />} />
         <Route path={'/review'} element={<MyChoice />} />
         <Route path={'/favorite/review'} element={<MyChoice />} />
         <Route path={'/favorite/person'} element={<MyChoice />} />
         <Route path={'/search/:keyword'} element={<Search />} />
+        <Route path={'/:movieId/comments'} element={<MovieComments />} />
         <Route path={'/evaluation'} element={<Evaluation />} />
         <Route path={'/'} element={<Home />} />
         {/* <Route element={<NotFound />} /> */}

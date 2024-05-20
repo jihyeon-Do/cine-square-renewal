@@ -4,16 +4,26 @@ $text-left-padding: 20px;
   .search-section {
     width: 100%;
     max-width: 1200px;
+    @media all and (max-width: 1220px) {
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
   }
   .search-results {
     width: 100%;
     box-sizing: border-box;
     border-bottom: 1px solid #eee;
     p {
-      font-size: 1.5em;
+      font-size: 1.5rem;
       text-align: center;
       padding: 80px 0 40px 0;
       margin: 0;
+      @media all and (max-width: 600px) {
+        font-size: 1.2rem;
+      }
+      @media all and (max-width: 350px) {
+        font-size: 1rem;
+      }
       span {
         font-weight: bold;
       }
@@ -27,6 +37,9 @@ $text-left-padding: 20px;
       font-weight: bold;
       font-size: 1.3em;
       margin-bottom: 30px;
+      @media all and (max-width: 350px) {
+        font-size: 1rem;
+      }
     }
     ul {
       // width: 100%;
@@ -34,6 +47,21 @@ $text-left-padding: 20px;
       grid-template-columns: repeat(8, 1fr);
       row-gap: 30px;
       column-gap: 10px;
+      @media all and (max-width: 1200px) {
+        grid-template-columns: repeat(6, 1fr);
+      }
+      @media all and (max-width: 800px) {
+        grid-template-columns: repeat(5, 1fr);
+      }
+      @media all and (max-width: 600px) {
+        grid-template-columns: repeat(4, 1fr);
+      }
+      @media all and (max-width: 400px) {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      @media all and (max-width: 300px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
       li {
         box-sizing: border-box;
         color: #000000;
@@ -70,11 +98,20 @@ $text-left-padding: 20px;
           min-height: 1px;
         }
         span {
-          width: 120px;
+          width: 100%;
           display: block;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+          @media all and (max-width: 600px) {
+            font-size: 0.8rem;
+          }
+          @media all and (max-width: 450px) {
+            font-size: 0.7rem;
+          }
+          @media all and (max-width: 300px) {
+            font-size: 0.9rem;
+          }
         }
         span:nth-of-type(2) {
           display: flex;
@@ -82,7 +119,7 @@ $text-left-padding: 20px;
         // }
         span:nth-of-type(2) {
           span::before {
-            content: ' • ';
+            content: '/';
           }
         }
       }

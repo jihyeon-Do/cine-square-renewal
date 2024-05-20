@@ -1,6 +1,11 @@
 .evaluation-main {
   background-color: #f8fbfc;
   padding-bottom: 60px;
+  padding-left: 20px;
+  padding-right: 20px;
+  .back {
+    padding-left: 0;
+  }
   .evalutaion {
     background-color: #fff;
     max-width: 560px;
@@ -8,7 +13,13 @@
     margin: 0 auto;
     border: 1px solid rgb(234, 234, 234);
     border-radius: 10px;
-    padding: 20px;
+    padding: 30px;
+    @media all and (max-width: 500px) {
+      padding: 20px;
+    }
+    @media all and (max-width: 350px) {
+      padding: 15px;
+    }
     & > div:nth-of-type(1) {
       //   background-color: aqua;
       padding-bottom: 10px;
@@ -19,12 +30,24 @@
       font-weight: 700;
       text-align: center;
       margin-bottom: 10px;
+      @media all and (max-width: 500px) {
+        font-size: 1.6rem;
+      }
+      @media all and (max-width: 350px) {
+        font-size: 1.4rem;
+      }
     }
     .aside {
       font-size: 0.9rem;
       color: rgb(120, 120, 120);
       text-align: center;
       margin-bottom: 10px;
+      @media all and (max-width: 500px) {
+        font-size: 0.8rem;
+      }
+      @media all and (max-width: 350px) {
+        font-size: 0.7rem;
+      }
     }
     ul {
       li {
@@ -42,15 +65,31 @@
         img {
           width: 80px;
           margin-right: 20px;
+          @media all and (max-width: 500px) {
+            width: 70px;
+            margin-right: 15px;
+          }
+          @media all and (max-width: 350px) {
+            width: 60px;
+          }
         }
         div {
           p {
             font-size: 1.1rem;
             font-weight: 300;
+            @media all and (max-width: 500px) {
+              font-size: 1rem;
+            }
+            @media all and (max-width: 350px) {
+              font-size: 0.9rem;
+            }
           }
           span {
             font-size: 0.8rem;
             color: rgb(120, 120, 120);
+            @media all and (max-width: 350px) {
+              font-size: 0.7rem;
+            }
           }
           .rating {
             // position: absolute;
@@ -79,6 +118,14 @@
                   padding: 1px;
                   position: relative;
                   pointer-events: none;
+                  @media all and (max-width: 500px) {
+                    width: 25px;
+                    height: 25px;
+                  }
+                  @media all and (max-width: 350px) {
+                    width: 20px;
+                    height: 20px;
+                  }
                 }
               }
               .reset {
@@ -87,6 +134,10 @@
                 cursor: pointer;
                 // background-color: blue;
                 margin-left: 20px;
+                @media all and (max-width: 500px) {
+                  width: 12px;
+                  height: 12px;
+                }
               }
             }
           }

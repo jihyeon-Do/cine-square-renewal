@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import HeaderTemplate from '../components/HeaderTemplate';
 import FooterTemplate from '../components/FooterTemplate';
 import { Link, useLocation } from 'react-router-dom';
-import axios from 'axios';
 // import './mychoice.scss';
 import backHistory from '../images/arrow_back.png';
 import { individualList } from '../data/CineSuggestionMovieList';
@@ -13,16 +12,47 @@ import { ReactComponent as FullStar1 } from '../images/star-full.svg';
 import { ReactComponent as Reset } from '../images/reset.svg';
 import './evaluation.scss';
 
+import axios from 'axios';
+import APIService from '../service/APIService';
+
+type RandomMovies = {
+  movie_id: number;
+  nation: string;
+  production_year: number;
+  thumbnail: string;
+  title: string;
+};
+
 export default function Evaluation() {
   const MAX_SCORE = 5;
   const [score, setScore] = useState(0);
   const [displayScore, setDisplayScore] = useState(score);
+  const [evaluatedMovieCount, setEvaluatedMovieCount] = useState(0);
+  const [randomMovies, setRandomMovies] = useState<RandomMovies[]>([]);
 
   const location = useLocation();
 
-  const handleMouseMove = useCallback((e: any) => {
-    setDisplayScore(calculateScore(e));
-  }, []);
+  const LOCALAPI = APIService.LOCALAPI;
+  const access_token = sessionStorage.getItem('token');
+  const bearer_header = {
+    headers: {
+      Authorization: `Bearer ${access_token}`,
+    },
+  };
+
+  const handleMouseMove = useCallback(
+    (e: any, id: number) => {
+      randomMovies.map((v, i) => {
+        if (v.movie_id === id) {
+          setDisplayScore(calculateScore(e));
+        } else {
+          return;
+        }
+      });
+    },
+    [randomMovies],
+  );
+
   const handleChange = (v: any) => {
     // if (token === null) {
     //   requiredLogin();
@@ -62,6 +92,30 @@ export default function Evaluation() {
       console.log(error);
     }
   };
+
+  //: 랜덤 영화 가져오기
+  useEffect(() => {
+    const getRandomMovie = async () => {
+      const response = await axios.get(
+        `${LOCALAPI}/api/movies/reports`,
+        bearer_header,
+      );
+      setRandomMovies(response.data.list);
+    };
+    getRandomMovie();
+  }, []);
+
+  useEffect(() => {
+    const getEvaluatedMovies = async () => {
+      const response = await axios.get(
+        `${LOCALAPI}/api/user-reports/score-counts`,
+        bearer_header,
+      );
+      setEvaluatedMovieCount(response.data.data);
+    };
+    getEvaluatedMovies();
+  }, []);
+
   return (
     <>
       <HeaderTemplate />
@@ -72,25 +126,25 @@ export default function Evaluation() {
         </button>
         <section className="evalutaion">
           <div>
-            <p className="count">23</p>
+            <p className="count">{evaluatedMovieCount}</p>
             <p className="aside">내가 본 영화들을 평가해볼까요?</p>
           </div>
           <ul>
-            {individualList.map((v, i) => (
-              <li key={v.movie.movie_id}>
-                <img src={v.movie.thumbnail} alt={v.movie.title} />
+            {randomMovies.map((v: RandomMovies, i: number) => (
+              <li key={v.movie_id}>
+                <img src={v.thumbnail} alt={v.title} />
                 <div>
                   <div>
-                    <p>{v.movie.title}</p>
+                    <p>{v.title}</p>
                     <span>
-                      {v.movie.production_year} {v.movie.nation}
+                      {v.production_year} {v.nation}
                     </span>
                   </div>
                   <div className="rating">
                     <section>
                       <div
                         className="stars"
-                        onMouseMove={handleMouseMove}
+                        onMouseMove={(e) => handleMouseMove(e, v.movie_id)}
                         onMouseLeave={() => setDisplayScore(score)}
                         onClick={() => handleChange(displayScore)}
                       >

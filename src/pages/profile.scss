@@ -1,6 +1,12 @@
 .profile-main {
   background-color: #f8fbfc;
   padding-bottom: 100px;
+  @media all and (max-width: 600px) {
+    padding-bottom: 50px;
+  }
+  @media all and (max-width: 400px) {
+    padding-bottom: 30px;
+  }
   button {
     background: none;
   }
@@ -14,6 +20,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    @media all and (max-width: 450px) {
+      font-size: 1rem;
+    }
+    @media all and (max-width: 350px) {
+      font-size: 0.9rem;
+    }
     .add {
       color: #606060;
       font-size: 0.8rem;
@@ -25,6 +37,10 @@
     max-width: 620px;
     margin: 0 auto;
     margin-top: 40px;
+    @media all and (max-width: 640px) {
+      padding: 0 20px;
+      box-sizing: border-box;
+    }
   }
   .cont {
     // margin-bottom: 130px;
@@ -43,9 +59,12 @@
       display: flex;
       align-items: center;
       padding: 20px 20px;
+      @media all and (max-width: 350px) {
+        padding: 10px 10px;
+      }
       .user-image-wrapper {
         display: flex;
-        width: 30%;
+        // width: 30%;
         justify-content: center;
         .user-image-box {
           background-image: url(../images/profile_picture.png);
@@ -56,6 +75,14 @@
           width: 120px;
           height: 120px;
           border: 1px solid rgb(255, 255, 255);
+          @media all and (max-width: 450px) {
+            width: 80px;
+            height: 80px;
+          }
+          @media all and (max-width: 350px) {
+            width: 60px;
+            height: 60px;
+          }
           .custom-thumbnail-input {
             visibility: hidden;
             height: 0;
@@ -102,11 +129,20 @@
         }
       }
       .user-info-box {
+        padding-left: 20px;
+
+        @media all and (max-width: 350px) {
+          padding-left: 10px;
+        }
+
         .user-profile {
           display: flex;
           justify-content: space-between;
           margin-bottom: 5px;
           align-items: center;
+          @media all and (max-width: 350px) {
+            margin-bottom: 0;
+          }
           &:last-child {
             margin-bottom: 0;
           }
@@ -117,12 +153,14 @@
         }
         input {
           color: #5e5e5e;
-          min-width: 160px;
           // padding: 10px 15px;
           border-radius: 3px;
           font-size: 0.8rem;
           font-weight: normal;
           background-color: transparent;
+          @media all and (max-width: 350px) {
+            font-size: 0.7rem;
+          }
         }
         input::placeholder {
           color: rgb(16, 16, 16);
@@ -130,6 +168,14 @@
         input#user_name {
           font-size: 1.2rem;
           font-weight: 700;
+          @media all and (max-width: 450px) {
+            font-size: 1rem;
+            font-weight: 600;
+          }
+          @media all and (max-width: 350px) {
+            font-size: 0.9rem;
+            font-weight: 600;
+          }
         }
         .modify {
           display: block;
@@ -147,9 +193,12 @@
     }
     .user-evaluate {
       justify-content: center;
-      background-color: #fafbfd;
+      background-color: #eef2f9;
       border-bottom-left-radius: 10px;
       border-bottom-right-radius: 10px;
+      @media all and (max-width: 450px) {
+        padding: 10px 10px;
+      }
 
       ul {
         width: 100%;
@@ -172,10 +221,24 @@
                 font-weight: 700;
                 font-size: 1rem;
                 margin-bottom: 3px;
+                @media all and (max-width: 450px) {
+                  font-weight: 600;
+                  font-size: 0.9rem;
+                }
+                @media all and (max-width: 350px) {
+                  font-weight: 500;
+                  font-size: 0.8rem;
+                }
               }
               &:last-child {
                 font-size: 0.9rem;
                 color: #5e5e5e;
+                @media all and (max-width: 450px) {
+                  font-size: 0.8rem;
+                }
+                @media all and (max-width: 350px) {
+                  font-size: 0.7rem;
+                }
               }
             }
             // align-items: center;
@@ -195,6 +258,11 @@
   section {
     .profile-full-info {
       // padding-top: 100px;
+      .profile-info-cont2 {
+        & > div {
+          padding: 10px 20px;
+        }
+      }
 
       .profile-info-cont1 {
         .person-info {
@@ -234,22 +302,35 @@
                   text-align: left;
                   .person-name {
                     font-size: 1rem;
+                    @media all and (max-width: 450px) {
+                      font-size: 0.9rem;
+                    }
+                    @media all and (max-width: 350px) {
+                      font-size: 0.8rem;
+                    }
                   }
                   .person-work {
                     font-size: 0.8rem;
                     color: #646464;
+                    @media all and (max-width: 350px) {
+                      font-size: 0.7rem;
+                    }
                   }
                 }
               }
               & > div:nth-child(2) {
                 font-size: 0.9rem;
                 color: #646464;
+                @media all and (max-width: 350px) {
+                  font-size: 0.8rem;
+                }
               }
             }
           }
         }
       }
-      .profile-info-cont3 {
+      .profile-info-cont3,
+      .profile-info-cont4 {
         ul {
           padding: 25px 40px 25px 40px;
           display: flex;
@@ -261,34 +342,33 @@
               font-weight: bold;
               font-size: 1rem;
               margin-bottom: 20px;
+              @media all and (max-width: 450px) {
+                font-size: 0.9rem;
+              }
+              @media all and (max-width: 350px) {
+                font-size: 0.8rem;
+              }
             }
             p:nth-of-type(2) {
               color: #646464;
               font-size: 0.8rem;
+              @media all and (max-width: 350px) {
+                font-size: 0.7rem;
+              }
             }
           }
         }
       }
       .profile-info-cont4 {
         ul {
-          padding: 25px 40px 25px 40px;
-          display: flex;
-          justify-content: space-around;
           li {
-            text-align: center;
             p:nth-of-type(1) {
               color: #000000;
-              font-weight: bold;
-              font-size: 1rem;
-              margin-bottom: 20px;
-            }
-            p:nth-of-type(2) {
-              color: #646464;
-              font-size: 0.8rem;
             }
           }
         }
       }
+
       .profile-info-cont5 {
         .slide-container {
           padding: 20px 10px;
@@ -419,6 +499,12 @@
         & > div {
           padding: 20px;
           text-align: center;
+          @media all and (max-width: 450px) {
+            font-size: 0.9rem;
+          }
+          @media all and (max-width: 350px) {
+            font-size: 0.8rem;
+          }
           & > p:first-child {
             margin-bottom: 10px;
           }
@@ -429,18 +515,45 @@
         }
       }
       .profile-info-cont8 {
-        h4 {
-          font-weight: 500;
+        .like-comment-list {
           display: flex;
           align-items: center;
           justify-content: space-between;
+          h4 {
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            span {
+              font-size: 0.9rem;
+              font-weight: 400;
+              color: #848484;
+              margin-left: 8px;
+            }
+            @media all and (max-width: 500px) {
+              font-size: 0.9rem;
+            }
+          }
           a {
             font-size: 0.8rem;
             color: #8c8c8c;
+            @media all and (max-width: 500px) {
+              font-size: 0.7rem;
+            }
           }
         }
+
         & > div {
           padding: 15px 15px;
+          h4 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            a {
+              font-size: 0.8rem;
+              color: #8c8c8c;
+            }
+          }
         }
         & > div:first-of-type {
           ul {
@@ -454,6 +567,14 @@
                 height: 110px;
                 margin: 0;
                 margin-bottom: 6px;
+                @media all and (max-width: 640px) {
+                  width: 80px;
+                  height: 80px;
+                }
+                @media all and (max-width: 500px) {
+                  width: 60px;
+                  height: 60px;
+                }
                 img {
                   width: 100%;
                   object-fit: cover;
@@ -464,10 +585,40 @@
               }
               & > p:first-of-type {
                 font-size: 0.9rem;
+                @media all and (max-width: 500px) {
+                  font-size: 0.8rem;
+                }
               }
               & > p:last-of-type {
                 font-size: 0.8rem;
                 color: #8c8c8c;
+                @media all and (max-width: 500px) {
+                  font-size: 0.7rem;
+                }
+              }
+            }
+          }
+        }
+        .favorite-person {
+          @media all and (max-width: 400px) {
+            display: none;
+          }
+        }
+        .favorite-person-xs {
+          display: none;
+          @media all and (max-width: 400px) {
+            display: block;
+            ul {
+              justify-content: space-around !important;
+            }
+          }
+          @media all and (max-width: 350px) {
+            ul {
+              li {
+                figure {
+                  width: 50px !important;
+                  height: 50px !important;
+                }
               }
             }
           }

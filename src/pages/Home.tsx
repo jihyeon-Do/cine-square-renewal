@@ -12,6 +12,7 @@ import Owlslide from '../components/Owlslide';
 import VideoFrameContainer from '../containers/VideoFrameContainer';
 import CineSuggestion from '../components/CineSuggestion';
 import axios from 'axios';
+import APIService from '../service/APIService';
 // import { startGetBoxOfficeListActionCreator } from '../redux/modules/boxoffice';
 // import BoxOffice from '../components/BoxOffice';
 // import TokenService from '../service/TokenService';
@@ -48,7 +49,7 @@ function Home() {
   const [individualArray, setIndividualArray] = useState<SimpleMoiveInfos[]>(
     [],
   );
-  const LOCALAPI = 'http://3.38.64.130:8080';
+  const LOCALAPI = APIService.LOCALAPI;
   // const token = useSelector((state: RootState) => state.auth.token);
   // const account = useSelector((state) => state.auth.account);
   // const userName = useSelector((state) => state.auth.userName);
@@ -76,11 +77,11 @@ function Home() {
 
   //: 박스오피스
   useEffect(() => {
-    // const today = getToday();
+    const today = getToday();
     async function getMovieInfo() {
       try {
         const response = await axios.get(
-          `${LOCALAPI}/api/movies/boxoffice?request_date=${20240423}`,
+          `${LOCALAPI}/api/movies/boxoffice?request_date=${today}`,
         );
         setBoxofficeArray(response.data.list);
       } catch (error) {

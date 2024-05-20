@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './signup.scss';
 import logo from '../images/main_logo.svg';
 import axios from 'axios';
+import APIService from '../service/APIService';
 
 function Signup() {
   const [account, setAccount] = useState('');
@@ -19,7 +20,7 @@ function Signup() {
 
   const passwordRef = useRef(null);
   const navigate = useNavigate();
-  const LOCALAPI = 'http://3.38.64.130:8080';
+  const LOCALAPI = APIService.LOCALAPI;
 
   function onChange(e: React.ChangeEvent<HTMLInputElement>, text: string) {
     if (text === 'name') {

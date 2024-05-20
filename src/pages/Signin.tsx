@@ -3,6 +3,7 @@ import { message } from 'antd';
 import './signin.scss';
 import logo from '../images/main_logo.svg';
 import { useNavigate } from 'react-router-dom';
+import APIService from '../service/APIService';
 
 import axios from 'axios';
 
@@ -15,7 +16,7 @@ function Signin() {
   });
 
   const navigate = useNavigate();
-  const LOCALAPI = 'http://3.38.64.130:8080';
+  const LOCALAPI = APIService.LOCALAPI;
 
   async function click() {
     try {

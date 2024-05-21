@@ -284,7 +284,7 @@ export const individualList = [
       running_time: 104,
       score: null,
       thumbnail:
-        'https://cinesquare-s3.s3.ap-northeast-2.amazonaws.com/movies/9004/thumbnail.jpg',
+        'https://cinesquares3.s3.ap-northeast-2.amazonaws.com/movies/9004/thumbnail.jpg',
       title: '험악한 꿈',
     },
     rank: 8,
@@ -297,7 +297,7 @@ export const individualList = [
       running_time: 111,
       score: null,
       thumbnail:
-        'https://cinesquare-s3.s3.ap-northeast-2.amazonaws.com/movies/9005/thumbnail.jpg',
+        'https://cinesquares3.s3.ap-northeast-2.amazonaws.com/movies/9005/thumbnail.jpg',
       title: '초이스',
     },
     rank: 9,
@@ -310,7 +310,7 @@ export const individualList = [
       running_time: 103,
       score: null,
       thumbnail:
-        'https://cinesquare-s3.s3.ap-northeast-2.amazonaws.com/movies/9006/thumbnail.jpg',
+        'https://cinesquares3.s3.ap-northeast-2.amazonaws.com/movies/9006/thumbnail.jpg',
       title: '목숨 건 연애',
     },
     rank: 10,

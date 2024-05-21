@@ -12,6 +12,8 @@ import BookmarkFull from '../images/like.png';
 import likeThumb from '../images/like_thumb.png';
 import commentIcon from '../images/comment_icon.png';
 import profilePicture from '../images/profile_picture.png';
+import noImg from '../images/no-image.png';
+
 import axios from 'axios';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 
@@ -472,7 +474,13 @@ export default function Detail() {
         <div className="poster-wrapper">
           <div className="poster-box">
             {/* <div className="poster-box-1"></div> */}
-            <div className="poster-box-2"></div>
+            <div
+              className="poster-box-2"
+              style={{
+                background: `url(${movieInfo?.images[0]}) no-repeat`,
+              }}
+            ></div>
+
             {/* <div className="poster-box-3"></div> */}
           </div>
         </div>
@@ -482,7 +490,7 @@ export default function Detail() {
               <div className="movie-info1">
                 <div className="thumbnail-wrapper">
                   <img
-                    src={`${movieInfo.thumbnail}`}
+                    src={`${movieInfo.thumbnail === null ? noImg : movieInfo.thumbnail}`}
                     alt={`${movieInfo.title}포스터`}
                   />
                 </div>

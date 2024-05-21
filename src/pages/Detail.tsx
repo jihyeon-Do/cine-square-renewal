@@ -11,7 +11,6 @@ import BookmarkEmpty from '../images/unlike.png';
 import BookmarkFull from '../images/like.png';
 import likeThumb from '../images/like_thumb.png';
 import commentIcon from '../images/comment_icon.png';
-import noImg from '../images/no-images.png';
 import profilePicture from '../images/profile_picture.png';
 import axios from 'axios';
 import { useNavigate, useParams, Link } from 'react-router-dom';
@@ -62,8 +61,8 @@ type Comment = {
 const MAX_SCORE = 5;
 
 export default function Detail() {
-  const [score, setScore] = useState(0);
-  const [displayScore, setDisplayScore] = useState(score);
+  const [score, setScore] = useState<number | null>(null);
+  const [displayScore, setDisplayScore] = useState<number | null>(score);
   const [bookmark, setBookmark] = useState(false);
   const [value, setValue] = useState('');
   const [status, setStatus] = useState('readOnly');
@@ -94,21 +93,43 @@ export default function Detail() {
     // dispatch(push('/signin'));
   };
 
+  const Star = ({ score, i }: any) => {
+    if (score > i) {
+      if (score - i === 0.5) {
+        return <HalfStar />;
+      } else {
+        return <FullStar />;
+      }
+    } else {
+      return <EmptyStar />;
+    }
+  };
+
+  const Bookmark = ({ bookmark }: any) => {
+    if (bookmark) {
+      return <img src={BookmarkFull} alt="" />;
+    } else {
+      return <img src={BookmarkEmpty} alt="" />;
+    }
+  };
+
   //: 영화 상세 정보, 유저가 평가한 점수, 유저 보고싶어요 상태
   useEffect(() => {
     async function userMovieInfo() {
       try {
+        //: 나의 보고싶어요 상태
         const statusResponse = await axios.get(
-          `${LOCALAPI}/api/user-reports/movies/${movieId}/status`,
+          `${LOCALAPI}/api/user-reports/me/movies/${movieId}/status`,
           bearer_header,
         );
         setBookmark(statusResponse.data.result);
+        //: 내 별점
         const scoreResponse = await axios.get(
-          `${LOCALAPI}/api/user-reports/movies/${movieId}/score`,
+          `${LOCALAPI}/api/user-reports/me/movies/${movieId}/score`,
           bearer_header,
         );
-        setDisplayScore(scoreResponse.data.result);
-        setScore(scoreResponse.data.result);
+        setScore(scoreResponse.data.data.score); // 여기를 수정
+        setDisplayScore(scoreResponse.data.data.score); // 여기를 수정
         //: 내 코멘트
         const myComment = await axios.get(
           `${LOCALAPI}/api/user-reports/movies/${movieId}/comment`,
@@ -200,10 +221,9 @@ export default function Detail() {
     getMovieInfo();
   }, [movieId]);
 
-  const handleChange = (v: number, type: string) => {
+  const handleChange = (v: number | null, type: string) => {
     if (access_token) {
       if (score === 0 && displayScore === 0) return;
-
       sendScore(v, type);
       setScore(v);
     } else {
@@ -211,31 +231,32 @@ export default function Detail() {
     }
   };
 
-  const sendScore = async function (v: number, type: string) {
+  const sendScore = async function (v: number | null, type: string) {
     if (access_token) {
       try {
-        if (score === 0 && type === 'registration') {
+        if (!score && type === 'registration') {
           //: 첫 등록
-          const response = await axios.post(
-            `${LOCALAPI}/api/user-reports/movies/${movieId}/score`,
+          await axios.post(
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/score`,
             {
               score: v,
             },
             bearer_header,
           );
-        } else if (score !== 0 && type === 'registration') {
+        } else if (score && type === 'registration') {
+          if (score === v) return;
           //: 수정
-          const response = await axios.patch(
-            `${LOCALAPI}/api/user-reports/movies/${movieId}/score`,
+          await axios.patch(
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/score`,
             {
               score: v,
             },
             bearer_header,
           );
-        } else if (score !== 0 && type === 'delete') {
+        } else if (score && type === 'delete') {
           //: 점수 삭제
-          const response = await axios.delete(
-            `${LOCALAPI}/api/user-reports/movies/${movieId}/score`,
+          await axios.delete(
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/score`,
             bearer_header,
           );
         }
@@ -265,7 +286,7 @@ export default function Detail() {
     if (access_token) {
       if (bookmark) {
         const response = await axios.delete(
-          `${LOCALAPI}/api/user-reports/movies/${movieId}/status`,
+          `${LOCALAPI}/api/user-reports/-/movies/${movieId}/status`,
           bearer_header,
         );
         if (response.status === 200) {
@@ -273,7 +294,7 @@ export default function Detail() {
         }
       } else {
         const response = await axios.post(
-          `${LOCALAPI}/api/user-reports/movies/${movieId}/status`,
+          `${LOCALAPI}/api/user-reports/-/movies/${movieId}/status`,
           {},
           bearer_header,
         );
@@ -361,11 +382,13 @@ export default function Detail() {
 
   async function handleAddComment() {
     if (access_token) {
+      if (!value) return;
+      const removeSpace = value.trim();
       try {
         const response = await axios.post(
           `${LOCALAPI}/api/movie-reports/${movieId}/comments`,
           {
-            content: value,
+            content: removeSpace,
           },
           bearer_header,
         );
@@ -499,6 +522,7 @@ export default function Detail() {
                         onMouseMove={handleMouseMove}
                         onMouseLeave={() => setDisplayScore(score)}
                         onClick={() =>
+                          displayScore &&
                           handleChange(displayScore, 'registration')
                         }
                       >
@@ -509,12 +533,14 @@ export default function Detail() {
                       <Reset
                         className="reset"
                         onClick={() => {
-                          handleChange(0, 'delete');
-                          setDisplayScore(0);
+                          handleChange(null, 'delete');
+                          setDisplayScore(null);
                         }}
                       ></Reset>
                     </section>
-                    <span>{displayScore} 점으로 평가하셨습니다.</span>
+                    <span>
+                      {!displayScore ? 0 : displayScore} 점으로 평가하셨습니다.
+                    </span>
                   </div>
                   <div className="my-comment">
                     {comment ? (
@@ -566,11 +592,17 @@ export default function Detail() {
                           <input
                             type="text"
                             value={value}
-                            placeholder="기대평, 관람평을 자유롭게 작성해주세요!"
+                            placeholder="코멘트 작성 준비중입니다"
                             onChange={addComment}
                             onKeyDown={enterPressComment}
+                            disabled
                           />
-                          <button type="button" onClick={handleAddComment}>
+                          <button
+                            type="button"
+                            onClick={handleAddComment}
+                            disabled={true}
+                            className="unclickable"
+                          >
                             코멘트 작성
                           </button>
                         </fieldset>
@@ -719,23 +751,3 @@ export default function Detail() {
     </>
   );
 }
-
-const Star = ({ score, i }: any) => {
-  if (score > i) {
-    if (score - i === 0.5) {
-      return <HalfStar />;
-    } else {
-      return <FullStar />;
-    }
-  } else {
-    return <EmptyStar />;
-  }
-};
-
-const Bookmark = ({ bookmark }: any) => {
-  if (bookmark) {
-    return <img src={BookmarkFull} alt="" />;
-  } else {
-    return <img src={BookmarkEmpty} alt="" />;
-  }
-};

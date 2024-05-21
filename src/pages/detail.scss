@@ -431,6 +431,10 @@ $border-color: #eee;
               @media all and (max-width: 800px) {
                 width: 25%;
               }
+              &.unclickable {
+                pointer-events: none;
+                opacity: 0.5;
+              }
             }
           }
         }

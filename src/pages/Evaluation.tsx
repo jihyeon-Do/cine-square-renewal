@@ -160,7 +160,6 @@ export default function Evaluation() {
                         }}
                       ></Reset>
                     </section>
-                    {/* <span>{displayScore} 점으로 평가하셨습니다.</span> */}
                   </div>
                 </div>
               </li>

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import noImg from '../images/no-images.png';
+import noImg from '../images/no-image.png';
 
 interface MovieListProps {
   movie_id?: string | number;

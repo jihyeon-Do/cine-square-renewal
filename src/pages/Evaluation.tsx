@@ -108,7 +108,7 @@ export default function Evaluation() {
   useEffect(() => {
     const getEvaluatedMovies = async () => {
       const response = await axios.get(
-        `${LOCALAPI}/api/user-reports/score-counts`,
+        `${LOCALAPI}/api/user-reports/me/movies/scored-counts`,
         bearer_header,
       );
       setEvaluatedMovieCount(response.data.data);

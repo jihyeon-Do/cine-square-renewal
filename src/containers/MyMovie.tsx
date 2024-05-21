@@ -247,7 +247,7 @@ function MyMovie({ listname }: Listname) {
     const getMovie = async () => {
       if (listname === 'evaluated') {
         try {
-          const response = await api.get(`/api/user-reports/movies/scored`);
+          const response = await api.get(`/api/user-reports/me/movies/scored`);
           const evaluatedPromise = response.data.list.map(async (v: any) => {
             const movieSimpleInfo = await api.get(
               `/api/movies/${v.movie_id}/simple`,

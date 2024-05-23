@@ -417,21 +417,23 @@ export default function Detail() {
   }
 
   async function sendEditComment() {
-    try {
-      const response = await axios.patch(
-        `${LOCALAPI}/api/movie-reports/${movieId}/comments/${comment?.comment_id}`,
-        { content: value },
-        bearer_header,
-      );
-      if (response.status === 200) {
-        setStatus('readOnly');
-        if (editCommentInput.current) {
-          editCommentInput.current.className = '';
-          editCommentInput.current.readOnly = true;
+    if (status === 'edit') {
+      try {
+        const response = await axios.patch(
+          `${LOCALAPI}/api/movie-reports/${movieId}/comments/${comment?.comment_id}`,
+          { content: value },
+          bearer_header,
+        );
+        if (response.status === 200) {
+          setStatus('readOnly');
+          if (editCommentInput.current) {
+            editCommentInput.current.className = '';
+            editCommentInput.current.readOnly = true;
+          }
         }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
   }
 
@@ -460,10 +462,17 @@ export default function Detail() {
     }
   }
 
-  function enterPressComment(e: { key: string; preventDefault: () => void }) {
+  function enterPressComment(
+    e: { key: string; preventDefault: () => void },
+    act: string,
+  ) {
     if (e.key !== 'Enter') return;
     e.preventDefault();
-    handleAddComment();
+    if (act === 'create') {
+      handleAddComment();
+    } else {
+      sendEditComment();
+    }
   }
 
   return (
@@ -564,7 +573,7 @@ export default function Detail() {
                             value={value}
                             // placeholder={comment.content}
                             onChange={addComment}
-                            onKeyDown={enterPressComment}
+                            onKeyDown={(e) => enterPressComment(e, 'update')}
                             readOnly={true}
                             ref={editCommentInput}
                           />
@@ -602,14 +611,14 @@ export default function Detail() {
                             value={value}
                             placeholder="코멘트 작성 준비중입니다"
                             onChange={addComment}
-                            onKeyDown={enterPressComment}
-                            disabled
+                            onKeyDown={(e) => enterPressComment(e, 'create')}
+                            // disabled
                           />
                           <button
                             type="button"
                             onClick={handleAddComment}
-                            disabled={true}
-                            className="unclickable"
+                            // disabled={true}
+                            // className="unclickable"
                           >
                             코멘트 작성
                           </button>

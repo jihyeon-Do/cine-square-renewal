@@ -17,6 +17,7 @@ import MyChoice from './pages/MyChoice';
 import Evaluation from './pages/Evaluation';
 import CommentDetail from './pages/CommentDetail';
 import MovieComments from './pages/MovieComments';
+import Test from './pages/Test';
 
 function App() {
   return (

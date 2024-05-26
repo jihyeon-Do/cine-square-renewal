@@ -9,6 +9,7 @@ import './evaluation.scss';
 import axios from 'axios';
 import APIService from '../service/APIService';
 import MovieRating from '../components/MovieRating';
+import Test from './Test';
 
 type RandomMovies = {
   movie_id: number;
@@ -22,7 +23,7 @@ export default function Evaluation() {
   const MAX_SCORE = 5;
   const [evaluatedMovieCount, setEvaluatedMovieCount] = useState(0);
   const [randomMovies, setRandomMovies] = useState<RandomMovies[]>([]);
-
+  const [page, setPage] = useState(0);
   const location = useLocation();
 
   const LOCALAPI = APIService.LOCALAPI;
@@ -41,11 +42,12 @@ export default function Evaluation() {
         bearer_header,
       );
       setRandomMovies(response.data.list);
+      if (page === 0) {
+        setPage(1);
+      }
     };
     getRandomMovie();
   }, []);
-
-  console.log(randomMovies);
 
   useEffect(() => {
     const getEvaluatedMovies = async () => {
@@ -57,6 +59,8 @@ export default function Evaluation() {
     };
     getEvaluatedMovies();
   }, []);
+
+  console.log(page);
 
   return (
     <>
@@ -83,6 +87,7 @@ export default function Evaluation() {
               </li>
             ))}
           </ul>
+          {page > 0 && <Test setPage={setPage} page={page} />}
         </section>
       </main>
 

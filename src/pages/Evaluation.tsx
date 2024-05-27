@@ -10,6 +10,7 @@ import axios from 'axios';
 import APIService from '../service/APIService';
 import MovieRating from '../components/MovieRating';
 import Test from './Test';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 type RandomMovies = {
   movie_id: number;
@@ -23,6 +24,7 @@ export default function Evaluation() {
   const MAX_SCORE = 5;
   const [evaluatedMovieCount, setEvaluatedMovieCount] = useState(0);
   const [randomMovies, setRandomMovies] = useState<RandomMovies[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(0);
   const location = useLocation();
 
@@ -37,17 +39,39 @@ export default function Evaluation() {
   //: 랜덤 영화 가져오기
   useEffect(() => {
     const getRandomMovie = async () => {
-      const response = await axios.get(
-        `${LOCALAPI}/api/movies/reports`,
-        bearer_header,
-      );
-      setRandomMovies(response.data.list);
-      if (page === 0) {
-        setPage(1);
+      try {
+        setIsLoading(true);
+        if (page === 0) {
+          const response = await axios.get(
+            `${LOCALAPI}/api/movies/reports?page=1&size=10`,
+            bearer_header,
+          );
+          setRandomMovies(response.data.list);
+          setPage(1);
+        } else if (page === 1) {
+          setIsLoading(false);
+          return;
+        } else {
+          if (page > 1) {
+            const response = await axios.get(
+              `${LOCALAPI}/api/movies/reports?page=${page}&size=10`,
+              bearer_header,
+            );
+            setTimeout(() => {
+              setRandomMovies([...randomMovies, ...response.data.list]);
+              setIsLoading(false);
+            }, 1000);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
       }
     };
     getRandomMovie();
-  }, []);
+  }, [page]);
+
+  console.log(page);
 
   useEffect(() => {
     const getEvaluatedMovies = async () => {
@@ -60,7 +84,7 @@ export default function Evaluation() {
     getEvaluatedMovies();
   }, []);
 
-  console.log(page);
+  // console.log(page);
 
   return (
     <>
@@ -87,7 +111,8 @@ export default function Evaluation() {
               </li>
             ))}
           </ul>
-          {page > 0 && <Test setPage={setPage} page={page} />}
+          {page > 0 && !isLoading && <Test setPage={setPage} />}
+          {isLoading && <LoadingSpinner />}
         </section>
       </main>
 

@@ -3,7 +3,6 @@ import useIntersectionObserver from '../hook/Observer';
 
 interface SetPage {
   setPage: any;
-  page: number;
 }
 
 export default function Test({ setPage }: SetPage) {

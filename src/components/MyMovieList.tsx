@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import { ReactComponent as FullStar1 } from '../images/star-full.svg';
 import './MyMovieList.scss';
 import { useNavigate } from 'react-router-dom';
+import Test from '../pages/Test';
+import LoadingSpinner from './LoadingSpinner';
 
 type Movie = {
   movie_id: number;
@@ -14,9 +16,18 @@ type Movie = {
 interface MyMovieListProps {
   movieArray: Movie[];
   listname: string;
+  setPage: any;
+  isLoading: boolean;
+  page: number;
 }
 
-function MyMovieList({ movieArray, listname }: MyMovieListProps) {
+function MyMovieList({
+  movieArray,
+  listname,
+  setPage,
+  isLoading,
+  page,
+}: MyMovieListProps) {
   const navigate = useNavigate();
 
   function goDetailPage(movieId: number) {
@@ -43,6 +54,8 @@ function MyMovieList({ movieArray, listname }: MyMovieListProps) {
           </li>
         ))}
       </ul>
+      {page > 0 && !isLoading && <Test setPage={setPage} />}
+      {isLoading && <LoadingSpinner />}
     </section>
   );
 }

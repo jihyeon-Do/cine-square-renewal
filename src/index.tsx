@@ -9,6 +9,7 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { HistoryRouter as Router } from 'redux-first-history/rr6';
 import { store, history } from './redux/create';
+import ScrollTop from './components/ScrollTop';
 
 // import create, { sagaMiddleware } from './redux/create';
 
@@ -20,6 +21,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <Provider store={store}>
     <Router history={history}>
+      <ScrollTop />
       <App />
     </Router>
   </Provider>,

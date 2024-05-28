@@ -65,8 +65,8 @@ export default function Search() {
                   <li key={index}>
                     <Link to={`/detail/${list.movie_id}`}>
                       {/* <img src={`${list.mainImg}`} alt={`${list.movie_title}`} /> */}
-                      <div className="thumbnail-wrapper">
-                        <div className="wrapper">
+                      <div className="thumbnail-container">
+                        <div className="thumbnail-wrapper">
                           <img
                             src={list.thumbnail ? list.thumbnail : noImg}
                             alt={`${list.title}`}

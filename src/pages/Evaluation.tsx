@@ -4,16 +4,13 @@ import FooterTemplate from '../components/FooterTemplate';
 import { Link, useLocation } from 'react-router-dom';
 // import './mychoice.scss';
 import backHistory from '../images/arrow_back.png';
-import { individualList } from '../data/CineSuggestionMovieList';
-import { ReactComponent as EmptyStar } from '../images/star-empty1.svg';
-import { ReactComponent as HalfStar } from '../images/star-half1.svg';
-import { ReactComponent as FullStar } from '../images/star-full1.svg';
-import { ReactComponent as FullStar1 } from '../images/star-full.svg';
-import { ReactComponent as Reset } from '../images/reset.svg';
 import './evaluation.scss';
 
 import axios from 'axios';
 import APIService from '../service/APIService';
+import MovieRating from '../components/MovieRating';
+import Test from './Test';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 type RandomMovies = {
   movie_id: number;
@@ -25,11 +22,10 @@ type RandomMovies = {
 
 export default function Evaluation() {
   const MAX_SCORE = 5;
-  const [score, setScore] = useState(0);
-  const [displayScore, setDisplayScore] = useState(score);
   const [evaluatedMovieCount, setEvaluatedMovieCount] = useState(0);
   const [randomMovies, setRandomMovies] = useState<RandomMovies[]>([]);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(0);
   const location = useLocation();
 
   const LOCALAPI = APIService.LOCALAPI;
@@ -40,81 +36,55 @@ export default function Evaluation() {
     },
   };
 
-  const handleMouseMove = useCallback(
-    (e: any, id: number) => {
-      randomMovies.map((v, i) => {
-        if (v.movie_id === id) {
-          setDisplayScore(calculateScore(e));
-        } else {
-          return;
-        }
-      });
-    },
-    [randomMovies],
-  );
-
-  const handleChange = (v: any) => {
-    // if (token === null) {
-    //   requiredLogin();
-    // } else {
-    //   if (score === 0 && displayScore === 0) return;
-    //   sendScore(v);
-    //   setScore(v);
-    // }
-    if (score === 0 && displayScore === 0) return;
-    sendScore(v);
-    setScore(v);
-  };
-  const calculateScore = (e: {
-    currentTarget: { getBoundingClientRect: () => { width: any; left: any } };
-    clientX: number;
-  }) => {
-    const { width, left } = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - left;
-    const scale = width / MAX_SCORE / 2;
-    return (Math.floor(x / scale) + 1) / 2;
-  };
-
-  const sendScore = async function (v: number) {
-    // if (account === null) return;
-    try {
-      //   const response = await axios({
-      //     method: 'POST',
-      //     url: `${LOCALAPI}/api/user-reports/score`,
-      //     // url: `${LOCALAPI}/user/selectMovieGrade`,
-      //     data: {
-      //       user_id: 6,
-      //       movie_id: movieId,
-      //       score: v,
-      //     },
-      //   });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   //: 랜덤 영화 가져오기
   useEffect(() => {
     const getRandomMovie = async () => {
-      const response = await axios.get(
-        `${LOCALAPI}/api/movies/reports`,
-        bearer_header,
-      );
-      setRandomMovies(response.data.list);
+      try {
+        setIsLoading(true);
+        if (page === 0) {
+          const response = await axios.get(
+            `${LOCALAPI}/api/movies/reports?page=1&size=10`,
+            bearer_header,
+          );
+          setRandomMovies(response.data.list);
+          setPage(1);
+        } else if (page === 1) {
+          setIsLoading(false);
+          return;
+        } else {
+          if (page > 1) {
+            const response = await axios.get(
+              `${LOCALAPI}/api/movies/reports?page=${page}&size=10`,
+              bearer_header,
+            );
+            setTimeout(() => {
+              setRandomMovies([...randomMovies, ...response.data.list]);
+              setIsLoading(false);
+            }, 1000);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+        setIsLoading(false);
+      }
     };
     getRandomMovie();
-  }, []);
+  }, [page]);
+
+  console.log(page);
 
   useEffect(() => {
     const getEvaluatedMovies = async () => {
       const response = await axios.get(
-        `${LOCALAPI}/api/user-reports/score-counts`,
+        `${LOCALAPI}/api/user-reports/me/movies/scored-counts`,
         bearer_header,
       );
       setEvaluatedMovieCount(response.data.data);
     };
     getEvaluatedMovies();
   }, []);
+
+  // console.log(page);
 
   return (
     <>
@@ -132,40 +102,17 @@ export default function Evaluation() {
           <ul>
             {randomMovies.map((v: RandomMovies, i: number) => (
               <li key={v.movie_id}>
-                <img src={v.thumbnail} alt={v.title} />
-                <div>
-                  <div>
-                    <p>{v.title}</p>
-                    <span>
-                      {v.production_year} {v.nation}
-                    </span>
-                  </div>
-                  <div className="rating">
-                    <section>
-                      <div
-                        className="stars"
-                        onMouseMove={(e) => handleMouseMove(e, v.movie_id)}
-                        onMouseLeave={() => setDisplayScore(score)}
-                        onClick={() => handleChange(displayScore)}
-                      >
-                        {[...Array(MAX_SCORE)].map((_, i) => (
-                          <Star key={i} score={displayScore} i={i} />
-                        ))}
-                      </div>
-                      <Reset
-                        className="reset"
-                        onClick={() => {
-                          handleChange(0);
-                          setDisplayScore(0);
-                        }}
-                      ></Reset>
-                    </section>
-                    {/* <span>{displayScore} 점으로 평가하셨습니다.</span> */}
-                  </div>
-                </div>
+                <MovieRating
+                  randomMovies={randomMovies}
+                  MAX_SCORE={MAX_SCORE}
+                  v={v}
+                  movieId={v.movie_id}
+                />
               </li>
             ))}
           </ul>
+          {page > 0 && !isLoading && <Test setPage={setPage} />}
+          {isLoading && <LoadingSpinner />}
         </section>
       </main>
 
@@ -173,14 +120,3 @@ export default function Evaluation() {
     </>
   );
 }
-const Star = ({ score, i }: any) => {
-  if (score > i) {
-    if (score - i === 0.5) {
-      return <HalfStar />;
-    } else {
-      return <FullStar />;
-    }
-  } else {
-    return <EmptyStar />;
-  }
-};

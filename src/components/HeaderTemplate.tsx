@@ -66,7 +66,8 @@ function HeaderTemplate() {
       (e.target === searchClickButton.current && e.type === 'click')
     ) {
       // getValue();
-      navigate(`/search/${value}`);
+      const removeSpace = value.trim();
+      navigate(`/search/${removeSpace}`);
     }
   }
 
@@ -87,7 +88,8 @@ function HeaderTemplate() {
       if (type === 'enter') {
         setIsSearch(false);
       }
-      navigate(`/search/${value}`);
+      const removeSpace = value.trim();
+      navigate(`/search/${removeSpace}`);
     }
   }
 
@@ -101,7 +103,7 @@ function HeaderTemplate() {
           //   }}
           onClick={() => navigate('/')}
         >
-          <img src="../images/main_logo.svg" alt="main_logo" />
+          <img src={mainLogo} alt="main_logo" />
         </h1>
         <div className="right-content">
           <div

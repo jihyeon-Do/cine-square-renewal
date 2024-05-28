@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import noImg from '../images/no-images.png';
+import noImg from '../images/no-image.png';
 
 interface MovieListProps {
   movie_id?: string | number;
@@ -49,8 +49,8 @@ function CineSuggestion({ title, list }: movieListCarousel) {
               <li key={i}>
                 <Link to={`/detail/${v.movie.movie_id}`}>
                   {title !== 'none' && <p className="ranking">{v.rank}</p>}
-                  <div className="test1">
-                    <div className="test2">
+                  <div className="thumbnail-container">
+                    <div className="thumbnail-wrapper">
                       <img
                         src={
                           v.movie.thumbnail === null ? noImg : v.movie.thumbnail

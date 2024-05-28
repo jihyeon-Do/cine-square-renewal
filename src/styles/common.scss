@@ -1,0 +1,64 @@
+.blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  width: 100vw;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.thumbnail-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  padding-bottom: 144%;
+  .thumbnail-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    img {
+      width: 100%;
+      height: 100%;
+      vertical-align: top;
+      border-radius: 5px;
+      object-fit: cover;
+      min-height: 1px;
+    }
+  }
+}
+
+.iframe-wrapper {
+  position: absolute;
+  padding-bottom: 45%;
+  width: 80%;
+  height: 0;
+  z-index: 9999;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  @media all and (max-width: 600px) {
+    width: 90%;
+  }
+}
+
+iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  .close-btn {
+    position: absolute;
+    left: 30%;
+    width: 30px;
+    height: 30px;
+  }
+}

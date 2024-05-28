@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { ReactComponent as FullStar1 } from '../images/star-full.svg';
 import MyMovieList from '../components/MyMovieList';
@@ -19,6 +19,9 @@ type Movie = {
 
 function MyMovie({ listname }: Listname) {
   const [movieArray, setMovieArray] = useState<Movie[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(0);
+  const [totalCount, setTotalCount] = useState(null);
 
   const LOCALAPI = APIService.LOCALAPI;
   const access_token = sessionStorage.getItem('token');
@@ -27,6 +30,7 @@ function MyMovie({ listname }: Listname) {
       Authorization: `Bearer ${access_token}`,
     },
   };
+  const stopFetch = useRef(false);
 
   const movieList = [
     {
@@ -246,30 +250,72 @@ function MyMovie({ listname }: Listname) {
   useEffect(() => {
     const getMovie = async () => {
       if (listname === 'evaluated') {
+        setIsLoading(true);
         try {
-          const response = await api.get(`/api/user-reports/movies/scored`);
-          const evaluatedPromise = response.data.list.map(async (v: any) => {
-            const movieSimpleInfo = await api.get(
-              `/api/movies/${v.movie_id}/simple`,
+          if (page === 0) {
+            const response = await api.get(
+              `/api/user-reports/me/movies/scored?page=1&size=32`,
             );
-            return { ...v, thumbnail: movieSimpleInfo.data.data.thumbnail };
-          });
-          const evaluatedMovieList = await Promise.all(evaluatedPromise);
-          console.log(evaluatedMovieList);
-          setMovieArray(evaluatedMovieList);
+            setTotalCount(response.data.total_count);
+            const evaluatedPromise = response.data.list.map(async (v: any) => {
+              const movieSimpleInfo = await api.get(
+                `/api/movies/${v.movie_id}/simple`,
+              );
+              return { ...v, thumbnail: movieSimpleInfo.data.data.thumbnail };
+            });
+            const evaluatedMovieList = await Promise.all(evaluatedPromise);
+            setMovieArray(evaluatedMovieList);
+            setPage(1);
+            setIsLoading(false);
+          } else if (page === 1) {
+            setIsLoading(false);
+            return;
+          } else {
+            const response = await api.get(
+              `/api/user-reports/me/movies/scored?page=${page}&size=32`,
+            );
+            const evaluatedPromise = response.data.list.map(async (v: any) => {
+              const movieSimpleInfo = await api.get(
+                `/api/movies/${v.movie_id}/simple`,
+              );
+              return { ...v, thumbnail: movieSimpleInfo.data.data.thumbnail };
+            });
+            const evaluatedMovieList = await Promise.all(evaluatedPromise);
+            setTimeout(() => {
+              setMovieArray([...movieArray, ...evaluatedMovieList]);
+            }, 1000);
+          }
         } catch (error) {
           console.log(error);
+          setIsLoading(false);
         }
       } else {
         setMovieArray([]);
       }
     };
-    getMovie();
-  }, []);
+    if (!stopFetch.current) {
+      getMovie();
+    }
+  }, [page]);
+
+  useEffect(() => {
+    //: movieArray의 길이와 totalCount의 길이가 같아지면 fetch 멈추기
+    if (movieArray.length === totalCount) {
+      setIsLoading(false);
+      stopFetch.current = true;
+      return;
+    }
+  }, [movieArray]);
 
   return (
     <>
-      <MyMovieList movieArray={movieArray} listname={listname} />
+      <MyMovieList
+        movieArray={movieArray}
+        listname={listname}
+        setPage={setPage}
+        isLoading={isLoading}
+        page={page}
+      />
     </>
   );
 }

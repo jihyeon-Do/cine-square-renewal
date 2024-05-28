@@ -69,7 +69,7 @@ export default function Profile() {
     async function Evaluated() {
       try {
         const response = await axios(
-          `${LOCALAPI}/api/user-reports/movie-rating`,
+          `${LOCALAPI}/api/user-reports/me/movies/scored-distribution`,
           bearer_header,
         );
         const result = response.data.list;
@@ -130,7 +130,7 @@ export default function Profile() {
   useEffect(() => {
     const evaluateCounts = async () => {
       const moive = await axios.get(
-        `${LOCALAPI}/api/user-reports/score-counts`,
+        `${LOCALAPI}/api/user-reports/me/movies/scored-counts`,
         bearer_header,
       );
       const comment = await axios.get(

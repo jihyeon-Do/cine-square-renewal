@@ -193,7 +193,7 @@ export const individualList = [
       running_time: 135,
       score: 3,
       thumbnail:
-        'https://cinesquare-s3.s3.ap-northeast-2.amazonaws.com/movies/8700/thumbnail.jpg',
+        ' https://cinesquares3.s3.ap-northeast-2.amazonaws.com/movies/8700/thumbnail.jpg',
       title: '스타워즈: 깨어난 포스',
     },
     rank: 1,
@@ -206,7 +206,7 @@ export const individualList = [
       running_time: 93,
       score: null,
       thumbnail:
-        'https://cinesquare-s3.s3.ap-northeast-2.amazonaws.com/movies/8800/thumbnail.jpg',
+        'https://cinesquares3.s3.ap-northeast-2.amazonaws.com/movies/8800/thumbnail.jpg',
       title: '더 비지트',
     },
     rank: 2,
@@ -219,7 +219,7 @@ export const individualList = [
       running_time: 94,
       score: null,
       thumbnail:
-        'https://cinesquare-s3.s3.ap-northeast-2.amazonaws.com/movies/8901/thumbnail.jpg',
+        'https://cinesquares3.s3.ap-northeast-2.amazonaws.com/movies/8901/thumbnail.jpg',
       title: '우리들',
     },
     rank: 3,
@@ -232,7 +232,7 @@ export const individualList = [
       running_time: 156,
       score: null,
       thumbnail:
-        'https://cinesquare-s3.s3.ap-northeast-2.amazonaws.com/movies/9000/thumbnail.jpg',
+        'https://cinesquares3.s3.ap-northeast-2.amazonaws.com/movies/9000/thumbnail.jpg',
       title: '곡성',
     },
     rank: 4,
@@ -245,7 +245,7 @@ export const individualList = [
       running_time: 120,
       score: null,
       thumbnail:
-        'https://cinesquare-s3.s3.ap-northeast-2.amazonaws.com/movies/9013/thumbnail.jpg',
+        'https://cinesquares3.s3.ap-northeast-2.amazonaws.com/movies/9013/thumbnail.jpg',
       title: '우행록: 어리석은 자의 기록',
     },
     rank: 5,
@@ -258,7 +258,7 @@ export const individualList = [
       running_time: 123,
       score: null,
       thumbnail:
-        'https://cinesquare-s3.s3.ap-northeast-2.amazonaws.com/movies/9002/thumbnail.jpg',
+        'https:/cinesquares3.s3.ap-northeast-2.amazonaws.com/movies/9002/thumbnail.jpg',
       title: '아이스브레이커',
     },
     rank: 6,
@@ -271,7 +271,7 @@ export const individualList = [
       running_time: 69,
       score: null,
       thumbnail:
-        'https://cinesquare-s3.s3.ap-northeast-2.amazonaws.com/movies/9003/thumbnail.jpg',
+        'https://cinesquares3.s3.ap-northeast-2.amazonaws.com/movies/9003/thumbnail.jpg',
       title: '두 번째 겨울',
     },
     rank: 7,
@@ -284,7 +284,7 @@ export const individualList = [
       running_time: 104,
       score: null,
       thumbnail:
-        'https://cinesquare-s3.s3.ap-northeast-2.amazonaws.com/movies/9004/thumbnail.jpg',
+        'https://cinesquares3.s3.ap-northeast-2.amazonaws.com/movies/9004/thumbnail.jpg',
       title: '험악한 꿈',
     },
     rank: 8,
@@ -297,7 +297,7 @@ export const individualList = [
       running_time: 111,
       score: null,
       thumbnail:
-        'https://cinesquare-s3.s3.ap-northeast-2.amazonaws.com/movies/9005/thumbnail.jpg',
+        'https://cinesquares3.s3.ap-northeast-2.amazonaws.com/movies/9005/thumbnail.jpg',
       title: '초이스',
     },
     rank: 9,
@@ -310,7 +310,7 @@ export const individualList = [
       running_time: 103,
       score: null,
       thumbnail:
-        'https://cinesquare-s3.s3.ap-northeast-2.amazonaws.com/movies/9006/thumbnail.jpg',
+        'https://cinesquares3.s3.ap-northeast-2.amazonaws.com/movies/9006/thumbnail.jpg',
       title: '목숨 건 연애',
     },
     rank: 10,

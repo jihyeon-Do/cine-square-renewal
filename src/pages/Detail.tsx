@@ -497,7 +497,7 @@ export default function Detail() {
           <section>
             <div className="movie-info">
               <div className="movie-info1">
-                <div className="thumbnail-wrapper">
+                <div className="thumbnail">
                   <img
                     src={`${movieInfo.thumbnail === null ? noImg : movieInfo.thumbnail}`}
                     alt={`${movieInfo.title}포스터`}

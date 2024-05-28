@@ -709,7 +709,7 @@ export default function Detail() {
                         <div
                           className="content"
                           onClick={() =>
-                            navigate(`/comment/${v.comment_id}`, {
+                            navigate(`/comment/detail/${v.comment_id}`, {
                               state: {
                                 movieId,
                                 nickname: v.nickname,
@@ -729,7 +729,7 @@ export default function Detail() {
                           </span>
                           <span
                             onClick={() =>
-                              navigate(`/comment/${v.comment_id}`, {
+                              navigate(`/comment/detail/${v.comment_id}`, {
                                 state: {
                                   movieId,
                                   nickname: v.nickname,

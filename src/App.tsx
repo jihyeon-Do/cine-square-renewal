@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Login from './pages/Signin';
-import { Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
 
 import Home from './pages/Home';
 // import FatalError from './pages/FatalError';
@@ -18,7 +18,6 @@ import Evaluation from './pages/Evaluation';
 import CommentDetail from './pages/CommentDetail';
 import MovieComments from './pages/MovieComments';
 import Test from './pages/Test';
-
 function App() {
   return (
     <div className="App">
@@ -27,7 +26,10 @@ function App() {
         <Route path={'/signup'} element={<Signup />} />
         <Route path={'/profile'} element={<Profile />} />
         <Route path={'/detail/:movieId'} element={<Detail />} />
-        <Route path={'/comment/:commentId'} element={<CommentDetail />} />
+        <Route
+          path={'/comment/detail/:commentId'}
+          element={<CommentDetail />}
+        />
         <Route path={'/mychoice/:listname'} element={<MyChoice />} />
         <Route path={'/review'} element={<MyChoice />} />
         <Route path={'/favorite/review'} element={<MyChoice />} />

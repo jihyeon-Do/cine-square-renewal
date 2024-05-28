@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { ReactComponent as FullStar1 } from '../images/star-full.svg';
 import MyMovieList from '../components/MyMovieList';
@@ -30,6 +30,7 @@ function MyMovie({ listname }: Listname) {
       Authorization: `Bearer ${access_token}`,
     },
   };
+  const stopFetch = useRef(false);
 
   const movieList = [
     {
@@ -292,12 +293,16 @@ function MyMovie({ listname }: Listname) {
         setMovieArray([]);
       }
     };
-    getMovie();
+    if (!stopFetch.current) {
+      getMovie();
+    }
   }, [page]);
 
   useEffect(() => {
+    //: movieArray의 길이와 totalCount의 길이가 같아지면 fetch 멈추기
     if (movieArray.length === totalCount) {
       setIsLoading(false);
+      stopFetch.current = true;
       return;
     }
   }, [movieArray]);

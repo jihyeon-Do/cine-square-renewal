@@ -67,9 +67,9 @@
         // width: 30%;
         justify-content: center;
         .user-image-box {
-          background-image: url(../images/profile_picture.png);
+          // background-image: url(../images/profile_picture.png);
           background-size: contain;
-          background-color: rgb(138, 138, 138);
+          background-color: #fff;
           border-radius: 50%;
           position: relative;
           width: 120px;
@@ -100,6 +100,7 @@
               height: 100%;
               border-radius: 150px;
               display: flex;
+              background-image: url(../images/profile_picture.png);
               background-size: cover;
               background-position: center;
               background-repeat: no-repeat;

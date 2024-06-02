@@ -22,7 +22,7 @@
   }
 
   .signup-form {
-    width: 400px;
+    width: 450px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -34,10 +34,9 @@
     box-sizing: border-box;
     color: #5e5e5e;
     @media all and (max-width: 500px) {
-      width: 80%;
+      width: 90%;
     }
     @media all and (max-width: 350px) {
-      width: 90%;
       padding: 50px 10px;
     }
     .input-box {
@@ -83,7 +82,7 @@
         padding: 0 10px;
         // border: 1px solid #e4e4e4;
         background-color: #f3f3f3;
-        font-size: 12px;
+        font-size: 16px;
         box-sizing: border-box;
       }
       button {

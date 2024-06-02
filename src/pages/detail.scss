@@ -206,6 +206,7 @@ $border-color: #eee;
         }
         @media all and (max-width: 600px) {
           padding-left: 0;
+          width: 100%;
         }
         .movie-title {
           font-size: 2rem;

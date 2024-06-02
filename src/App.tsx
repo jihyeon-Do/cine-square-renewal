@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import Login from './pages/Signin';
 import { BrowserRouter, Route, Router, Routes } from 'react-router-dom';
@@ -18,7 +18,19 @@ import Evaluation from './pages/Evaluation';
 import CommentDetail from './pages/CommentDetail';
 import MovieComments from './pages/MovieComments';
 import Test from './pages/Test';
+
 function App() {
+  function setScreenHeight() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+
+  useEffect(() => {
+    setScreenHeight();
+    window.addEventListener('resize', setScreenHeight);
+    return () => window.removeEventListener('resize', setScreenHeight);
+  }, []);
+
   return (
     <div className="App">
       <Routes>

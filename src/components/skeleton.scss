@@ -11,6 +11,11 @@
   height: 12px;
 }
 
+.skeleton.movie-text {
+  width: 60%;
+  height: 8px;
+}
+
 .skeleton.title {
   width: 50%;
   height: 20px;
@@ -24,8 +29,9 @@
 }
 
 .skeleton.thumbnail {
-  width: 100px;
-  height: 100px;
+  width: 100%;
+  height: 0px;
+  padding-bottom: 144%;
 }
 
 .skeleton.movie-thumbnail {

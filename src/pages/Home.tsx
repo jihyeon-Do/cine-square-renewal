@@ -110,7 +110,7 @@ function Home() {
       setIndividualArray(individualList);
     }
 
-    setTimeout(() => {
+    const movieList = setTimeout(() => {
       Promise.all([
         getMovieInfo(),
         getAverageRatingMovie(),
@@ -119,6 +119,8 @@ function Home() {
         setIsFetch(false);
       });
     }, 500);
+
+    return () => clearTimeout(movieList);
   }, []);
 
   // //: 개인별 추천 순위

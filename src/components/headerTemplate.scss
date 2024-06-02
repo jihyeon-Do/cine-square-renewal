@@ -171,6 +171,9 @@
       }
       .input-box {
         position: relative;
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
         &.active {
           @media all and (max-width: 470px) {
             width: 100%;

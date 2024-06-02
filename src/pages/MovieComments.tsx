@@ -164,9 +164,9 @@ function MovieComments() {
       <HeaderTemplate />
       <main>
         <h2 className="a11y-hidden">영화별 코멘트 리스트</h2>
-        <button className="back">
+        {/* <button className="back">
           <img src={backHistory} alt="뒤로가기" />
-        </button>
+        </button> */}
         <section className="movie-comments-list">
           <ul>
             {movieComments.length !== 0 ? (

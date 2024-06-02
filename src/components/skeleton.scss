@@ -1,0 +1,66 @@
+.skeleton {
+  background: #ddd;
+  margin: 10px 0;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.skeleton.text {
+  width: 100%;
+  height: 12px;
+}
+
+.skeleton.title {
+  width: 50%;
+  height: 20px;
+  margin-bottom: 15px;
+}
+
+.skeleton.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.skeleton.thumbnail {
+  width: 100px;
+  height: 100px;
+}
+
+.skeleton.movie-thumbnail {
+  width: calc(100% / 5 - 20px);
+  height: 20vw;
+  @media all and (max-width: 600px) {
+    width: calc(100% / 3 - 20px);
+    height: 35vw;
+  }
+}
+
+.shimmer-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  animation: loading 2.5s infinite;
+}
+
+.shimmer {
+  width: 50%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.06);
+  box-shadow: 0 0 30px 30px rgba(0, 0, 0, 0.05);
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-150%);
+  }
+  50% {
+    transform: translateX(-60%);
+  }
+  100% {
+    transform: translate(150%);
+  }
+}

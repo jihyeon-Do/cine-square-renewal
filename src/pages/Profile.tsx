@@ -17,6 +17,7 @@ import { movieStorage } from '../data/CineSuggestionMovieList';
 import { actor } from '../data/MyInfo';
 import PersonListBox from '../components/PersonListBox';
 import APIService from '../service/APIService';
+import profilePicture from '../images/profile_picture.png';
 
 // import APIService from '../service/APIService';
 
@@ -235,7 +236,11 @@ export default function Profile() {
                     />
                     <div
                       className="profile-thumb"
-                      style={{ backgroundImage: `url(${imgUrl})` }}
+                      style={
+                        imgUrl
+                          ? { backgroundImage: `url(${imgUrl})` }
+                          : { backgroundImage: `url(${profilePicture})` }
+                      }
                     />
                   </label>
                 </div>

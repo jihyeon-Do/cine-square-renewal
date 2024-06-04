@@ -66,6 +66,8 @@
         display: flex;
         // width: 30%;
         justify-content: center;
+        border: 1px solid #ddd;
+        border-radius: 50%;
         .user-image-box {
           // background-image: url(../images/profile_picture.png);
           background-size: contain;

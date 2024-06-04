@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import noImg from '../images/no-image.png';
 
@@ -23,13 +23,16 @@ interface movieListCarousel {
 }
 
 function CineSuggestion({ title, list }: movieListCarousel) {
-  let slideIndex = 0;
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  // let slideIndex = 0;
 
   const slideWrap = useRef<HTMLUListElement>(null);
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
 
   const ref = useRef(null);
+  const slideIndex = useRef(0);
   let trigger = false;
 
   useEffect(() => {
@@ -56,7 +59,40 @@ function CineSuggestion({ title, list }: movieListCarousel) {
         observer.unobserve(ref.current);
       }
     };
+  }, [windowWidth]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    let resizeTimeout: string | number | NodeJS.Timeout | undefined;
+
+    const debouncedResizeHandler = () => {
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+      }
+
+      resizeTimeout = setTimeout(handleResize, 200);
+    };
+
+    window.addEventListener('resize', debouncedResizeHandler);
+
+    return () => {
+      window.removeEventListener('resize', debouncedResizeHandler);
+    };
   }, []);
+
+  useEffect(() => {
+    if (windowWidth >= 601) {
+      if (slideIndex.current >= 2) {
+        slideIndex.current = 1;
+        if (slideWrap.current) {
+          slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex.current}))`;
+        }
+      }
+    }
+  }, [windowWidth]);
 
   return (
     <>
@@ -133,9 +169,9 @@ function CineSuggestion({ title, list }: movieListCarousel) {
       console.error('Error: One or more refs are null.');
       return;
     }
-    if (slideIndex === 0) return;
-    slideIndex -= 1;
-    slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex}))`;
+    if (slideIndex.current === 0) return;
+    slideIndex.current = slideIndex.current - 1;
+    slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex.current}))`;
     nextRef.current.style.display = 'block';
   }
 
@@ -145,8 +181,8 @@ function CineSuggestion({ title, list }: movieListCarousel) {
       return;
     }
     if (trigger) return;
-    slideIndex += 1;
-    slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex}))`;
+    slideIndex.current = slideIndex.current + 1;
+    slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex.current}))`;
     prevRef.current.style.display = 'block';
   }
 }

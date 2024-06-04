@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import noImg from '../images/no-image.png';
 
@@ -28,6 +28,35 @@ function CineSuggestion({ title, list }: movieListCarousel) {
   const slideWrap = useRef<HTMLUListElement>(null);
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
+
+  const ref = useRef(null);
+  let trigger = false;
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            trigger = true;
+          } else {
+            trigger = false;
+          }
+        });
+      },
+      { threshold: 0.3 },
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        //: observer가 관찰하는 모든 요소의 관찰을 중지
+        observer.unobserve(ref.current);
+      }
+    };
+  }, []);
 
   return (
     <>
@@ -77,6 +106,7 @@ function CineSuggestion({ title, list }: movieListCarousel) {
                 </Link>
               </li>
             ))}
+          <div className="observer" ref={ref} style={{ height: '1px' }}></div>
         </ul>
       </div>
       <button
@@ -106,7 +136,6 @@ function CineSuggestion({ title, list }: movieListCarousel) {
     if (slideIndex === 0) return;
     slideIndex -= 1;
     slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex}))`;
-    prevRef.current.style.display = 'none';
     nextRef.current.style.display = 'block';
   }
 
@@ -115,10 +144,9 @@ function CineSuggestion({ title, list }: movieListCarousel) {
       console.error('Error: One or more refs are null.');
       return;
     }
-    if (slideIndex === 1) return;
+    if (trigger) return;
     slideIndex += 1;
-    slideWrap.current.style.transform = `translate(calc(-100% - 16px * ${slideIndex}))`;
-    nextRef.current.style.display = 'none';
+    slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex}))`;
     prevRef.current.style.display = 'block';
   }
 }

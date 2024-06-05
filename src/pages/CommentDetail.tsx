@@ -210,7 +210,7 @@ function CommentDetail() {
         setReplies(AfterEditMyReplies);
       } else {
         const response = await axios.patch(
-          `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}`,
+          `${LOCALAPI}/api/user-reports/-/movies/${locationState.movieId}/comments/${commentId}`,
           { content: value },
           bearer_header,
         );
@@ -231,7 +231,7 @@ function CommentDetail() {
   async function deleteComment() {
     try {
       const response = await axios.delete(
-        `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}`,
+        `${LOCALAPI}/api/user-reports/-/movies/${locationState.movieId}/comments/${commentId}`,
         bearer_header,
       );
       setConfirm('false');

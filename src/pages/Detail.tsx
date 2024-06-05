@@ -146,12 +146,16 @@ export default function Detail() {
         setDisplayScore(scoreResponse.data.data.score); // 여기를 수정
         //: 내 코멘트
         const myComment = await axios.get(
-          `${LOCALAPI}/api/user-reports/movies/${movieId}/comment`,
+          `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comment`,
           bearer_header,
         );
-        setComment(myComment.data.result);
-        setValue(myComment.data.result.content);
-        setStatus('readOnly');
+        if (myComment.status === 204) {
+          setComment(null);
+        } else {
+          setComment(myComment.data.result);
+          setValue(myComment.data.result.content);
+          setStatus('readOnly');
+        }
       } catch (error) {
         // console.log(error);
       }
@@ -206,7 +210,7 @@ export default function Detail() {
         setComments(addIsLike);
         if (access_token) {
           const userLikeCommentsList = await axios.get(
-            `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments`,
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/like-comments`,
             bearer_header,
           );
           if (userLikeCommentsList.data.list.length) {
@@ -436,7 +440,7 @@ export default function Detail() {
         const removeSpace = value.trim();
         try {
           const response = await axios.post(
-            `${LOCALAPI}/api/movie-reports/${movieId}/comments`,
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments`,
             {
               content: removeSpace,
             },
@@ -444,11 +448,15 @@ export default function Detail() {
           );
           // setComments([...comments, response.data.data]);
           const myComment = await axios.get(
-            `${LOCALAPI}/api/user-reports/movies/${movieId}/comment`,
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comment`,
             bearer_header,
           );
-          setComment(myComment.data.result);
-          setStatus('readOnly');
+          if (myComment.status === 204) {
+            setComment(null);
+          } else {
+            setComment(myComment.data.result);
+            setStatus('readOnly');
+          }
         } catch (error) {
           console.log(error);
         } finally {
@@ -474,7 +482,7 @@ export default function Detail() {
       isCommunicating = true;
       try {
         const response = await axios.patch(
-          `${LOCALAPI}/api/movie-reports/${movieId}/comments/${comment?.comment_id}`,
+          `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${comment?.comment_id}`,
           { content: value },
           bearer_header,
         );
@@ -501,7 +509,7 @@ export default function Detail() {
       isCommunicating = true;
       try {
         const response = await axios.delete(
-          `${LOCALAPI}/api/movie-reports/${movieId}/comments/${comment?.comment_id}`,
+          `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${comment?.comment_id}`,
           bearer_header,
         );
         setComment(null);

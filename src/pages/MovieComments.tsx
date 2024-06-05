@@ -69,7 +69,7 @@ function MovieComments() {
         ];
         if (access_token) {
           const userLikeCommentsList = await axios.get(
-            `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments`,
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/like-comments`,
             bearer_header,
           );
           if (userLikeCommentsList.data.list.length) {

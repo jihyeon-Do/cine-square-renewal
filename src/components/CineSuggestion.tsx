@@ -41,6 +41,9 @@ function CineSuggestion({ title, list }: movieListCarousel) {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             trigger = true;
+            if (nextRef.current) {
+              nextRef.current.style.display = 'none';
+            }
           } else {
             trigger = false;
           }
@@ -93,6 +96,31 @@ function CineSuggestion({ title, list }: movieListCarousel) {
       }
     }
   }, [windowWidth]);
+
+  function slidePrev() {
+    if (!slideWrap.current || !prevRef.current || !nextRef.current) {
+      console.error('Error: One or more refs are null.');
+      return;
+    }
+    if (slideIndex.current === 0) return;
+    slideIndex.current = slideIndex.current - 1;
+    slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex.current}))`;
+    nextRef.current.style.display = 'block';
+    if (slideIndex.current === 0) {
+      prevRef.current.style.display = 'none';
+    }
+  }
+
+  function slideNext() {
+    if (!slideWrap.current || !prevRef.current || !nextRef.current) {
+      console.error('Error: One or more refs are null.');
+      return;
+    }
+    if (trigger) return;
+    slideIndex.current = slideIndex.current + 1;
+    slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex.current}))`;
+    prevRef.current.style.display = 'block';
+  }
 
   return (
     <>
@@ -163,28 +191,6 @@ function CineSuggestion({ title, list }: movieListCarousel) {
       </button>
     </>
   );
-
-  function slidePrev() {
-    if (!slideWrap.current || !prevRef.current || !nextRef.current) {
-      console.error('Error: One or more refs are null.');
-      return;
-    }
-    if (slideIndex.current === 0) return;
-    slideIndex.current = slideIndex.current - 1;
-    slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex.current}))`;
-    nextRef.current.style.display = 'block';
-  }
-
-  function slideNext() {
-    if (!slideWrap.current || !prevRef.current || !nextRef.current) {
-      console.error('Error: One or more refs are null.');
-      return;
-    }
-    if (trigger) return;
-    slideIndex.current = slideIndex.current + 1;
-    slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex.current}))`;
-    prevRef.current.style.display = 'block';
-  }
 }
 
 export default CineSuggestion;

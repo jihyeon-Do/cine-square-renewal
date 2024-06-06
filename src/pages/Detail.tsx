@@ -203,7 +203,6 @@ export default function Detail() {
         const commentScore = await axios.get(
           `${LOCALAPI}/api/movie-reports/summary/movies/${movieId}`,
         );
-        console.log(commentScore);
         const addIsLike = commentScore.data.list.map((value: commentsList) => {
           return { ...value, isLike: false };
         });

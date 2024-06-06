@@ -22,7 +22,6 @@ function MyFavorite() {
         `${LOCALAPI}/api/user-reports/me/movies/-/like-comments`,
         bearer_header,
       );
-      console.log(response);
       let copyFavoriteReview: any = [];
       response.data.list.map(async (v: any) => {
         const detailMovieInfo = await axios.get(

@@ -76,9 +76,7 @@ function MovieComments() {
             let copyComment: any = [];
             copyMovieComments.map((v: any) => {
               for (let i = 0; i < userLikeCommentsList.data.list.length; i++) {
-                if (
-                  v.comment_id === userLikeCommentsList.data.list[i].comment_id
-                ) {
+                if (v.comment_id === userLikeCommentsList.data.list[i]) {
                   copyComment = [...copyComment, { ...v, isLike: true }];
                   break;
                 } else if (i === userLikeCommentsList.data.list.length - 1) {
@@ -108,7 +106,7 @@ function MovieComments() {
       if (!isLike) {
         try {
           const response = await axios.post(
-            `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${commentId}`,
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${commentId}/like`,
             {},
             bearer_header,
           );
@@ -133,10 +131,10 @@ function MovieComments() {
         //: like 취소하기
         try {
           const response = await axios.delete(
-            `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${commentId}`,
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${commentId}/like`,
             bearer_header,
           );
-          if (response.status === 200) {
+          if (response.status === 204) {
             let copyComments: any[] = [];
             movieComments.map((v, i) => {
               if (v.comment_id === commentId) {

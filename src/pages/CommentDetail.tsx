@@ -123,7 +123,7 @@ function CommentDetail() {
   useEffect(() => {
     const getLikeComments = async () => {
       const response = await axios.get(
-        `${LOCALAPI}/api/user-reports/like-comments`,
+        `${LOCALAPI}/api/user-reports/me/movies/-/like-comments`,
         bearer_header,
       );
       response.data.list.map((v: any) => {
@@ -263,13 +263,13 @@ function CommentDetail() {
     try {
       if (isLike) {
         const response = await axios.delete(
-          `${LOCALAPI}/api/user-reports/movies/${locationState.movieId}/like-comments/${commentId}`,
+          `${LOCALAPI}/api/user-reports/-/movies/${locationState.movieId}/comments/${commentId}/like`,
           bearer_header,
         );
         if (response.status === 200) setIsLike(false);
       } else {
         const response = await axios.post(
-          `${LOCALAPI}/api/user-reports/movies/${locationState.movieId}/like-comments/${commentId}`,
+          `${LOCALAPI}/api/user-reports/-/movies/${locationState.movieId}/comments/${commentId}/like`,
           {},
           bearer_header,
         );

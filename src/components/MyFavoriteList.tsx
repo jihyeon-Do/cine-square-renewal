@@ -46,12 +46,12 @@ function MyFavotieList({ data, pageName, func }: MyMovieListProps) {
     try {
       if (likeStatus) {
         await axios.delete(
-          `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${id}`,
+          `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${id}/like`,
           bearer_header,
         );
       } else {
         await axios.post(
-          `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${id}`,
+          `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${id}/like`,
           {},
           bearer_header,
         );

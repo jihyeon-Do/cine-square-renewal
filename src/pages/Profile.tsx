@@ -150,7 +150,7 @@ export default function Profile() {
   useEffect(() => {
     const getLikeCommentCounts = async () => {
       const comment = await axios.get(
-        `${LOCALAPI}/api/user-reports/like-comment-counts`,
+        `${LOCALAPI}/api/user-reports/me/movies/-/like-comments/count`,
         bearer_header,
       );
       setLikeCommentCounts(comment.data.data);

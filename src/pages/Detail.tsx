@@ -83,7 +83,7 @@ export default function Detail() {
   const editCommentInput = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
-  const { movieId } = useParams();
+  const { movieId } = useParams<{ movieId?: string }>();
   const access_token = sessionStorage.getItem('token');
   const bearer_header = {
     headers: {
@@ -203,7 +203,7 @@ export default function Detail() {
         const commentScore = await axios.get(
           `${LOCALAPI}/api/movie-reports/summary/movies/${movieId}`,
         );
-
+        console.log(commentScore);
         const addIsLike = commentScore.data.list.map((value: commentsList) => {
           return { ...value, isLike: false };
         });
@@ -217,10 +217,7 @@ export default function Detail() {
             let copyCommentList: commentsList[] = [];
             addIsLike.map((value: commentsList) => {
               for (let i = 0; i < userLikeCommentsList.data.list.length; i++) {
-                if (
-                  value.comment_id ===
-                  userLikeCommentsList.data.list[i].comment_id
-                ) {
+                if (value.comment_id === userLikeCommentsList.data.list[i]) {
                   copyCommentList = [
                     ...copyCommentList,
                     { ...value, isLike: true },
@@ -345,7 +342,7 @@ export default function Detail() {
       if (!isLike) {
         try {
           const response = await axios.post(
-            `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${commentId}`,
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${commentId}/like`,
             {},
             bearer_header,
           );
@@ -370,10 +367,10 @@ export default function Detail() {
         //: like 취소하기
         try {
           const response = await axios.delete(
-            `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${commentId}`,
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${commentId}/like`,
             bearer_header,
           );
-          if (response.status === 200) {
+          if (response.status === 204) {
             let copyComments: any[] = [];
             comments.map((v, i) => {
               if (v.comment_id === commentId) {

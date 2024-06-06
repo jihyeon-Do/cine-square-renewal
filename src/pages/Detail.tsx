@@ -152,8 +152,8 @@ export default function Detail() {
         if (myComment.status === 204) {
           setComment(null);
         } else {
-          setComment(myComment.data.result);
-          setValue(myComment.data.result.content);
+          setComment(myComment.data.data);
+          setValue(myComment.data.data.content);
           setStatus('readOnly');
         }
       } catch (error) {
@@ -447,10 +447,11 @@ export default function Detail() {
             `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comment`,
             bearer_header,
           );
+          console.log(myComment);
           if (myComment.status === 204) {
             setComment(null);
           } else {
-            setComment(myComment.data.result);
+            setComment(myComment.data.data.content);
             setStatus('readOnly');
           }
         } catch (error) {

@@ -539,13 +539,14 @@ export default function Detail() {
         <div className="poster-wrapper">
           <div className="poster-box">
             {/* <div className="poster-box-1"></div> */}
-            <div
-              className="poster-box-2"
-              style={{
-                background: `url(${movieInfo?.images[0]}) no-repeat`,
-              }}
-            ></div>
-
+            {movieInfo && movieInfo.images.length && (
+              <div
+                className="poster-box-2"
+                style={{
+                  background: `url(${movieInfo.images[0]}) no-repeat`,
+                }}
+              ></div>
+            )}
             {/* <div className="poster-box-3"></div> */}
           </div>
         </div>

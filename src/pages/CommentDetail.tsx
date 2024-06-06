@@ -49,7 +49,9 @@ interface Reply {
 
 function CommentDetail() {
   //: movie id는 location state에서 가져오고 comment id는 path에서 가져온다.
-  const [commentContent, setCommentContent] = useState<CommentContent>();
+  const [commentContent, setCommentContent] = useState<CommentContent | null>(
+    null,
+  );
   const [replies, setReplies] = useState<Reply[]>([]);
   const [value, setValue] = useState('');
   const [comment, setComment] = useState<Comment | null>(null);
@@ -83,7 +85,7 @@ function CommentDetail() {
     const year = date.getFullYear();
     const month = date.getMonth();
     const getDate = date.getDate();
-    const createdDate = `${year}-${month < 10 ? '0' + month : month}-${getDate}`;
+    const createdDate = `${year}-${month < 10 ? '0' + month : month}-${getDate < 10 ? '0' + getDate : getDate}`;
     return createdDate;
   };
 
@@ -123,7 +125,7 @@ function CommentDetail() {
   useEffect(() => {
     const getLikeComments = async () => {
       const response = await axios.get(
-        `${LOCALAPI}/api/user-reports/like-comments`,
+        `${LOCALAPI}/api/user-reports/me/movies/-/like-comments`,
         bearer_header,
       );
       response.data.list.map((v: any) => {
@@ -210,7 +212,7 @@ function CommentDetail() {
         setReplies(AfterEditMyReplies);
       } else {
         const response = await axios.patch(
-          `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}`,
+          `${LOCALAPI}/api/user-reports/-/movies/${locationState.movieId}/comments/${commentId}`,
           { content: value },
           bearer_header,
         );
@@ -231,7 +233,7 @@ function CommentDetail() {
   async function deleteComment() {
     try {
       const response = await axios.delete(
-        `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}`,
+        `${LOCALAPI}/api/user-reports/-/movies/${locationState.movieId}/comments/${commentId}`,
         bearer_header,
       );
       setConfirm('false');
@@ -263,17 +265,33 @@ function CommentDetail() {
     try {
       if (isLike) {
         const response = await axios.delete(
-          `${LOCALAPI}/api/user-reports/movies/${locationState.movieId}/like-comments/${commentId}`,
+          `${LOCALAPI}/api/user-reports/-/movies/${locationState.movieId}/comments/${commentId}/like`,
           bearer_header,
         );
-        if (response.status === 200) setIsLike(false);
+        if (response.status === 204) {
+          if (commentContent) {
+            setCommentContent({
+              ...commentContent,
+              like: commentContent.like - 1,
+            });
+          }
+          setIsLike(false);
+        }
       } else {
         const response = await axios.post(
-          `${LOCALAPI}/api/user-reports/movies/${locationState.movieId}/like-comments/${commentId}`,
+          `${LOCALAPI}/api/user-reports/-/movies/${locationState.movieId}/comments/${commentId}/like`,
           {},
           bearer_header,
         );
-        if (response.status === 200) setIsLike(true);
+        if (response.status === 200) {
+          if (commentContent) {
+            setCommentContent({
+              ...commentContent,
+              like: commentContent.like + 1,
+            });
+          }
+          setIsLike(true);
+        }
       }
     } catch (error) {
       console.log(error);

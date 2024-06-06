@@ -171,6 +171,9 @@
       }
       .input-box {
         position: relative;
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
         &.active {
           @media all and (max-width: 470px) {
             width: 100%;
@@ -186,6 +189,7 @@
           padding: 0;
           color: #808080;
           font-weight: normal;
+          font-size: 16px;
           &::placeholder {
             color: rgb(165, 165, 165);
           }

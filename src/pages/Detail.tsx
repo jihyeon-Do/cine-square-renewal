@@ -67,17 +67,23 @@ export default function Detail() {
   const [displayScore, setDisplayScore] = useState<number | null>(score);
   const [bookmark, setBookmark] = useState(false);
   const [value, setValue] = useState('');
-  const [status, setStatus] = useState('readOnly');
+  //: 코멘트 상태
+  const [status, setStatus] = useState('null');
   const [comment, setComment] = useState<Comment | null>(null);
   const [comments, setComments] = useState<commentsList[]>([]);
   const [seeMore, setSeeMore] = useState(false);
   const [movieInfo, setMovieInfo] = useState<movieDetailInfoType | null>(null);
   const [isLike, setIsLike] = useState(false);
+
+  // const [isCommunicating, setIsCommunicating] = useState(false);
+  // const isCommunicating = useRef<boolean>(false);
+  let isCommunicating = false;
   const formtag = useRef(null);
+
   const editCommentInput = useRef<HTMLInputElement>(null);
 
   const navigate = useNavigate();
-  const { movieId } = useParams();
+  const { movieId } = useParams<{ movieId?: string }>();
   const access_token = sessionStorage.getItem('token');
   const bearer_header = {
     headers: {
@@ -88,6 +94,12 @@ export default function Detail() {
   //   const token = useSelector((state) => state.auth.token);
   //   const account = useSelector((state) => state.auth.account);
   //   const userName = useSelector((state) => state.auth.userName);
+
+  /**
+   *
+   * 상태 : readonly, post, patch, delete, null
+   * api를 보내기전에 무슨상태인지 알아야한다. api 중복요청 안되게끔
+   */
 
   const requiredLogin = () => {
     alert('로그인 후 이용해 주세요');
@@ -134,11 +146,16 @@ export default function Detail() {
         setDisplayScore(scoreResponse.data.data.score); // 여기를 수정
         //: 내 코멘트
         const myComment = await axios.get(
-          `${LOCALAPI}/api/user-reports/movies/${movieId}/comment`,
+          `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comment`,
           bearer_header,
         );
-        setComment(myComment.data.result);
-        setValue(myComment.data.result.content);
+        if (myComment.status === 204) {
+          setComment(null);
+        } else {
+          setComment(myComment.data.data);
+          setValue(myComment.data.data.content);
+          setStatus('readOnly');
+        }
       } catch (error) {
         // console.log(error);
       }
@@ -192,17 +209,14 @@ export default function Detail() {
         setComments(addIsLike);
         if (access_token) {
           const userLikeCommentsList = await axios.get(
-            `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments`,
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/like-comments`,
             bearer_header,
           );
           if (userLikeCommentsList.data.list.length) {
             let copyCommentList: commentsList[] = [];
             addIsLike.map((value: commentsList) => {
               for (let i = 0; i < userLikeCommentsList.data.list.length; i++) {
-                if (
-                  value.comment_id ===
-                  userLikeCommentsList.data.list[i].comment_id
-                ) {
+                if (value.comment_id === userLikeCommentsList.data.list[i]) {
                   copyCommentList = [
                     ...copyCommentList,
                     { ...value, isLike: true },
@@ -317,10 +331,6 @@ export default function Detail() {
   //   console.log(response);
   // };
 
-  function addComment(e: any) {
-    setValue(e.target.value);
-  }
-
   async function like(
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
     commentId: number,
@@ -331,7 +341,7 @@ export default function Detail() {
       if (!isLike) {
         try {
           const response = await axios.post(
-            `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${commentId}`,
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${commentId}/like`,
             {},
             bearer_header,
           );
@@ -356,10 +366,10 @@ export default function Detail() {
         //: like 취소하기
         try {
           const response = await axios.delete(
-            `${LOCALAPI}/api/user-reports/movies/${movieId}/like-comments/${commentId}`,
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${commentId}/like`,
             bearer_header,
           );
-          if (response.status === 200) {
+          if (response.status === 204) {
             let copyComments: any[] = [];
             comments.map((v, i) => {
               if (v.comment_id === commentId) {
@@ -382,29 +392,76 @@ export default function Detail() {
     }
   }
 
+  function addComment(e: any) {
+    setValue(e.target.value);
+  }
+
+  //: input에서 enter눌렀을 때
+  function enterPressComment(
+    e: { key: string; preventDefault: () => void },
+    action: string,
+  ) {
+    if (e.key !== 'Enter') return;
+    if (status === 'readOnly') return;
+    e.preventDefault();
+    setStatus(action);
+  }
+
+  //: comment 등록, 수정, 취소, 삭제 버튼 눌렀을 때 action
+  function clickCommentButton(action: string) {
+    setStatus(action);
+  }
+
+  useEffect(() => {
+    if (status === 'create') {
+      handleAddComment();
+    } else if (status === 'not-readOnly') {
+      editComment();
+    } else if (status === 'edit') {
+      sendEditComment();
+    } else if (status === 'cancel') {
+      cancel();
+    } else if (status === 'delete') {
+      deleteComment();
+    }
+  }, [status]);
+
   async function handleAddComment() {
-    if (access_token) {
-      if (!value) return;
-      const removeSpace = value.trim();
-      try {
-        const response = await axios.post(
-          `${LOCALAPI}/api/movie-reports/${movieId}/comments`,
-          {
-            content: removeSpace,
-          },
-          bearer_header,
-        );
-        // setComments([...comments, response.data.data]);
-        const myComment = await axios.get(
-          `${LOCALAPI}/api/user-reports/movies/${movieId}/comment`,
-          bearer_header,
-        );
-        setComment(myComment.data.result);
-      } catch (error) {
-        console.log(error);
+    if (isCommunicating) return;
+
+    if (status === 'create') {
+      isCommunicating = true;
+      if (access_token) {
+        if (!value) return;
+        const removeSpace = value.trim();
+        try {
+          const response = await axios.post(
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments`,
+            {
+              content: removeSpace,
+            },
+            bearer_header,
+          );
+          // setComments([...comments, response.data.data]);
+          const myComment = await axios.get(
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comment`,
+            bearer_header,
+          );
+          console.log(myComment);
+          if (myComment.status === 204) {
+            setComment(null);
+          } else {
+            setComment(myComment.data.data.content);
+            setStatus('readOnly');
+          }
+        } catch (error) {
+          console.log(error);
+        } finally {
+          isCommunicating = false;
+        }
+      } else {
+        requiredLogin();
       }
-    } else {
-      requiredLogin();
     }
   }
 
@@ -412,20 +469,23 @@ export default function Detail() {
     if (editCommentInput.current) {
       editCommentInput.current.readOnly = false;
       editCommentInput.current.className = 'active';
-      setStatus('edit');
     }
   }
 
   async function sendEditComment() {
+    if (isCommunicating) return;
+
     if (status === 'edit') {
+      isCommunicating = true;
       try {
         const response = await axios.patch(
-          `${LOCALAPI}/api/movie-reports/${movieId}/comments/${comment?.comment_id}`,
+          `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${comment?.comment_id}`,
           { content: value },
           bearer_header,
         );
         if (response.status === 200) {
           setStatus('readOnly');
+          setComment(response.data.data);
           if (editCommentInput.current) {
             editCommentInput.current.className = '';
             editCommentInput.current.readOnly = true;
@@ -433,46 +493,42 @@ export default function Detail() {
         }
       } catch (error) {
         console.log(error);
+      } finally {
+        isCommunicating = false;
       }
     }
   }
 
   async function deleteComment() {
-    try {
-      const response = await axios.delete(
-        `${LOCALAPI}/api/movie-reports/${movieId}/comments/${comment?.comment_id}`,
-        bearer_header,
-      );
-      setComment(null);
-      setValue('');
-    } catch (error) {
-      console.log(error);
+    if (isCommunicating) return;
+
+    if (status === 'delete') {
+      isCommunicating = true;
+      try {
+        const response = await axios.delete(
+          `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${comment?.comment_id}`,
+          bearer_header,
+        );
+        setComment(null);
+        setValue('');
+        setStatus('null');
+      } catch (error) {
+        console.log(error);
+      } finally {
+        isCommunicating = false;
+      }
     }
   }
 
   function cancel() {
-    setStatus('readOnly');
     if (editCommentInput.current) {
       editCommentInput.current.className = '';
       editCommentInput.current.readOnly = true;
     }
-
     if (comment !== null) {
       setValue(comment.content);
     }
-  }
-
-  function enterPressComment(
-    e: { key: string; preventDefault: () => void },
-    act: string,
-  ) {
-    if (e.key !== 'Enter') return;
-    e.preventDefault();
-    if (act === 'create') {
-      handleAddComment();
-    } else {
-      sendEditComment();
-    }
+    setStatus('readOnly');
   }
 
   return (
@@ -562,9 +618,9 @@ export default function Detail() {
                   <div className="my-comment">
                     {comment ? (
                       <form
-                        action="/detail"
                         ref={formtag}
                         className="is-comment"
+                        onSubmit={(e) => e.preventDefault()}
                       >
                         <fieldset>
                           <legend>내가 작성한 코멘트</legend>
@@ -573,25 +629,41 @@ export default function Detail() {
                             value={value}
                             // placeholder={comment.content}
                             onChange={addComment}
-                            onKeyDown={(e) => enterPressComment(e, 'update')}
+                            onKeyDown={(e) => enterPressComment(e, 'edit')}
                             readOnly={true}
                             ref={editCommentInput}
                           />
                           {status === 'readOnly' ? (
+                            //: 읽기 전용일 때
                             <div>
-                              <button type="button" onClick={editComment}>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  clickCommentButton('not-readOnly')
+                                }
+                              >
                                 수정
                               </button>
-                              <button type="button" onClick={deleteComment}>
+                              <button
+                                type="button"
+                                onClick={() => clickCommentButton('delete')}
+                              >
                                 삭제
                               </button>
                             </div>
                           ) : (
+                            //: 수정 상태일 때
                             <div>
-                              <button type="button" onClick={cancel}>
+                              <button
+                                type="button"
+                                onClick={() => clickCommentButton('cancel')}
+                              >
                                 취소
                               </button>
-                              <button type="button" onClick={sendEditComment}>
+                              <button
+                                type="button"
+                                onClick={() => clickCommentButton('edit')}
+                              >
                                 완료
                               </button>
                             </div>
@@ -600,24 +672,23 @@ export default function Detail() {
                       </form>
                     ) : (
                       <form
-                        action="/detail"
                         ref={formtag}
                         className="no-comment"
+                        onSubmit={(e) => e.preventDefault()}
                       >
                         <fieldset>
                           <legend>코멘트 작성하기</legend>
                           <input
                             type="text"
                             value={value}
-                            placeholder="코멘트 작성 준비중입니다"
+                            placeholder="코멘트를 자유롭게 남겨주세요"
                             onChange={addComment}
                             onKeyDown={(e) => enterPressComment(e, 'create')}
                             // disabled
                           />
                           <button
                             type="button"
-                            onClick={handleAddComment}
-                            // disabled={true}
+                            onClick={() => clickCommentButton('create')} // disabled={true}
                             // className="unclickable"
                           >
                             코멘트 작성

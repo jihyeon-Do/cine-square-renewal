@@ -19,7 +19,7 @@ function MyFavorite() {
   useEffect(() => {
     const getFavoriteReview = async () => {
       const response = await axios.get(
-        `${LOCALAPI}/api/user-reports/like-comments`,
+        `${LOCALAPI}/api/user-reports/me/movies/-/like-comments`,
         bearer_header,
       );
       let copyFavoriteReview: any = [];

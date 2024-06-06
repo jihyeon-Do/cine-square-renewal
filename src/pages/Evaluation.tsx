@@ -91,9 +91,9 @@ export default function Evaluation() {
       <HeaderTemplate />
       <main className="evaluation-main">
         <h2 className="a11y-hidden">평가하기</h2>
-        <button className="back">
+        {/* <button className="back">
           <img src={backHistory} alt="뒤로가기" />
-        </button>
+        </button> */}
         <section className="evalutaion">
           <div>
             <p className="count">{evaluatedMovieCount}</p>

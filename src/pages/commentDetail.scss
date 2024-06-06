@@ -267,6 +267,12 @@
   border-radius: 10px;
   padding: 30px;
   box-sizing: border-box;
+  @media all and (max-width: 600px) {
+    width: 70%;
+  }
+  @media all and (max-width: 400px) {
+    width: 90%;
+  }
   .write {
     width: 100%;
     fieldset {

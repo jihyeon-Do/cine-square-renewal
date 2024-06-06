@@ -1,0 +1,18 @@
+.home-skeleton {
+  .skeleton-pc {
+    display: block;
+    @media all and (max-width: 600px) {
+      display: none;
+    }
+  }
+  .skeleton-mb {
+    display: none;
+    @media all and (max-width: 600px) {
+      display: block;
+    }
+  }
+  .movie-list {
+    display: flex;
+    justify-content: space-between;
+  }
+}

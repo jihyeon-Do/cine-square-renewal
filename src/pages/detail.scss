@@ -1,7 +1,7 @@
 $border-color: #eee;
 
 .detail-main {
-  padding-top: 0;
+  // padding-top: 0;
   section {
     max-width: 1200px;
     width: 100%;
@@ -206,6 +206,7 @@ $border-color: #eee;
         }
         @media all and (max-width: 600px) {
           padding-left: 0;
+          width: 100%;
         }
         .movie-title {
           font-size: 2rem;

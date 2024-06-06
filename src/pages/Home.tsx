@@ -13,6 +13,8 @@ import VideoFrameContainer from '../containers/VideoFrameContainer';
 import CineSuggestion from '../components/CineSuggestion';
 import axios from 'axios';
 import APIService from '../service/APIService';
+import SkeletonElement from '../components/SkeletonElement';
+import HomeSkeleton from '../components/skeleton/HomeSkeleton';
 // import { startGetBoxOfficeListActionCreator } from '../redux/modules/boxoffice';
 // import BoxOffice from '../components/BoxOffice';
 // import TokenService from '../service/TokenService';
@@ -50,6 +52,7 @@ function Home() {
     [],
   );
   const LOCALAPI = APIService.LOCALAPI;
+  const [isFetch, setIsFetch] = useState(true);
   // const token = useSelector((state: RootState) => state.auth.token);
   // const account = useSelector((state) => state.auth.account);
   // const userName = useSelector((state) => state.auth.userName);
@@ -83,16 +86,15 @@ function Home() {
         const response = await axios.get(
           `${LOCALAPI}/api/movies/boxoffice?request_date=${today}`,
         );
+        if (response.status === 200) {
+          setIsFetch(false);
+        }
         setBoxofficeArray(response.data.list);
       } catch (error) {
         console.log(error);
       }
     }
-    getMovieInfo();
-  }, []);
 
-  //: 평균별점 높은 순위
-  useEffect(() => {
     async function getAverageRatingMovie() {
       try {
         const response = await axios.get(
@@ -103,13 +105,28 @@ function Home() {
         console.log(error);
       }
     }
-    getAverageRatingMovie();
+
+    function getIndividualList() {
+      setIndividualArray(individualList);
+    }
+
+    const movieList = setTimeout(() => {
+      Promise.all([
+        getMovieInfo(),
+        getAverageRatingMovie(),
+        getIndividualList(),
+      ]).then(() => {
+        setIsFetch(false);
+      });
+    }, 500);
+
+    return () => clearTimeout(movieList);
   }, []);
 
-  //: 개인별 추천 순위
-  useEffect(() => {
-    setIndividualArray(individualList);
-  }, []);
+  // //: 개인별 추천 순위
+  // useEffect(() => {
+  //   setIndividualArray(individualList);
+  // }, []);
 
   // const getBoxOfficeList = useCallback(() => {
   //   dispatch(startGetBoxOfficeListActionCreator());
@@ -128,13 +145,25 @@ function Home() {
         {modalId > 0 && <VideoFrameContainer hide={hide} id={modalId} />}
         <section>
           <article className="rank cine-square-rank">
-            <CineSuggestion title={'boxoffice'} list={boxofficeArray} />
+            {isFetch ? (
+              <HomeSkeleton />
+            ) : (
+              <CineSuggestion title={'boxoffice'} list={boxofficeArray} />
+            )}
           </article>
           <article className="rank cine-square-rank">
-            <CineSuggestion title={'starRating'} list={averageRatingArray} />
+            {isFetch ? (
+              <HomeSkeleton />
+            ) : (
+              <CineSuggestion title={'starRating'} list={averageRatingArray} />
+            )}
           </article>
           <article className="rank cine-square-rank">
-            <CineSuggestion title={'individual'} list={individualArray} />
+            {isFetch ? (
+              <HomeSkeleton />
+            ) : (
+              <CineSuggestion title={'individual'} list={individualArray} />
+            )}
           </article>
         </section>
       </main>

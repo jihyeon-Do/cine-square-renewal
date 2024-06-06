@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import noImg from '../images/no-image.png';
 
@@ -23,11 +23,104 @@ interface movieListCarousel {
 }
 
 function CineSuggestion({ title, list }: movieListCarousel) {
-  let slideIndex = 0;
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  // let slideIndex = 0;
 
   const slideWrap = useRef<HTMLUListElement>(null);
   const prevRef = useRef<HTMLButtonElement>(null);
   const nextRef = useRef<HTMLButtonElement>(null);
+
+  const ref = useRef(null);
+  const slideIndex = useRef(0);
+  let trigger = false;
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            trigger = true;
+            if (nextRef.current) {
+              nextRef.current.style.display = 'none';
+            }
+          } else {
+            trigger = false;
+          }
+        });
+      },
+      { threshold: 0.3 },
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        //: observer가 관찰하는 모든 요소의 관찰을 중지
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [windowWidth]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    let resizeTimeout: string | number | NodeJS.Timeout | undefined;
+
+    const debouncedResizeHandler = () => {
+      if (resizeTimeout) {
+        clearTimeout(resizeTimeout);
+      }
+
+      resizeTimeout = setTimeout(handleResize, 200);
+    };
+
+    window.addEventListener('resize', debouncedResizeHandler);
+
+    return () => {
+      window.removeEventListener('resize', debouncedResizeHandler);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (windowWidth >= 601) {
+      if (slideIndex.current >= 2) {
+        slideIndex.current = 1;
+        if (slideWrap.current) {
+          slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex.current}))`;
+        }
+      }
+    }
+  }, [windowWidth]);
+
+  function slidePrev() {
+    if (!slideWrap.current || !prevRef.current || !nextRef.current) {
+      console.error('Error: One or more refs are null.');
+      return;
+    }
+    if (slideIndex.current === 0) return;
+    slideIndex.current = slideIndex.current - 1;
+    slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex.current}))`;
+    nextRef.current.style.display = 'block';
+    if (slideIndex.current === 0) {
+      prevRef.current.style.display = 'none';
+    }
+  }
+
+  function slideNext() {
+    if (!slideWrap.current || !prevRef.current || !nextRef.current) {
+      console.error('Error: One or more refs are null.');
+      return;
+    }
+    if (trigger) return;
+    slideIndex.current = slideIndex.current + 1;
+    slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex.current}))`;
+    prevRef.current.style.display = 'block';
+  }
 
   return (
     <>
@@ -77,6 +170,7 @@ function CineSuggestion({ title, list }: movieListCarousel) {
                 </Link>
               </li>
             ))}
+          <div className="observer" ref={ref} style={{ height: '1px' }}></div>
         </ul>
       </div>
       <button
@@ -97,30 +191,6 @@ function CineSuggestion({ title, list }: movieListCarousel) {
       </button>
     </>
   );
-
-  function slidePrev() {
-    if (!slideWrap.current || !prevRef.current || !nextRef.current) {
-      console.error('Error: One or more refs are null.');
-      return;
-    }
-    if (slideIndex === 0) return;
-    slideIndex -= 1;
-    slideWrap.current.style.transform = `translate(calc(-100% * ${slideIndex}))`;
-    prevRef.current.style.display = 'none';
-    nextRef.current.style.display = 'block';
-  }
-
-  function slideNext() {
-    if (!slideWrap.current || !prevRef.current || !nextRef.current) {
-      console.error('Error: One or more refs are null.');
-      return;
-    }
-    if (slideIndex === 1) return;
-    slideIndex += 1;
-    slideWrap.current.style.transform = `translate(calc(-100% - 16px * ${slideIndex}))`;
-    nextRef.current.style.display = 'none';
-    prevRef.current.style.display = 'block';
-  }
 }
 
 export default CineSuggestion;

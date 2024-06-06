@@ -6,6 +6,8 @@ import FooterTemplate from '../components/FooterTemplate';
 import axios from 'axios';
 import APIService from '../service/APIService';
 import noImg from '../images/no-images.png';
+import SkeletonElement from '../components/SkeletonElement';
+import SearchSkeleton from '../components/skeleton/SearchSkeleton';
 
 type searchListType = {
   movie_id: number;
@@ -18,6 +20,7 @@ type searchListType = {
 
 export default function Search() {
   const [searchList, setSearchList] = useState<searchListType>([]);
+  const [isFetch, setIsFetch] = useState<boolean>(true);
   const { keyword } = useParams();
   const LOCALAPI = APIService.LOCALAPI;
   // const searchLists: searchListType = [
@@ -32,6 +35,7 @@ export default function Search() {
   //   },
   // ];
   useEffect(() => {
+    setIsFetch(true);
     async function getSearchList() {
       try {
         const response = await axios.get(
@@ -40,9 +44,17 @@ export default function Search() {
         setSearchList(response.data.list);
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsFetch(false);
       }
     }
-    getSearchList();
+    const searchListAPI = setTimeout(() => {
+      getSearchList();
+    }, 500);
+
+    return () => {
+      clearTimeout(searchListAPI);
+    };
   }, [keyword]);
 
   return (
@@ -57,11 +69,17 @@ export default function Search() {
           </div>
           <div className="search-results-list">
             <h2>검색결과</h2>
-            {searchList.length === 0 ? (
-              <p>일치하는 검색 결과가 없습니다.</p>
-            ) : (
-              <ul>
-                {searchList.map((list, index) => (
+            <ul>
+              {isFetch ? (
+                Array.from({ length: 24 }).map((_, index) => (
+                  <li key={index} className="thumbnail-skeleton">
+                    <SearchSkeleton />
+                  </li>
+                ))
+              ) : searchList.length === 0 ? (
+                <p>검색결과가 없습니다.</p>
+              ) : (
+                searchList.map((list, index) => (
                   <li key={index}>
                     <Link to={`/detail/${list.movie_id}`}>
                       {/* <img src={`${list.mainImg}`} alt={`${list.movie_title}`} /> */}
@@ -79,9 +97,9 @@ export default function Search() {
                       </span>
                     </Link>
                   </li>
-                ))}
-              </ul>
-            )}
+                ))
+              )}
+            </ul>
           </div>
         </section>
       </main>

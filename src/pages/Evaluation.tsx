@@ -71,8 +71,6 @@ export default function Evaluation() {
     getRandomMovie();
   }, [page]);
 
-  console.log(page);
-
   useEffect(() => {
     const getEvaluatedMovies = async () => {
       const response = await axios.get(

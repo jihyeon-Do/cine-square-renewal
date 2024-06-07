@@ -33,6 +33,7 @@ function MyMovieList({
   function goDetailPage(movieId: number) {
     navigate(`/detail/${movieId}`);
   }
+
   return (
     <section className="my-choice-movie">
       <h3>

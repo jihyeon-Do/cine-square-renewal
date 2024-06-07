@@ -138,8 +138,13 @@ export default function Profile() {
         `${LOCALAPI}/api/movie-reports/comments/counts`,
         bearer_header,
       );
+      const status = await axios.get(
+        `${LOCALAPI}/api/user-reports/me/movies/-/status`,
+        bearer_header,
+      );
       setEvaluated({
         ...evaluated,
+        see: status.data.total_count,
         comment: comment.data.data,
         movie: moive.data.data,
       });

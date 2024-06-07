@@ -1,8 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import ReactDOM from 'react-dom';
-import { ReactComponent as FullStar1 } from '../images/star-full.svg';
 import MyMovieList from '../components/MyMovieList';
-import axios from 'axios';
 import APIService from '../service/APIService';
 import { api } from '../service/AxiosInstance';
 
@@ -32,269 +29,56 @@ function MyMovie({ listname }: Listname) {
   };
   const stopFetch = useRef(false);
 
-  const movieList = [
-    {
-      id: 1,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 2,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 3,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 1,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 2,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 3,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 1,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 2,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 3,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-    {
-      id: 4,
-      movieCd: '203662',
-      movieNm: '파묘',
-      score: 3.5,
-      mainImg: '../images/boxoffice1.jpg',
-    },
-  ];
+  const fetchMovies = async (url: string, bearerHeader?: any) => {
+    setIsLoading(true);
+    try {
+      const response = await api.get(url, bearerHeader);
+      const moviePromises = response.data.list.map(async (v: any) => {
+        const movieSimpleInfo = await api.get(
+          `/api/movies/${v.movie_id || v}/simple`,
+        );
 
-  const movieListArray: any = [];
+        return typeof v === 'number'
+          ? movieSimpleInfo.data.data
+          : { ...v, thumbnail: movieSimpleInfo.data.data.thumbnail };
+      });
+      const movies = await Promise.all(moviePromises);
+      setMovieArray((prevMovies) => [...prevMovies, ...movies]);
+      setTotalCount(response.data.total_count);
+      setPage((prevPage) => prevPage + 1);
+      setIsLoading(false);
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+    }
+  };
 
+  //: 가장먼저 영화 불러오기
+  //: page 0 => page 1
   useEffect(() => {
-    const getMovie = async () => {
-      if (listname === 'evaluated') {
-        setIsLoading(true);
-        try {
-          if (page === 0) {
-            const response = await api.get(
-              `/api/user-reports/me/movies/scored?page=1&size=32`,
-            );
-            setTotalCount(response.data.total_count);
-            const evaluatedPromise = response.data.list.map(async (v: any) => {
-              const movieSimpleInfo = await api.get(
-                `/api/movies/${v.movie_id}/simple`,
-              );
-              return { ...v, thumbnail: movieSimpleInfo.data.data.thumbnail };
-            });
-            const evaluatedMovieList = await Promise.all(evaluatedPromise);
-            setMovieArray(evaluatedMovieList);
-            setPage(1);
-            setIsLoading(false);
-          } else if (page === 1) {
-            setIsLoading(false);
-            return;
-          } else {
-            const response = await api.get(
-              `/api/user-reports/me/movies/scored?page=${page}&size=32`,
-            );
-            const evaluatedPromise = response.data.list.map(async (v: any) => {
-              const movieSimpleInfo = await api.get(
-                `/api/movies/${v.movie_id}/simple`,
-              );
-              return { ...v, thumbnail: movieSimpleInfo.data.data.thumbnail };
-            });
-            const evaluatedMovieList = await Promise.all(evaluatedPromise);
-            setTimeout(() => {
-              setMovieArray([...movieArray, ...evaluatedMovieList]);
-            }, 1000);
-          }
-        } catch (error) {
-          console.log(error);
-          setIsLoading(false);
-        }
-      } else {
-        setMovieArray([]);
-      }
-    };
+    const fetchUrl =
+      listname === 'evaluated'
+        ? `/api/user-reports/me/movies/scored?page=1&size=32`
+        : `/api/user-reports/me/movies/-/status?page=1&size=32`;
+
     if (!stopFetch.current) {
-      getMovie();
+      fetchMovies(fetchUrl);
+    }
+  }, []);
+
+  //: 1 page 부르고 난 후 2 page부터 호출
+  useEffect(() => {
+    if (page === 1) {
+      setIsLoading(false);
+      return;
+    }
+    if (page > 0 && !stopFetch.current) {
+      const fetchUrl =
+        listname === 'evaluated'
+          ? `/api/user-reports/me/movies/scored?page=${page}&size=32`
+          : `/api/user-reports/me/movies/-/status?page=${page}&size=32`;
+
+      fetchMovies(fetchUrl, bearer_header);
     }
   }, [page]);
 
@@ -303,9 +87,8 @@ function MyMovie({ listname }: Listname) {
     if (movieArray.length === totalCount) {
       setIsLoading(false);
       stopFetch.current = true;
-      return;
     }
-  }, [movieArray]);
+  }, [movieArray, totalCount]);
 
   return (
     <>

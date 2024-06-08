@@ -447,11 +447,11 @@ export default function Detail() {
             `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comment`,
             bearer_header,
           );
-          console.log(myComment);
           if (myComment.status === 204) {
             setComment(null);
           } else {
-            setComment(myComment.data.data.content);
+            setComment(myComment.data.data);
+            setValue(myComment.data.data.content);
             setStatus('readOnly');
           }
         } catch (error) {
@@ -478,17 +478,19 @@ export default function Detail() {
     if (status === 'edit') {
       isCommunicating = true;
       try {
-        const response = await axios.patch(
-          `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${comment?.comment_id}`,
-          { content: value },
-          bearer_header,
-        );
-        if (response.status === 200) {
-          setStatus('readOnly');
-          setComment(response.data.data);
-          if (editCommentInput.current) {
-            editCommentInput.current.className = '';
-            editCommentInput.current.readOnly = true;
+        if (comment && comment.comment_id) {
+          const response = await axios.patch(
+            `${LOCALAPI}/api/user-reports/-/movies/${movieId}/comments/${comment.comment_id}`,
+            { content: value },
+            bearer_header,
+          );
+          if (response.status === 200) {
+            setStatus('readOnly');
+            setComment(response.data.data);
+            if (editCommentInput.current) {
+              editCommentInput.current.className = '';
+              editCommentInput.current.readOnly = true;
+            }
           }
         }
       } catch (error) {

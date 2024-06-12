@@ -48,10 +48,14 @@ function MyMovieList({
               </div>
             </div>
             <p>{v.title}</p>
-            <p>
-              <FullStar1 />
-              {v.score}점으로 평가함
-            </p>
+            {v.score ? (
+              <p>
+                <FullStar1 />
+                {v.score}점으로 평가함
+              </p>
+            ) : (
+              <></>
+            )}
           </li>
         ))}
       </ul>

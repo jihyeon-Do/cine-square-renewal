@@ -29,10 +29,10 @@ function MyMovie({ listname }: Listname) {
   };
   const stopFetch = useRef(false);
 
-  const fetchMovies = async (url: string, bearerHeader?: any) => {
+  const fetchMovies = async (url: string) => {
     setIsLoading(true);
     try {
-      const response = await api.get(url, bearerHeader);
+      const response = await api.get(url);
       const moviePromises = response.data.list.map(async (v: any) => {
         const movieSimpleInfo = await api.get(
           `/api/movies/${v.movie_id || v}/simple`,
@@ -78,7 +78,7 @@ function MyMovie({ listname }: Listname) {
           ? `/api/user-reports/me/movies/scored?page=${page}&size=32`
           : `/api/user-reports/me/movies/-/status?page=${page}&size=32`;
 
-      fetchMovies(fetchUrl, bearer_header);
+      fetchMovies(fetchUrl);
     }
   }, [page]);
 

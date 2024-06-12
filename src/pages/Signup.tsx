@@ -92,8 +92,9 @@ function Signup() {
   async function click() {
     try {
       const isDuplication = await axios.get(
-        `${LOCALAPI}/api/users/check-account/${account}`,
+        `${LOCALAPI}/api/auth/check-account/${account}`,
       );
+      console.log(isDuplication);
       if (!isDuplication.data.result) {
         const response = await axios.post(`${LOCALAPI}/api/auth/sign-up`, {
           account: account,

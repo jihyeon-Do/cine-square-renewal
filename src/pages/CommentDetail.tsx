@@ -114,7 +114,7 @@ function CommentDetail() {
   useEffect(() => {
     const getRelpies = async () => {
       const response = await axios.get(
-        `${LOCALAPI}/api/movie-reports/comments/${commentId}`,
+        `${LOCALAPI}/api/movie-reports/-/comments/${commentId}/replies`,
       );
       setReplies(response.data.list);
     };
@@ -173,7 +173,7 @@ function CommentDetail() {
     if (access_token) {
       try {
         const response = await axios.post(
-          `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}/replies`,
+          `${LOCALAPI}/api/movie-reports/-/comments/${commentId}/replies`,
           {
             content: value,
           },
@@ -200,7 +200,7 @@ function CommentDetail() {
     try {
       if (replyId) {
         const response = await axios.patch(
-          `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}/replies/${replyId}`,
+          `${LOCALAPI}/api/movie-reports/-/comments/${commentId}/replies/${replyId}`,
           { content: value },
           bearer_header,
         );
@@ -247,7 +247,7 @@ function CommentDetail() {
   async function deleteReply() {
     try {
       const response = await axios.delete(
-        `${LOCALAPI}/api/movie-reports/${locationState.movieId}/comments/${commentId}/replies/${replyId}`,
+        `${LOCALAPI}/api/movie-reports/-/comments/${commentId}/replies/${replyId}`,
         bearer_header,
       );
       setConfirm('false');

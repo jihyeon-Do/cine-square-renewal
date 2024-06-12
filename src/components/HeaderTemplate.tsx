@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import './headerTemplate.scss';
 import mainLogo from '../images/main_logo.svg';
+import { Cookies } from 'react-cookie';
 
 function HeaderTemplate() {
   const [value, setValue] = useState('');
@@ -17,6 +18,8 @@ function HeaderTemplate() {
   //     setValue(keyword);
   //   }
   // }, [urlParameter, keyword]);
+
+  const cookies = new Cookies();
 
   useEffect(() => {
     if (keyword) {
@@ -35,6 +38,7 @@ function HeaderTemplate() {
   function logOut() {
     if (confirm('로그아웃 하시겠습니까?')) {
       sessionStorage.removeItem('token');
+      cookies.remove('refreshToken');
       alert('로그아웃 되었습니다.');
       navigate('/');
       location.reload();

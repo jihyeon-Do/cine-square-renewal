@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Cookies } from 'react-cookie';
 import { message } from 'antd';
 import './signin.scss';
 import logo from '../images/main_logo.svg';
@@ -18,19 +19,31 @@ function Signin() {
   const navigate = useNavigate();
   const LOCALAPI = APIService.LOCALAPI;
 
+  const cookies = new Cookies();
+
   async function click() {
     try {
       const response = await axios.post(`${LOCALAPI}/api/auth/sign-in`, {
         account: account,
         password: password,
       });
-      if (response.data.access_token) {
+      console.log(response);
+      if (response.data.data.access_token) {
         setIsValidation({
           ...isValidation,
           confirm: false,
         });
-        sessionStorage.setItem('token', response.data.access_token);
-        sessionStorage.setItem('refresh-token', response.data.refresh_token);
+        sessionStorage.setItem('token', response.data.data.access_token);
+        // sessionStorage.setItem(
+        //   'refresh-token',
+        //   response.data.data.refresh_token,
+        // );
+        cookies.set('refreshToken', response.data.data.refresh_token, {
+          path: '/',
+          // httpOnly: true,
+        });
+        // const refresh = cookies.get('refreshToken');
+        // document.cookie = `refreshToken=${response.data.data.refresh_token}; Secure; SameSite=Strict`;
         alert('로그인성공');
         navigate('/');
       }

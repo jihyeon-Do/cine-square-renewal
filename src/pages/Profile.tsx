@@ -18,6 +18,7 @@ import { actor } from '../data/MyInfo';
 import PersonListBox from '../components/PersonListBox';
 import APIService from '../service/APIService';
 import profilePicture from '../images/profile_picture.png';
+import { api } from '../service/AxiosInstance';
 
 // import APIService from '../service/APIService';
 
@@ -69,9 +70,8 @@ export default function Profile() {
   useEffect(() => {
     async function Evaluated() {
       try {
-        const response = await axios(
-          `${LOCALAPI}/api/user-reports/me/movies/scored-distribution`,
-          bearer_header,
+        const response = await api.get(
+          `/api/user-reports/me/movies/scored-distribution`,
         );
         const result = response.data.list;
         const evaluatedMovieCount = result.map((v: any) => +v.count);
@@ -105,10 +105,21 @@ export default function Profile() {
               barPercentage: 1,
               barThickness: 25,
               backgroundColor: '#6100ff',
-              label: '내가 해당 점수로 평가한 영화 갯수',
+              label: '내가 해당 점수로 평가한 영화 수',
               data: evaluatedCount,
             },
           ],
+        },
+        options: {
+          scales: {
+            y: {
+              ticks: {
+                callback: function (value) {
+                  return Number.isInteger(value) ? value : '';
+                },
+              },
+            },
+          },
         },
       });
       return () => {
@@ -120,7 +131,7 @@ export default function Profile() {
   //: 내정보 가져오기
   useEffect(() => {
     const getMyInfo = async () => {
-      const myInfo = await axios.get(`${LOCALAPI}/api/users/me`, bearer_header);
+      const myInfo = await api.get(`/api/users/me`);
       setImgUrl(myInfo.data.data.image);
       setUserInfo(myInfo.data.data);
     };
@@ -130,18 +141,9 @@ export default function Profile() {
   //: 평가한 영화 갯수, 작성한 코멘트 갯수 가져오기
   useEffect(() => {
     const evaluateCounts = async () => {
-      const moive = await axios.get(
-        `${LOCALAPI}/api/user-reports/me/movies/scored-counts`,
-        bearer_header,
-      );
-      const comment = await axios.get(
-        `${LOCALAPI}/api/movie-reports/comments/counts`,
-        bearer_header,
-      );
-      const status = await axios.get(
-        `${LOCALAPI}/api/user-reports/me/movies/-/status`,
-        bearer_header,
-      );
+      const moive = await api.get(`/api/user-reports/me/movies/scored-counts`);
+      const comment = await api.get(`/api/movie-reports/comments/counts`);
+      const status = await api.get(`/api/user-reports/me/movies/-/status`);
       setEvaluated({
         ...evaluated,
         see: status.data.total_count,
@@ -154,9 +156,8 @@ export default function Profile() {
 
   useEffect(() => {
     const getLikeCommentCounts = async () => {
-      const comment = await axios.get(
-        `${LOCALAPI}/api/user-reports/me/movies/-/like-comments/count`,
-        bearer_header,
+      const comment = await api.get(
+        `/api/user-reports/me/movies/-/like-comments/count`,
       );
       setLikeCommentCounts(comment.data.data);
     };

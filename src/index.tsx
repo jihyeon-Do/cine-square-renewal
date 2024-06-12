@@ -10,6 +10,7 @@ import { Provider } from 'react-redux';
 import { HistoryRouter as Router } from 'redux-first-history/rr6';
 import { store, history } from './redux/create';
 import ScrollTop from './components/ScrollTop';
+import { CookiesProvider } from 'react-cookie';
 
 // import create, { sagaMiddleware } from './redux/create';
 
@@ -20,10 +21,12 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Provider store={store}>
+    {/* <CookiesProvider> */}
     <Router history={history}>
       <ScrollTop />
       <App />
     </Router>
+    {/* </CookiesProvider> */}
   </Provider>,
 );
 

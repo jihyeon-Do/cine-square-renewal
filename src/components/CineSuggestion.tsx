@@ -46,6 +46,11 @@ function CineSuggestion({ title, list }: movieListCarousel) {
             }
           } else {
             trigger = false;
+            if (windowWidth < 601) {
+              if (nextRef.current) {
+                nextRef.current.style.display = 'block';
+              }
+            }
           }
         });
       },

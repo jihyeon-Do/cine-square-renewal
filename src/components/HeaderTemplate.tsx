@@ -38,7 +38,7 @@ function HeaderTemplate() {
   function logOut() {
     if (confirm('로그아웃 하시겠습니까?')) {
       sessionStorage.removeItem('token');
-      cookies.remove('refreshToken');
+      cookies.remove('Refresh-Token');
       alert('로그아웃 되었습니다.');
       navigate('/');
       location.reload();

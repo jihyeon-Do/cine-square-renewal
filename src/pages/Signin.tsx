@@ -38,9 +38,9 @@ function Signin() {
         //   'refresh-token',
         //   response.data.data.refresh_token,
         // );
-        cookies.set('refreshToken', response.data.data.refresh_token, {
+        cookies.set('Refresh-Token', response.data.data.refresh_token, {
           path: '/',
-          // httpOnly: true,
+          secure: false,
         });
         // const refresh = cookies.get('refreshToken');
         // document.cookie = `refreshToken=${response.data.data.refresh_token}; Secure; SameSite=Strict`;

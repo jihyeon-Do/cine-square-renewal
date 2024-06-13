@@ -21,12 +21,12 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <Provider store={store}>
-    {/* <CookiesProvider> */}
-    <Router history={history}>
-      <ScrollTop />
-      <App />
-    </Router>
-    {/* </CookiesProvider> */}
+    <CookiesProvider>
+      <Router history={history}>
+        <ScrollTop />
+        <App />
+      </Router>
+    </CookiesProvider>
   </Provider>,
 );
 

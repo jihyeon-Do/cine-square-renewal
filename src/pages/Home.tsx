@@ -84,7 +84,7 @@ function Home() {
     async function getMovieInfo() {
       try {
         const response = await axios.get(
-          `${LOCALAPI}/api/movies/boxoffice?request_date=${today}`,
+          `${LOCALAPI}/api/movies/boxoffice?request_date=${20240505}`,
         );
         if (response.status === 200) {
           setIsFetch(false);

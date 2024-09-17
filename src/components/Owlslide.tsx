@@ -7,23 +7,23 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 const images = [
   {
     id: 1,
-    title: '이승윤 콘서트 도킹 : 리프트오프',
-    src: '../images/main-slide-img1.jpeg',
+    title: '우리가 끝이야',
+    src: '../images/main-slide-img01.webp',
   },
   {
     id: 2,
-    title: '[위드키즈]래빗스쿨 2: 부활절 대소동',
-    src: '../images/main-slide-img2.jpeg',
+    title: '테인티드 러브',
+    src: '../images/main-slide-img02.webp',
   },
   {
     id: 3,
-    title: '[위드키즈]브레드이발소: 셀럽 인 베이커리타운',
-    src: '../images/main-slide-img3.jpeg',
+    title: '트랜스포머 ONE',
+    src: '../images/main-slide-img03.webp',
   },
   {
     id: 4,
-    title: '비키퍼',
-    src: '../images/main-slide-img4.jpeg',
+    title: '오지: 사라진 숲을 찾아서',
+    src: '../images/main-slide-img04.webp',
   },
 ];
 

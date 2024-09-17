@@ -16,32 +16,73 @@ function MyFavorite() {
     },
   };
 
-  useEffect(() => {
-    const getFavoriteReview = async () => {
+  // useEffect(() => {
+  //   const getFavoriteReview = async () => {
+  //     const response = await axios.get(
+  //       `${LOCALAPI}/api/user-reports/me/movies/-/like-comments`,
+  //       bearer_header,
+  //     );
+  //     let copyFavoriteReview: any = [];
+  //     response.data.list.map(async (v: any) => {
+  //       const detailMovieInfo = await axios.get(
+  //         `${LOCALAPI}/api/movies/${v.movie_id}`,
+  //       );
+  //       copyFavoriteReview = [
+  //         ...copyFavoriteReview,
+  //         {
+  //           ...v,
+  //           open_date: detailMovieInfo.data.data.open_date,
+  //           title: detailMovieInfo.data.data.title,
+  //           thumbnail: detailMovieInfo.data.data.thumbnail,
+  //           isLike: true,
+  //         },
+  //       ];
+  //       setFavoriteReview(copyFavoriteReview);
+  //     });
+  //     // setFavoriteReview(response.data.list);
+  //   };
+  //   getFavoriteReview();
+  // }, []);
+
+  const fetchMyActivities = async (path: string) => {
+    try {
       const response = await axios.get(
-        `${LOCALAPI}/api/user-reports/me/movies/-/like-comments`,
+        `${LOCALAPI}/api/user-reports/me/movies/-/${path}`,
         bearer_header,
       );
-      let copyFavoriteReview: any = [];
-      response.data.list.map(async (v: any) => {
-        const detailMovieInfo = await axios.get(
-          `${LOCALAPI}/api/movies/${v.movie_id}`,
-        );
-        copyFavoriteReview = [
-          ...copyFavoriteReview,
-          {
-            ...v,
-            open_date: detailMovieInfo.data.data.open_date,
-            title: detailMovieInfo.data.data.title,
-            thumbnail: detailMovieInfo.data.data.thumbnail,
-            isLike: true,
-          },
-        ];
-        setFavoriteReview(copyFavoriteReview);
-      });
-      // setFavoriteReview(response.data.list);
+      return response.data.list;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    const getMyActivities = async () => {
+      if (location.pathname === '/review') {
+        const data = await fetchMyActivities('comments');
+      } else if (location.pathname === '/favorite/review') {
+        const data = await fetchMyActivities('like-comments');
+        let copyFavoriteReview: any = [];
+        data.map(async (v: any) => {
+          const detailMovieInfo = await axios.get(
+            `${LOCALAPI}/api/movies/${v.movie_id}`,
+          );
+          copyFavoriteReview = [
+            ...copyFavoriteReview,
+            {
+              ...v,
+              open_date: detailMovieInfo.data.data.open_date,
+              title: detailMovieInfo.data.data.title,
+              thumbnail: detailMovieInfo.data.data.thumbnail,
+              isLike: true,
+            },
+          ];
+          setFavoriteReview(copyFavoriteReview);
+        });
+      } else {
+      }
     };
-    getFavoriteReview();
+    getMyActivities();
   }, []);
 
   const review: any = [
